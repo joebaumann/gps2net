@@ -1,0 +1,26 @@
+* San francisco taxi data
+
+** GPS data
+
+   Dataset of mobility traces of taxi cabs in San Francisco, USA.
+
+   - File: cabspottingdata.tar.gz
+   - URL: https://crawdad.org/epfl/mobility/20090224/
+   - Accessed: <2018-08-21 Die>
+
+   Note: Registration and log in is nessesary in order to get the data
+
+
+   How to cite:
+
+   Michal Piorkowski, Natasa Sarafijanovic‑Djukic, Matthias Grossglauser,
+   CRAWDAD dataset epfl/mobility (v. 2009‑02‑24), downloaded from
+   https://crawdad.org/epfl/mobility/20090224, https://doi.org/10.15783/C7J010,
+   Feb 2009.
+
+** GIS Road Map data
+
+   - File: San Francisco Basemap Street Centerlines.zip
+   - URL: https://data.sfgov.org/Geographic-Locations-and-Boundaries/San-Francisco-Basemap-Street-Centerlines/7hfy-8sz8/data
+   - Accessed: <2018-08-21 Die>
+   - License: ODC Public Domain Dedication and Licence (PDDL)
