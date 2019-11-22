@@ -63,10 +63,10 @@ timeClosestPoint = 0
 
 # Print iterations progress
 def printProgressBar(iteration, total, prefix='', suffix='', decimals=1, length=100, fill='█', printEnd="\r"):
-    """
-    Call in a loop to create terminal progress bar
-    @params:
-        iteration   - Required  : current iteration (Int)
+    """Call in a loop to create terminal progress bar
+
+    Parameters
+    ----------        iteration   - Required  : current iteration (Int)
         total       - Required  : total iterations (Int)
         prefix      - Optional  : prefix string (Str)
         suffix      - Optional  : suffix string (Str)
@@ -126,6 +126,11 @@ def distFrom(lng1, lat1, lng2, lat2):
     --------
     >>> myDistance = distFrom()
     >>> print(myDistance)
+
+    Returns
+    --------
+    dist : int
+        The distance between two points in meters.
 
     """
 
