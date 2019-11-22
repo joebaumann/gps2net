@@ -100,6 +100,35 @@ def printProgressBar(iteration, total, prefix='', suffix='', decimals=1, length=
 # QGIS could calculate accurate distance
 
 def distFrom(lng1, lat1, lng2, lat2):
+    """Returns the distance between two points in meters.
+
+    Parameters
+    ----------
+    lng1 : float
+        This float is the longitude of the source.
+    lat1 : float
+        This float is the latitude of the source.
+    lng2 : float
+        This float is the longitude of the target.
+    lat2 : float
+        This float is the latitude of the target.
+
+
+    Notes
+    -----
+    This function calculates the distance between two gps points.
+    The result is not 100% correct as the function does not consider the elipsis-like shape of the earth. Instead it just uses an earth radius of 6371000 meters for the calculation.
+
+    A more accurate calculation of the distance can be done in QGIS. For more details, please visit: http://www.qgistutorials.com/en/docs/calculating_line_lengths.html
+    However, this function was used to be able to run the code independently of QGIS.
+
+    Examples
+    --------
+    >>> myDistance = distFrom()
+    >>> print(myDistance)
+
+    """
+
     earthRadius = 6371000  # meters
     dLat = math.radians(lat2-lat1)
     dLng = math.radians(lng2-lng1)
@@ -954,7 +983,8 @@ def calculateClosestPointAndShortestPath(filepath, filepath_shp, minNumberOfLine
                 timestamp = int(values[3])
 
                 # get the result for the current location
-                current_location_result, source, target, intersected_line, target_intersected_line, timestamp, intersected_line_oneway, target_intersected_line_oneway = getLocationResult(filepath_shp, x, y, passenger, timestamp, previous_source, previous_intersected_line, previous_timestamp, previous_intersected_line_oneway)
+                current_location_result, source, target, intersected_line, target_intersected_line, timestamp, intersected_line_oneway, target_intersected_line_oneway = getLocationResult(
+                    filepath_shp, x, y, passenger, timestamp, previous_source, previous_intersected_line, previous_timestamp, previous_intersected_line_oneway)
 
                 print('lets check previous_target:', previous_target)
                 print('lets check target:', target)
@@ -1083,7 +1113,8 @@ def calculateClosestPointAndShortestPath(filepath, filepath_shp, minNumberOfLine
                                 print('new_solution_point_y:',
                                       new_solution_point_y)
 
-                                current_location_result_new, source_new, target_new, intersected_line_new, target_intersected_line_new, timestamp_new, intersected_line_oneway_new, target_intersected_line_oneway_new = getLocationResult(filepath_shp, x, y, passenger, timestamp, (new_solution_point_x, new_solution_point_y), new_solution['input_line'], previous_location_result['timestamp'], new_solution['oneway'])
+                                current_location_result_new, source_new, target_new, intersected_line_new, target_intersected_line_new, timestamp_new, intersected_line_oneway_new, target_intersected_line_oneway_new = getLocationResult(
+                                    filepath_shp, x, y, passenger, timestamp, (new_solution_point_x, new_solution_point_y), new_solution['input_line'], previous_location_result['timestamp'], new_solution['oneway'])
 
                                 print('current_location_result_new:',
                                       current_location_result_new)
@@ -1101,7 +1132,8 @@ def calculateClosestPointAndShortestPath(filepath, filepath_shp, minNumberOfLine
                                 print('target_intersected_line_oneway_new:',
                                       target_intersected_line_oneway_new)
 
-                                previous_location_result_new, previous_source_new, previous_target_new, previous_intersected_line_new, previous_target_intersected_line_new, previous_timestamp_new, previous_intersected_line_oneway_new, previous_target_intersected_line_oneway_new = getLocationResult(filepath_shp, new_solution_point_x, new_solution_point_y, previous_location_result['passenger'], previous_location_result['timestamp'], previous_location_result['target'], previous_location_result['previous_intersected_line'], previous_location_result['previous_timestamp'], previous_location_result['previous_intersected_line_oneway'])
+                                previous_location_result_new, previous_source_new, previous_target_new, previous_intersected_line_new, previous_target_intersected_line_new, previous_timestamp_new, previous_intersected_line_oneway_new, previous_target_intersected_line_oneway_new = getLocationResult(
+                                    filepath_shp, new_solution_point_x, new_solution_point_y, previous_location_result['passenger'], previous_location_result['timestamp'], previous_location_result['target'], previous_location_result['previous_intersected_line'], previous_location_result['previous_timestamp'], previous_location_result['previous_intersected_line_oneway'])
                                 print('previous_location_result_new:',
                                       previous_location_result_new)
                                 print('previous_location_result_new -- PATH:',
@@ -1267,7 +1299,6 @@ startTotal = timer()
 filepath = '/Users/Joechi/Google Drive/gps2net/Data/test_data/just_one_taxi/new_abboip_copy.txt'
 
 
-
 #filepath_shp = '/Users/Joechi/Google Drive/HS19 – PathPy/2_Taxi data/Tests/Exports/AllPointsForOneTaxi/geo_SF_lines_exported_for_testing.shp'
 
 filepath_shp = '/Users/Joechi/Google Drive/gps2net/Data/taxi_san_francisco/San Francisco Basemap Street Centerlines/geo_export_e5dd0539-2344-4e87-b198-d50274be8e1d.shp'
@@ -1307,7 +1338,7 @@ print('')
 # this saves a new text file which includes the calculated parameters
 
 # with open("CreatedFiles3/ImprovedAlgorithm/"+new_filename, "w") as new_file:
-#with open("2_Taxi data/CreatedFiles3/ImprovedAlgorithm2/"+new_filename, "w") as new_file:
+# with open("2_Taxi data/CreatedFiles3/ImprovedAlgorithm2/"+new_filename, "w") as new_file:
 with open("output_files/"+new_filename, "w") as new_file:
     new_file.writelines(myHeader)
 
