@@ -9,7 +9,6 @@ Welcome to gps2net's documentation!
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
-   gps2net.py
 
 
 
@@ -19,3 +18,5 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
+
+* gps2net.py
