@@ -13,6 +13,7 @@ import math
 
 import time
 from timeit import default_timer as timer
+import doctest
 
 
 import sys
@@ -105,7 +106,7 @@ def distFrom(lng1, lat1, lng2, lat2):
     Parameters
     ----------
     lng1 : float
-        This float is the longitude of the source.
+        This fff float is the longitude of the source.
     lat1 : float
         This float is the latitude of the source.
     lng2 : float
@@ -124,8 +125,20 @@ def distFrom(lng1, lat1, lng2, lat2):
 
     Examples
     --------
-    >>> myDistance = distFrom()
-    >>> print(myDistance)
+
+    >>> x=12
+    >>> x
+    12
+    >>> (5<10)
+    True
+    >>> myDist = distFrom(-122.115, 37.115, -122.111, 37.111)
+    >>> myDist
+    568.8872918546489
+    >>> distFrom(-122.115, 37.115, -122.111, 37.111) # doctest: +SKIP
+    5
+
+
+    >>> print(myDistance) // prints 568.8872918 ...
 
     Returns
     --------
@@ -144,6 +157,7 @@ def distFrom(lng1, lat1, lng2, lat2):
     dist = earthRadius * c
 
     return dist
+
 
 
 # %%
@@ -1282,154 +1296,166 @@ def calculateClosestPointAndShortestPath(filepath, filepath_shp, minNumberOfLine
 # all data points from this taxi
 # filepath = '/Users/Joechi/Google Drive/HS19 – PathPy/2_Taxi data/Tests/Exports/AllPointsForOneTaxi/new_abboip_copy_selection_for_SP_tests.txt'
 
-# blockPrint()
-startTotal = timer()
+def main():
 
-#filepath = '/Users/Joechi/Google Drive/HS19 – PathPy/2_Taxi data/Tests/Exports/AllPointsForOneTaxi/new_abboip_copy.txt'
+    # blockPrint()
+    startTotal = timer()
 
-# filepath = '/Users/Joechi/Google Drive/HS19 – PathPy/2_Taxi data/Tests/Exports/AllPointsForOneTaxi/new_abboip_copy_small.txt'
-# filepath = '/Users/Joechi/Google Drive/HS19 – PathPy/2_Taxi data/Tests/Exports/AllPointsForOneTaxi/new_abboip_copy_small_verysmall.txt'
-# filepath = '/Users/Joechi/Google Drive/HS19 – PathPy/2_Taxi data/Tests/Exports/AllPointsForOneTaxi/new_abboip_copy_small_verysmall_2.txt'
-# filepath = '/Users/Joechi/Google Drive/HS19 – PathPy/2_Taxi data/Tests/Exports/AllPointsForOneTaxi/new_abboip_copy_small_verysmall_3.txt'
+    #filepath = '/Users/Joechi/Google Drive/HS19 – PathPy/2_Taxi data/Tests/Exports/AllPointsForOneTaxi/new_abboip_copy.txt'
 
-# filepath = '/Users/Joechi/Google Drive/HS19 – PathPy/2_Taxi data/Tests/Exports/AllPointsForOneTaxi/new_abboip_copy_small_verysmall_4.txt'
+    # filepath = '/Users/Joechi/Google Drive/HS19 – PathPy/2_Taxi data/Tests/Exports/AllPointsForOneTaxi/new_abboip_copy_small.txt'
+    # filepath = '/Users/Joechi/Google Drive/HS19 – PathPy/2_Taxi data/Tests/Exports/AllPointsForOneTaxi/new_abboip_copy_small_verysmall.txt'
+    # filepath = '/Users/Joechi/Google Drive/HS19 – PathPy/2_Taxi data/Tests/Exports/AllPointsForOneTaxi/new_abboip_copy_small_verysmall_2.txt'
+    # filepath = '/Users/Joechi/Google Drive/HS19 – PathPy/2_Taxi data/Tests/Exports/AllPointsForOneTaxi/new_abboip_copy_small_verysmall_3.txt'
 
-#filepath = '/Users/Joechi/Google Drive/HS19 – PathPy/2_Taxi data/Tests/Exports/AllPointsForOneTaxi/new_abboip_copy_verysmall_closestIsBest_oneline.txt'
+    # filepath = '/Users/Joechi/Google Drive/HS19 – PathPy/2_Taxi data/Tests/Exports/AllPointsForOneTaxi/new_abboip_copy_small_verysmall_4.txt'
 
-#filepath = '/Users/Joechi/Google Drive/HS19 – PathPy/2_Taxi data/Tests/Exports/AllPointsForOneTaxi/new_abboip_copy_SMALL_to_check_outlier.txt'
+    #filepath = '/Users/Joechi/Google Drive/HS19 – PathPy/2_Taxi data/Tests/Exports/AllPointsForOneTaxi/new_abboip_copy_verysmall_closestIsBest_oneline.txt'
 
-##filepath = '/Users/Joechi/Google Drive/HS19 – PathPy/2_Taxi data/Tests/Exports/AllPointsForOneTaxi/new_abboip_copy_verysmall_closestIsBest_1stSolution.txt'
+    #filepath = '/Users/Joechi/Google Drive/HS19 – PathPy/2_Taxi data/Tests/Exports/AllPointsForOneTaxi/new_abboip_copy_SMALL_to_check_outlier.txt'
 
-
-filepath = '/Users/Joechi/Google Drive/gps2net/Data/test_data/just_one_taxi/new_abboip_copy.txt'
-
-
-#filepath_shp = '/Users/Joechi/Google Drive/HS19 – PathPy/2_Taxi data/Tests/Exports/AllPointsForOneTaxi/geo_SF_lines_exported_for_testing.shp'
-
-filepath_shp = '/Users/Joechi/Google Drive/gps2net/Data/taxi_san_francisco/San Francisco Basemap Street Centerlines/geo_export_e5dd0539-2344-4e87-b198-d50274be8e1d.shp'
-
-filepathIndex = filepath.rfind('/')
-filepathIndex2 = filepath.rfind('.')
-new_filename = filepath[filepathIndex+1:filepathIndex2]
-new_filename += '_testfile.txt'
+    ##filepath = '/Users/Joechi/Google Drive/HS19 – PathPy/2_Taxi data/Tests/Exports/AllPointsForOneTaxi/new_abboip_copy_verysmall_closestIsBest_1stSolution.txt'
 
 
-myHeader, myCalculatedSolution = calculateClosestPointAndShortestPath(
-    filepath, filepath_shp, minNumberOfLines=2, aStar=1)
-
-print('')
-print('')
-print('')
-print('')
-print('')
-print('')
-print('')
-#print('NEW returned calculated solution: ')
-# print(myCalculatedSolution)
-print('')
-print('')
-print('')
-print('')
-print('')
-print('')
+    filepath = '/Users/Joechi/Google Drive/gps2net/Data/test_data/just_one_taxi/new_abboip_copy.txt'
 
 
-# print(myHeader)
-# print("data:")
-# print(myCalculatedSolution)
-# print("data end.")
+    #filepath_shp = '/Users/Joechi/Google Drive/HS19 – PathPy/2_Taxi data/Tests/Exports/AllPointsForOneTaxi/geo_SF_lines_exported_for_testing.shp'
+
+    filepath_shp = '/Users/Joechi/Google Drive/gps2net/Data/taxi_san_francisco/San Francisco Basemap Street Centerlines/geo_export_e5dd0539-2344-4e87-b198-d50274be8e1d.shp'
+
+    filepathIndex = filepath.rfind('/')
+    filepathIndex2 = filepath.rfind('.')
+    new_filename = filepath[filepathIndex+1:filepathIndex2]
+    new_filename += '_testfile.txt'
 
 
-# this saves a new text file which includes the calculated parameters
+    myHeader, myCalculatedSolution = calculateClosestPointAndShortestPath(
+        filepath, filepath_shp, minNumberOfLines=2, aStar=1)
 
-# with open("CreatedFiles3/ImprovedAlgorithm/"+new_filename, "w") as new_file:
-# with open("2_Taxi data/CreatedFiles3/ImprovedAlgorithm2/"+new_filename, "w") as new_file:
-with open("output_files/"+new_filename, "w") as new_file:
-    new_file.writelines(myHeader)
-
-    for location_result in myCalculatedSolution:
-        new_file.write(str(location_result['y']))
-        new_file.write(';')
-        new_file.write(str(location_result['x']))
-        new_file.write(';')
-        new_file.write(str(location_result['passenger']))
-        new_file.write(';')
-        new_file.write(str(location_result['timestamp']))
-        new_file.write(';')
-        new_file.write(str(location_result['closest_intersection_x']))
-        new_file.write(';')
-        new_file.write(str(location_result['closest_intersection_y']))
-        new_file.write(';')
-        new_file.write(str(location_result['intersected_line']))
-        new_file.write(';')
-        new_file.write(
-            str(location_result['linestring_adjustment_visualization']))
-        new_file.write(';')
-        new_file.write(str(location_result['path_time']))
-        new_file.write(';')
-        new_file.write(str(location_result['path']))
-        new_file.write(';')
-        new_file.write(str(location_result['path_length']))
-        new_file.write(';')
-        new_file.write(str(location_result['air_line_length']))
-        new_file.write(';')
-        new_file.write(str(location_result['path_length/air_line_length']))
-        new_file.write(';')
-        new_file.write(str(location_result['velocity_m_s']))
-        new_file.write(';')
-        new_file.write(str(location_result['pathIDs']))
-        new_file.write(';')
-        new_file.write(str(location_result['solution_id']))
-        new_file.write(';')
-        new_file.write(str(location_result['solution_index']))
-        new_file.write(';')
-        new_file.write(str(location_result['path_from_target_to_source']))
-        new_file.write(';')
-        new_file.write(str(location_result['comment']))
-        new_file.write('\n')
-        # new_file.writelines(myCalculatedSolution)
-
-endTotal = timer()
+    print('')
+    print('')
+    print('')
+    print('')
+    print('')
+    print('')
+    print('')
+    #print('NEW returned calculated solution: ')
+    # print(myCalculatedSolution)
+    print('')
+    print('')
+    print('')
+    print('')
+    print('')
+    print('')
 
 
-# enablePrint()
-
-print("no_path_AStar :", no_path_AStar)
-print("---")
-print("timeTotal :", endTotal-startTotal)
-print("timeCreatingGraph :", timeCreatingGraph)
-print("timeCreatingGraph2 :", timeCreatingGraph2)
-print("timeAStar :", timeAStar)
-print("time_aStar_path :", time_aStar_path)
-print("time_aStar_length :", time_aStar_length)
-
-print("")
-print("XXXXXXXX")
-print("")
-
-print("astar_copyGraph: ", astar_copyGraph)
-print("astar_addTarget: ", astar_addTarget)
-print("astar_addSource: ", astar_addSource)
-print("astar_numberOfEdges: ", astar_numberOfEdges)
-print("astar_getEdgeData: ", astar_getEdgeData)
-print("astar_addEdge: ", astar_addEdge)
-
-print("")
-
-print("-------")
-print("")
+    # print(myHeader)
+    # print("data:")
+    # print(myCalculatedSolution)
+    # print("data end.")
 
 
-print("aStar_write :", aStar_write)
-print("timeClosestPoint Total :", timeClosestPoint)
-print("timeClosestPoint without graphs :",
-      timeClosestPoint-timeAStar)
-print("")
-print("-------")
-print("")
+    # this saves a new text file which includes the calculated parameters
+
+    # with open("CreatedFiles3/ImprovedAlgorithm/"+new_filename, "w") as new_file:
+    # with open("2_Taxi data/CreatedFiles3/ImprovedAlgorithm2/"+new_filename, "w") as new_file:
+    with open("../output_files/"+new_filename, "w") as new_file:
+        new_file.writelines(myHeader)
+
+        for location_result in myCalculatedSolution:
+            new_file.write(str(location_result['y']))
+            new_file.write(';')
+            new_file.write(str(location_result['x']))
+            new_file.write(';')
+            new_file.write(str(location_result['passenger']))
+            new_file.write(';')
+            new_file.write(str(location_result['timestamp']))
+            new_file.write(';')
+            new_file.write(str(location_result['closest_intersection_x']))
+            new_file.write(';')
+            new_file.write(str(location_result['closest_intersection_y']))
+            new_file.write(';')
+            new_file.write(str(location_result['intersected_line']))
+            new_file.write(';')
+            new_file.write(
+                str(location_result['linestring_adjustment_visualization']))
+            new_file.write(';')
+            new_file.write(str(location_result['path_time']))
+            new_file.write(';')
+            new_file.write(str(location_result['path']))
+            new_file.write(';')
+            new_file.write(str(location_result['path_length']))
+            new_file.write(';')
+            new_file.write(str(location_result['air_line_length']))
+            new_file.write(';')
+            new_file.write(str(location_result['path_length/air_line_length']))
+            new_file.write(';')
+            new_file.write(str(location_result['velocity_m_s']))
+            new_file.write(';')
+            new_file.write(str(location_result['pathIDs']))
+            new_file.write(';')
+            new_file.write(str(location_result['solution_id']))
+            new_file.write(';')
+            new_file.write(str(location_result['solution_index']))
+            new_file.write(';')
+            new_file.write(str(location_result['path_from_target_to_source']))
+            new_file.write(';')
+            new_file.write(str(location_result['comment']))
+            new_file.write('\n')
+            # new_file.writelines(myCalculatedSolution)
+
+    endTotal = timer()
 
 
-print("GraphFromSHP nr of edges END: ", DG.number_of_edges())
+    # enablePrint()
+
+    print("no_path_AStar :", no_path_AStar)
+    print("---")
+    print("timeTotal :", endTotal-startTotal)
+    print("timeCreatingGraph :", timeCreatingGraph)
+    print("timeCreatingGraph2 :", timeCreatingGraph2)
+    print("timeAStar :", timeAStar)
+    print("time_aStar_path :", time_aStar_path)
+    print("time_aStar_length :", time_aStar_length)
+
+    print("")
+    print("XXXXXXXX")
+    print("")
+
+    print("astar_copyGraph: ", astar_copyGraph)
+    print("astar_addTarget: ", astar_addTarget)
+    print("astar_addSource: ", astar_addSource)
+    print("astar_numberOfEdges: ", astar_numberOfEdges)
+    print("astar_getEdgeData: ", astar_getEdgeData)
+    print("astar_addEdge: ", astar_addEdge)
+
+    print("")
+
+    print("-------")
+    print("")
+
+
+    print("aStar_write :", aStar_write)
+    print("timeClosestPoint Total :", timeClosestPoint)
+    print("timeClosestPoint without graphs :",
+        timeClosestPoint-timeAStar)
+    print("")
+    print("-------")
+    print("")
+
+
+    print("GraphFromSHP nr of edges END: ", DG.number_of_edges())
 
 
 # %%
+
+
+
+
+if __name__ == "__main__":
+    import doctest
+    # test the examples with the following command: python gps2net.py -v
+    doctest.testmod()
+
+    main()

@@ -146,8 +146,80 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="welcome-to-gps2net-s-documentation">
-<h1>Welcome to gps2net’s documentation!<a class="headerlink" href="#welcome-to-gps2net-s-documentation" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-gps2net">
+<span id="welcome-to-gps2net-s-documentation"></span><h1>Welcome to gps2net’s documentation!<a class="headerlink" href="#module-gps2net" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="gps2net.distFrom">
+<code class="sig-prename descclassname">gps2net.</code><code class="sig-name descname">distFrom</code><span class="sig-paren">(</span><em class="sig-param">lng1</em>, <em class="sig-param">lat1</em>, <em class="sig-param">lng2</em>, <em class="sig-param">lat2</em><span class="sig-paren">)</span><a class="headerlink" href="#gps2net.distFrom" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the distance between two points in meters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>lng1</strong><span class="classifier">float</span></dt><dd><p>This fff float is the longitude of the source.</p>
+</dd>
+<dt><strong>lat1</strong><span class="classifier">float</span></dt><dd><p>This float is the latitude of the source.</p>
+</dd>
+<dt><strong>lng2</strong><span class="classifier">float</span></dt><dd><p>This float is the longitude of the target.</p>
+</dd>
+<dt><strong>lat2</strong><span class="classifier">float</span></dt><dd><p>This float is the latitude of the target.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>dist</strong><span class="classifier">int</span></dt><dd><p>The distance between two points in meters.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>This function calculates the distance between two gps points.
+The result is not 100% correct as the function does not consider the elipsis-like shape of the earth. Instead it just uses an earth radius of 6371000 meters for the calculation.</p>
+<p>A more accurate calculation of the distance can be done in QGIS. For more details, please visit: <a class="reference external" href="http://www.qgistutorials.com/en/docs/calculating_line_lengths.html">http://www.qgistutorials.com/en/docs/calculating_line_lengths.html</a>
+However, this function was used to be able to run the code independently of QGIS.</p>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="p">(</span><span class="mi">5</span><span class="o">&lt;</span><span class="mi">10</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">distFrom</span><span class="p">(</span><span class="o">-</span><span class="mf">122.115</span><span class="p">,</span> <span class="mf">37.115</span><span class="p">,</span> <span class="o">-</span><span class="mf">122.111</span><span class="p">,</span> <span class="mf">37.111</span><span class="p">)</span> <span class="c1"># doctest:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="mf">568.8872918546489</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">distFrom</span><span class="p">(</span><span class="o">-</span><span class="mf">122.115</span><span class="p">,</span> <span class="mf">37.115</span><span class="p">,</span> <span class="o">-</span><span class="mf">122.111</span><span class="p">,</span> <span class="mf">37.111</span><span class="p">)</span> 
+<span class="go">5</span>
+</pre></div>
+</div>
+<div class="highlight-pycon3 notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">sum</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="go">4</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">myDistance</span><span class="p">)</span> <span class="o">//</span> <span class="n">prints</span> <span class="mf">568.8872918</span> <span class="o">...</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="gps2net.printProgressBar">
+<code class="sig-prename descclassname">gps2net.</code><code class="sig-name descname">printProgressBar</code><span class="sig-paren">(</span><em class="sig-param">iteration</em>, <em class="sig-param">total</em>, <em class="sig-param">prefix=''</em>, <em class="sig-param">suffix=''</em>, <em class="sig-param">decimals=1</em>, <em class="sig-param">length=100</em>, <em class="sig-param">fill='█'</em>, <em class="sig-param">printEnd='r'</em><span class="sig-paren">)</span><a class="headerlink" href="#gps2net.printProgressBar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Call in a loop to create terminal progress bar</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>total       - Required</strong><span class="classifier">total iterations (Int)</span></dt><dd><p>prefix      - Optional  : prefix string (Str)
+suffix      - Optional  : suffix string (Str)
+decimals    - Optional  : positive number of decimals in percent complete (Int)
+length      - Optional  : character length of bar (Int)
+fill        - Optional  : bar fill character (Str)
+printEnd    - Optional  : end character (e.g. “</p>
+</dd>
+<dt><strong>“, “</strong></dt><dd></dd>
+<dt><strong>“) (Str)</strong></dt><dd></dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
 <div class="toctree-wrapper compound">
 </div>
 </div>
@@ -157,7 +229,6 @@
 <li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
 <li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
 <li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
-<li><p>gps2net.py</p></li>
 </ul>
 </div>
 
