@@ -1360,7 +1360,7 @@ def main():
 
     # with open("CreatedFiles3/ImprovedAlgorithm/"+new_filename, "w") as new_file:
     # with open("2_Taxi data/CreatedFiles3/ImprovedAlgorithm2/"+new_filename, "w") as new_file:
-    with open("../output_files/"+new_filename, "w") as new_file:
+    with open("output_files/"+new_filename, "w") as new_file:
         new_file.writelines(myHeader)
 
         for location_result in myCalculatedSolution:

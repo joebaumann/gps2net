@@ -178,20 +178,16 @@ The result is not 100% correct as the function does not consider the elipsis-lik
 <p>A more accurate calculation of the distance can be done in QGIS. For more details, please visit: <a class="reference external" href="http://www.qgistutorials.com/en/docs/calculating_line_lengths.html">http://www.qgistutorials.com/en/docs/calculating_line_lengths.html</a>
 However, this function was used to be able to run the code independently of QGIS.</p>
 <p class="rubric">Examples</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="p">(</span><span class="mi">5</span><span class="o">&lt;</span><span class="mi">10</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="o">=</span><span class="mi">12</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span>
+<span class="go">12</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">(</span><span class="mi">5</span><span class="o">&lt;</span><span class="mi">10</span><span class="p">)</span>
 <span class="go">True</span>
-</pre></div>
-</div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">distFrom</span><span class="p">(</span><span class="o">-</span><span class="mf">122.115</span><span class="p">,</span> <span class="mf">37.115</span><span class="p">,</span> <span class="o">-</span><span class="mf">122.111</span><span class="p">,</span> <span class="mf">37.111</span><span class="p">)</span> <span class="c1"># doctest:</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="mf">568.8872918546489</span>
-</pre></div>
-</div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">distFrom</span><span class="p">(</span><span class="o">-</span><span class="mf">122.115</span><span class="p">,</span> <span class="mf">37.115</span><span class="p">,</span> <span class="o">-</span><span class="mf">122.111</span><span class="p">,</span> <span class="mf">37.111</span><span class="p">)</span> 
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myDist</span> <span class="o">=</span> <span class="n">distFrom</span><span class="p">(</span><span class="o">-</span><span class="mf">122.115</span><span class="p">,</span> <span class="mf">37.115</span><span class="p">,</span> <span class="o">-</span><span class="mf">122.111</span><span class="p">,</span> <span class="mf">37.111</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myDist</span>
+<span class="go">568.8872918546489</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">distFrom</span><span class="p">(</span><span class="o">-</span><span class="mf">122.115</span><span class="p">,</span> <span class="mf">37.115</span><span class="p">,</span> <span class="o">-</span><span class="mf">122.111</span><span class="p">,</span> <span class="mf">37.111</span><span class="p">)</span> 
 <span class="go">5</span>
-</pre></div>
-</div>
-<div class="highlight-pycon3 notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">sum</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
-<span class="go">4</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">myDistance</span><span class="p">)</span> <span class="o">//</span> <span class="n">prints</span> <span class="mf">568.8872918</span> <span class="o">...</span>
