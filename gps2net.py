@@ -159,7 +159,6 @@ def distFrom(lng1, lat1, lng2, lat2):
     return dist
 
 
-
 # %%
 # how to cut a line
 def cut(line, distance, point):
@@ -674,7 +673,7 @@ def calculateClosestPointAndShortestPath(filepath, filepath_shp, minNumberOfLine
     previous_timestamp = None
     previous_intersected_line_oneway = None
 
-    def getLocationResult(filepath_shp, x, y, passenger, timestamp, previous_point, previous_intersected_line, previous_timestamp, previous_intersected_line_oneway):
+    def getLocationResult(filepath_shp, x, y, passenger, timestamp, previous_point, previous_intersected_line, previous_timestamp, previous_intersected_line_oneway, minNumberOfLines=2):
 
         print('')
         print('')
@@ -749,6 +748,7 @@ def calculateClosestPointAndShortestPath(filepath, filepath_shp, minNumberOfLine
         # load the input lines and combine them into one geometry
 
         # the whole san francisco shp file (which was exported as a copy)
+        # TODO: write better comment like:  min nr just needed to increse areasize
         with fiona.open(filepath_shp) as input_lines:
             # define size of area to filter map lines
             areasize = 0.0005
@@ -766,8 +766,17 @@ def calculateClosestPointAndShortestPath(filepath, filepath_shp, minNumberOfLine
                 # double are size so that if no lines are found, a bigger area is taken into account when filtering
                 areasize = areasize*1.25
 
-        # if point is oulier
-        if(areasize >= max_areasize):
+
+                # if the areasize already arrived at its maximuum size decrease the set minimum number of lines by one.
+                # This makes sure that (if minNumberOfLines>1) a point is only market as an outlier if there is not even one line within the aresize.
+                # Without that it is possible that points are market as outliers just because there are not many lines close to the point,
+                # even though the point lies very close to a line.
+                
+                #if((not (number_of_lines < minNumberOfLines)) and (not (areasize < max_areasize)) and (minNumberOfLines > 1)):
+                #    minNumberOfLines -= 1
+
+        # point is oulier only if no line was found
+        if(number_of_lines==0):
             print("This point is an outlier.")
             comment += 'This point is an outlier.'
 
@@ -1003,7 +1012,7 @@ def calculateClosestPointAndShortestPath(filepath, filepath_shp, minNumberOfLine
 
                 # get the result for the current location
                 current_location_result, source, target, intersected_line, target_intersected_line, timestamp, intersected_line_oneway, target_intersected_line_oneway = getLocationResult(
-                    filepath_shp, x, y, passenger, timestamp, previous_source, previous_intersected_line, previous_timestamp, previous_intersected_line_oneway)
+                    filepath_shp, x, y, passenger, timestamp, previous_source, previous_intersected_line, previous_timestamp, previous_intersected_line_oneway, minNumberOfLines)
 
                 print('lets check previous_target:', previous_target)
                 print('lets check target:', target)
@@ -1133,7 +1142,7 @@ def calculateClosestPointAndShortestPath(filepath, filepath_shp, minNumberOfLine
                                       new_solution_point_y)
 
                                 current_location_result_new, source_new, target_new, intersected_line_new, target_intersected_line_new, timestamp_new, intersected_line_oneway_new, target_intersected_line_oneway_new = getLocationResult(
-                                    filepath_shp, x, y, passenger, timestamp, (new_solution_point_x, new_solution_point_y), new_solution['input_line'], previous_location_result['timestamp'], new_solution['oneway'])
+                                    filepath_shp, x, y, passenger, timestamp, (new_solution_point_x, new_solution_point_y), new_solution['input_line'], previous_location_result['timestamp'], new_solution['oneway'], minNumberOfLines)
 
                                 print('current_location_result_new:',
                                       current_location_result_new)
@@ -1152,7 +1161,7 @@ def calculateClosestPointAndShortestPath(filepath, filepath_shp, minNumberOfLine
                                       target_intersected_line_oneway_new)
 
                                 previous_location_result_new, previous_source_new, previous_target_new, previous_intersected_line_new, previous_target_intersected_line_new, previous_timestamp_new, previous_intersected_line_oneway_new, previous_target_intersected_line_oneway_new = getLocationResult(
-                                    filepath_shp, new_solution_point_x, new_solution_point_y, previous_location_result['passenger'], previous_location_result['timestamp'], previous_location_result['target'], previous_location_result['previous_intersected_line'], previous_location_result['previous_timestamp'], previous_location_result['previous_intersected_line_oneway'])
+                                    filepath_shp, new_solution_point_x, new_solution_point_y, previous_location_result['passenger'], previous_location_result['timestamp'], previous_location_result['target'], previous_location_result['previous_intersected_line'], previous_location_result['previous_timestamp'], previous_location_result['previous_intersected_line_oneway'], minNumberOfLines)
                                 print('previous_location_result_new:',
                                       previous_location_result_new)
                                 print('previous_location_result_new -- PATH:',
@@ -1258,7 +1267,7 @@ def calculateClosestPointAndShortestPath(filepath, filepath_shp, minNumberOfLine
             print(counter)
             if (counter > 10):
                 print("ende")
-                break
+                # break
 
             # Update Progress Bar
 
@@ -1316,9 +1325,9 @@ def main():
 
     ##filepath = '/Users/Joechi/Google Drive/HS19 – PathPy/2_Taxi data/Tests/Exports/AllPointsForOneTaxi/new_abboip_copy_verysmall_closestIsBest_1stSolution.txt'
 
+    ###filepath = '/Users/Joechi/Google Drive/gps2net/Data/test_data/just_one_taxi/new_abboip_copy.txt'
 
-    filepath = '/Users/Joechi/Google Drive/gps2net/Data/test_data/just_one_taxi/new_abboip_copy.txt'
-
+    filepath = '/Users/Joechi/Google Drive/gps2net/Data/test_data/just_one_taxi/new_abboip_copy_check_wrong_outliers.txt'
 
     #filepath_shp = '/Users/Joechi/Google Drive/HS19 – PathPy/2_Taxi data/Tests/Exports/AllPointsForOneTaxi/geo_SF_lines_exported_for_testing.shp'
 
@@ -1327,8 +1336,7 @@ def main():
     filepathIndex = filepath.rfind('/')
     filepathIndex2 = filepath.rfind('.')
     new_filename = filepath[filepathIndex+1:filepathIndex2]
-    new_filename += '_testfile.txt'
-
+    new_filename += '_testfile_NEW.txt'
 
     myHeader, myCalculatedSolution = calculateClosestPointAndShortestPath(
         filepath, filepath_shp, minNumberOfLines=2, aStar=1)
@@ -1349,12 +1357,10 @@ def main():
     print('')
     print('')
 
-
     # print(myHeader)
     # print("data:")
     # print(myCalculatedSolution)
     # print("data end.")
-
 
     # this saves a new text file which includes the calculated parameters
 
@@ -1407,7 +1413,6 @@ def main():
 
     endTotal = timer()
 
-
     # enablePrint()
 
     print("no_path_AStar :", no_path_AStar)
@@ -1435,22 +1440,18 @@ def main():
     print("-------")
     print("")
 
-
     print("aStar_write :", aStar_write)
     print("timeClosestPoint Total :", timeClosestPoint)
     print("timeClosestPoint without graphs :",
-        timeClosestPoint-timeAStar)
+          timeClosestPoint-timeAStar)
     print("")
     print("-------")
     print("")
-
 
     print("GraphFromSHP nr of edges END: ", DG.number_of_edges())
 
 
 # %%
-
-
 
 
 if __name__ == "__main__":
