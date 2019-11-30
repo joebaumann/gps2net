@@ -660,7 +660,7 @@ def calculateClosestPointAndShortestPath(filepath, filepath_shp, minNumberOfLine
     """
 
     # header = ["latitude(y);longitude(x);hasPassenger;time;closest_intersection_x;closest_intersection_y;intersected_line_as_linestring;linestring_adjustment_visualization;path_time;path_as_linestring;path_length;air_line_length;path_length/air_line_length;velocity_m_s;A_path_as_linestring;A_path_length;A_air_line_length;A_path_length/air_line_length;A_velocity_m_s\n"]
-    header = ['latitude(y);longitude(x);hasPassenger;time;closest_intersection_x;closest_intersection_y;intersected_line_as_linestring;linestring_adjustment_visualization;path_time']
+    header = ['latitude(y);longitude(x);hasPassenger;time;closest_intersection_x;closest_intersection_y;relative_position;relative_position_normalized;intersected_line_oneway;intersected_line_as_linestring;linestring_adjustment_visualization;path_time']
 
     if(aStar == 1):
         header += ';path_as_linestring;path_length;air_line_length;path_length/air_line_length;velocity_m_s;pathIDs;solution_id;solution_index;path_from_target_to_source;comment'
@@ -713,12 +713,12 @@ def calculateClosestPointAndShortestPath(filepath, filepath_shp, minNumberOfLine
         if (previous_intersected_line != None):
             location_result['previous_intersected_line'] = previous_intersected_line
         else:
-            location_result['previous_intersected_line'] = 'previous_intersected_line'
+            location_result['previous_intersected_line'] = ''
 
         if(previous_intersected_line_oneway != None):
             location_result['previous_intersected_line_oneway'] = previous_intersected_line_oneway
         else:
-            location_result['previous_intersected_line_oneway'] = 'previous_intersected_line_oneway'
+            location_result['previous_intersected_line_oneway'] = ''
 
         location_result['path_time'] = ''
         location_result['path'] = ''
@@ -731,7 +731,10 @@ def calculateClosestPointAndShortestPath(filepath, filepath_shp, minNumberOfLine
         location_result['path_from_target_to_source'] = ''
         location_result['closest_intersection_x'] = ''
         location_result['closest_intersection_y'] = ''
+        location_result['relative_position'] = ''
+        location_result['relative_position_normalized'] = ''
         location_result['intersected_line'] = ''
+        location_result['intersected_line_oneway'] = ''
         location_result['linestring_adjustment_visualization'] = ''
 
         location_result['solution_id'] = ''
@@ -796,12 +799,21 @@ def calculateClosestPointAndShortestPath(filepath, filepath_shp, minNumberOfLine
                 lineID = input_line[1]['id']
 
                 newLS = LineString(input_line[1]['geometry']['coordinates'])
-                closest_point_on_line = newLS.interpolate(
-                    newLS.project(focal_pt))
+                #get the distance along the LineString to a point nearest to the point
+                relative_position=newLS.project(focal_pt)
+                #get the distance normalized to the length of the LineString
+                relative_position_normalized=newLS.project(focal_pt, normalized=True)
+                
+
+
+                closest_point_on_line = newLS.interpolate(relative_position)
+                
 
                 inter_dict_point = {}
 
                 inter_dict_point["closest_point_on_line"] = closest_point_on_line
+                inter_dict_point["relative_position_closest_point_on_line"] = relative_position
+                inter_dict_point["relative_position_normalized_closest_point_on_line"] = relative_position_normalized
                 inter_dict_point["input_line"] = newLS
 
                 inter_dict_point["oneway"] = input_line[1]['properties']['oneway']
@@ -838,6 +850,8 @@ def calculateClosestPointAndShortestPath(filepath, filepath_shp, minNumberOfLine
 
             closest_intersection_x = solution['closest_point_on_line'].x
             closest_intersection_y = solution['closest_point_on_line'].y
+            relative_position = solution['relative_position_closest_point_on_line']
+            relative_position_normalized = solution['relative_position_normalized_closest_point_on_line']
 
             intersected_line = solution['input_line']
             intersected_line_oneway = solution['oneway']
@@ -846,8 +860,13 @@ def calculateClosestPointAndShortestPath(filepath, filepath_shp, minNumberOfLine
             location_result['closest_intersection_x'] = closest_intersection_x
             location_result['closest_intersection_y'] = closest_intersection_y
 
-            # append the underlying map line on which the final point lies
+            # append the relative position / and the normalized relative position of the solution on the intersected line
+            location_result['relative_position'] = relative_position
+            location_result['relative_position_normalized'] = relative_position_normalized
+
+            # append the underlying map line on which the final point lies AND the oneway_property
             location_result['intersected_line'] = intersected_line
+            location_result['intersected_line_oneway'] = intersected_line_oneway
 
             # append the line which visualizes the way from the start point to the new position of the closest intersection point
             linestring_adjustment_visualization = LineString(
@@ -1270,7 +1289,7 @@ def calculateClosestPointAndShortestPath(filepath, filepath_shp, minNumberOfLine
             print(counter)
             if (counter > 10):
                 print("ende")
-                # break
+                break
 
             # Update Progress Bar
 
@@ -1384,9 +1403,14 @@ def main():
 
     ##filepath = '/Users/Joechi/Google Drive/HS19 – PathPy/2_Taxi data/Tests/Exports/AllPointsForOneTaxi/new_abboip_copy_verysmall_closestIsBest_1stSolution.txt'
 
-    ###filepath = '/Users/Joechi/Google Drive/gps2net/Data/test_data/just_one_taxi/new_abboip_copy.txt'
 
-    filepath = '/Users/Joechi/Google Drive/gps2net/Data/test_data/just_one_taxi/new_abboip_copy_check_wrong_outliers.txt'
+    #filepath = '/Users/Joechi/Google Drive/gps2net/Data/test_data/just_one_taxi/new_abboip_copy_check_wrong_outliers.txt'
+
+    filepath = '/Users/Joechi/Google Drive/gps2net/Data/test_data/just_one_taxi/new_abboip_copy.txt'
+
+
+
+
 
     #filepath_shp = '/Users/Joechi/Google Drive/HS19 – PathPy/2_Taxi data/Tests/Exports/AllPointsForOneTaxi/geo_SF_lines_exported_for_testing.shp'
 
@@ -1395,7 +1419,7 @@ def main():
     filepathIndex = filepath.rfind('/')
     filepathIndex2 = filepath.rfind('.')
     new_filename = filepath[filepathIndex+1:filepathIndex2]
-    new_filename += '_testfile_NEW.txt'
+    new_filename += '_returnRelativePOS2.txt'
 
     myHeader, myCalculatedSolution = calculateClosestPointAndShortestPath(
         filepath, filepath_shp, minNumberOfLines=2, aStar=1)
@@ -1441,10 +1465,15 @@ def main():
             new_file.write(';')
             new_file.write(str(location_result['closest_intersection_y']))
             new_file.write(';')
+            new_file.write(str(location_result['relative_position']))
+            new_file.write(';')
+            new_file.write(str(location_result['relative_position_normalized']))
+            new_file.write(';')
+            new_file.write(str(location_result['intersected_line_oneway']))
+            new_file.write(';')
             new_file.write(str(location_result['intersected_line']))
             new_file.write(';')
-            new_file.write(
-                str(location_result['linestring_adjustment_visualization']))
+            new_file.write(str(location_result['linestring_adjustment_visualization']))
             new_file.write(';')
             new_file.write(str(location_result['path_time']))
             new_file.write(';')
@@ -1510,6 +1539,21 @@ def main():
     print("GraphFromSHP nr of edges END: ", DG.number_of_edges())
 
 
+    path='/Users/Joechi/Google Drive/gps2net/Data/test_data/just_one_taxi/new_abboip_copy_verysmall_closestIsBest_1stSolution.txt'
+    path2='/Users/Joechi/Google Drive/gps2net/Data/test_data/just_one_taxi/new_abboip_copy_small.txt'
+    path3='/Users/Joechi/Google Drive/gps2net/Data/test_data/just_one_taxi/new_abboip_copy_small_verysmall_3.txt'
+    path4='/Users/Joechi/Google Drive/gps2net/Data/test_data/just_one_taxi/new_abboip_copy.txt'
+
+
+    # get all timestamp differences of a text file
+
+    #timeDifferences=getTimeDifferences(path4, 3)
+    
+    # plot the timeDifferences in a histogram
+    
+    #plotHistogram(timeDifferences,300,25)
+
+
 # %%
 
 
@@ -1520,19 +1564,3 @@ if __name__ == "__main__":
 
     main()
 
-
-#%%
-
-path='/Users/Joechi/Google Drive/gps2net/Data/test_data/just_one_taxi/new_abboip_copy_verysmall_closestIsBest_1stSolution.txt'
-path2='/Users/Joechi/Google Drive/gps2net/Data/test_data/just_one_taxi/new_abboip_copy_small.txt'
-path3='/Users/Joechi/Google Drive/gps2net/Data/test_data/just_one_taxi/new_abboip_copy_small_verysmall_3.txt'
-path4='/Users/Joechi/Google Drive/gps2net/Data/test_data/just_one_taxi/new_abboip_copy.txt'
-
-
-# get all timestamp differences of a text file
-timeDifferences=getTimeDifferences(path4, 3)
-# plot the timeDifferences in a histogram
-plotHistogram(timeDifferences,300,25)
-
-
-# %%
