@@ -2,13 +2,17 @@
 # imports
 
 from shapely.geometry import LineString
-from matplotlib import pyplot
+#from matplotlib import pyplot
 from shapely.geometry import Point, LineString, MultiLineString, mapping, shape
 from shapely.ops import cascaded_union
 from shapely import affinity
 import fiona
 import networkx as nx
 import math
+
+
+import matplotlib.pyplot as plt
+import numpy as np
 
 
 import time
@@ -766,17 +770,16 @@ def calculateClosestPointAndShortestPath(filepath, filepath_shp, minNumberOfLine
                 # double are size so that if no lines are found, a bigger area is taken into account when filtering
                 areasize = areasize*1.25
 
-
                 # if the areasize already arrived at its maximuum size decrease the set minimum number of lines by one.
                 # This makes sure that (if minNumberOfLines>1) a point is only market as an outlier if there is not even one line within the aresize.
                 # Without that it is possible that points are market as outliers just because there are not many lines close to the point,
                 # even though the point lies very close to a line.
-                
-                #if((not (number_of_lines < minNumberOfLines)) and (not (areasize < max_areasize)) and (minNumberOfLines > 1)):
+
+                # if((not (number_of_lines < minNumberOfLines)) and (not (areasize < max_areasize)) and (minNumberOfLines > 1)):
                 #    minNumberOfLines -= 1
 
         # point is oulier only if no line was found
-        if(number_of_lines==0):
+        if(number_of_lines == 0):
             print("This point is an outlier.")
             comment += 'This point is an outlier.'
 
@@ -1299,6 +1302,62 @@ def calculateClosestPointAndShortestPath(filepath, filepath_shp, minNumberOfLine
     return header, lines_for_new_text_file
 
 
+def getTimeDifferences(filepath, timestampPosition):
+
+    # initialise empty set
+    timeDifferences = []
+    # set previousTimestamp to 0
+    previousTimestamp = 0
+
+    # open the file
+    with open(filepath, "r") as f:
+        mylist = f.read().splitlines()
+
+        # loop through the txt file
+        for lines in mylist:
+            values = lines.split(" ")
+            # get the timestamp of the current line
+            timestamp = int(values[timestampPosition])
+
+            # if it't not the forst entry of the txt file, append the difference to the set
+            if(previousTimestamp != 0):
+                timeDifferences.append(previousTimestamp-timestamp)
+
+            previousTimestamp = timestamp
+
+    return timeDifferences
+
+
+def plotHistogram(input, maxXLabel, binSize):
+    # get the max value of the imputs
+    maxInput = max(input)
+
+    # create the bins (as a range from 0 to maxXLabel or maxInput depending on which one is smaller). +2 is needed to display also the max number.
+    myBins = range(0, min(maxXLabel, maxInput)+2, binSize)
+
+    # plot the histogram. 'np.clip' makes sure that the time differences which are bigger then the max X value are visualized in the last bin.
+    n, bins, patches = plt.hist(x=np.clip(
+        input, 0, myBins[-1]), bins=myBins, color='#0504aa', alpha=0.7, rwidth=0.85)
+
+    plt.grid(axis='y', alpha=0.75)
+    plt.xlabel('time difference in seconds')
+    plt.ylabel('Frequency')
+    plt.title('Histogram of time differences between gps points')
+    maxfreq = n.max()
+    # Set a clean upper y-axis limit.
+    plt.ylim(ymax=np.ceil(maxfreq / 10) * 10 if maxfreq % 10 else maxfreq + 10)
+
+    xlabels = bins[0:].astype(str)
+
+    # remove the last x label
+    xlabels = xlabels[:-1]
+    # add a '+' to the label of the last bin to visualize that this bin contains all timeDifferences  which are equal or bigger than the xTick.
+    xlabels[-1] += '+'
+
+    myXTicks = np.array(myBins)
+    plt.xticks(myXTicks, xlabels)
+
+
 # %%
 # only selected data points from this taxi
 # filepath = '/Users/Joechi/Google Drive/HS19 – PathPy/2_Taxi data/Tests/Exports/new_abboip_selection_test.txt'
@@ -1460,3 +1519,20 @@ if __name__ == "__main__":
     doctest.testmod()
 
     main()
+
+
+#%%
+
+path='/Users/Joechi/Google Drive/gps2net/Data/test_data/just_one_taxi/new_abboip_copy_verysmall_closestIsBest_1stSolution.txt'
+path2='/Users/Joechi/Google Drive/gps2net/Data/test_data/just_one_taxi/new_abboip_copy_small.txt'
+path3='/Users/Joechi/Google Drive/gps2net/Data/test_data/just_one_taxi/new_abboip_copy_small_verysmall_3.txt'
+path4='/Users/Joechi/Google Drive/gps2net/Data/test_data/just_one_taxi/new_abboip_copy.txt'
+
+
+# get all timestamp differences of a text file
+timeDifferences=getTimeDifferences(path4, 3)
+# plot the timeDifferences in a histogram
+plotHistogram(timeDifferences,300,25)
+
+
+# %%

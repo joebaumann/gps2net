@@ -90,7 +90,8 @@ def plotHistogramOfTimeDifferences(filepath, timestampPosition, maxXLabel, binSi
     myBins=range(0,min(maxXLabel,maxTimeDifferences)+2,binSize)
     
     #n, bins, patches = plt.hist(x=np.clip(timeDifferences,0,myBins[-1]), bins=myBins, color='#0504aa', alpha=0.7, rwidth=0.85)
-    n, bins, patches = plt.hist(x=timeDifferences, bins=myBins, color='#0504aa', alpha=0.7, rwidth=0.85)
+    n, bins, patches = plt.hist(x=np.clip(timeDifferences,0,myBins[-1]), bins=myBins, color='#0504aa', alpha=0.7, rwidth=0.85)
+    
     print('n')
     print(n)
     #print(bins)
@@ -108,19 +109,21 @@ def plotHistogramOfTimeDifferences(filepath, timestampPosition, maxXLabel, binSi
     xlabels = bins[0:].astype(str)
     print('test:')
     print(xlabels)
-    xlabels[-1] += '+'
-    print('test')
-    print(type(xlabels))
+    
+    xlabels2 = xlabels[:-1]
+    print('test2:')
+    print(xlabels2)
+    xlabels2[-1] += '+'
 
-    myXTicks=np.array(myBins)+(binSize/2)
+    myXTicks=np.array(myBins)
     #myXTicks=np.array(myBins)
     print('myXTicks')
     print(myXTicks)
     print('xlabel')
-    print(xlabels)
+    print(xlabels2)
     print('myBins')
     print(myBins)
-    plt.xticks(myXTicks,xlabels)
+    plt.xticks(myXTicks,xlabels2)
     
 
     #N_labels = len(xlabels)
@@ -135,9 +138,9 @@ def plotHistogramOfTimeDifferences(filepath, timestampPosition, maxXLabel, binSi
 path='/Users/Joechi/Google Drive/gps2net/Data/test_data/just_one_taxi/new_abboip_copy_verysmall_closestIsBest_1stSolution.txt'
 path2='/Users/Joechi/Google Drive/gps2net/Data/test_data/just_one_taxi/new_abboip_copy_small.txt'
 path3='/Users/Joechi/Google Drive/gps2net/Data/test_data/just_one_taxi/new_abboip_copy_small_verysmall_3.txt'
+path4='/Users/Joechi/Google Drive/gps2net/Data/test_data/just_one_taxi/new_abboip_copy.txt'
 
-
-plotHistogramOfTimeDifferences(path3, 3,15,1)
+plotHistogramOfTimeDifferences(path4, 3,300,25)
 
 
 
