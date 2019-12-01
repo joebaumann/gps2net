@@ -167,21 +167,29 @@ def distFrom(lng1, lat1, lng2, lat2):
 # how to cut a line
 def cut(line, distance, point):
     # Cuts a line in two at a distance from its starting point
+
+    # check if point lies on line. If not, return uncut line.
     if distance <= 0.0 or distance >= line.length:
         return [LineString(line)]
     coords = list(line.coords)
+    
+    # loop through all all points (nodes) of the linestring
     for i, p in enumerate(coords):
+        # i is the index
+        # p is the point on the line
+        # pd is the distance of point p on the line
         pd = line.project(Point(p))
-        if pd == distance:
+        # pd==distance means that point where the line should be cut is already a point on the line at index i (= so this means that there is a linesegment in the line which has the point as a starting or end point)
+        if (pd == distance):
+            # return two lines (whithout cutting any line segment)
             return [
                 LineString(coords[:i+1]),
                 LineString(coords[i:])]
-        if pd > distance:
+        # pd>distance means that a line segment of the line has to be cut
+        # If the line is a circle (start of the line equals the end of the line) and the line has to be cut in the last line segment 'pd>distance' is not enough as pd=0.0 for the end point.
+        if (pd > distance or (i!=0 and pd==0.0 and coords[0] == coords[len(coords)-1])):
             cp = line.interpolate(distance)
-            # print("point.x: ", point.x)
-            # print("cp.x: ", cp.x)
-            # print("point.y: ", point.y)
-            # print("cp.y: ", cp.y)
+            #return the cut line
             return [
                 LineString(coords[:i] + [(point.x, point.y)]),
                 LineString([(point.x, point.y)] + coords[i:])]
@@ -333,7 +341,9 @@ def getShortestPathAStar(source, target, source_line, target_line, source_line_o
     # function to temporarily add an edge to the graph. Only adds the edge if it deosn't exist yet. Further, new edge is added to list so that it can be removed again in the end
     def temporarily_add_edge_to_graph(startNode, endNode, edgeWeight, edgeId, direction):
         if (not DG.has_edge(startNode, endNode)):
+            # print('edge has to be added')
             # print("adding ({},{})".format(startNode, endNode))
+            # print('')
 
             DG.add_edge(startNode, endNode, weight=edgeWeight,
                         id=edgeId, oneway=direction)
@@ -341,6 +351,7 @@ def getShortestPathAStar(source, target, source_line, target_line, source_line_o
         # else:
             # print("graph does have({},{})".format(startNode,endNode))
             # print("edge:",DG.get_edge_data(startNode, endNode))
+            # print('')
 
     astar_copyGraph_start = timer()
 
@@ -503,7 +514,7 @@ def getShortestPathAStar(source, target, source_line, target_line, source_line_o
 
         astar_addEdge_start = timer()
 
-        # if source and target lie on the same line segment, add a connection between the two
+        # if source and target line on the same line segment, add a connection between the two
         if((source_line == target_line) and (target not in target_line) and (edge_to_remove_T_source == edge_to_remove_S_source)and (edge_to_remove_T_target == edge_to_remove_S_target)):
 
             # check which point comes first on the line to then know which direction the line between the two should be
@@ -1335,7 +1346,7 @@ def calculateClosestPointAndShortestPath(filepath, filepath_shp, minNumberOfLine
             print(counter)
             if (counter > 50):
                 print("ende")
-                break
+                #break
 
             # Update Progress Bar
 
@@ -1620,11 +1631,11 @@ def main():
 
     #filepath = '/Users/Joechi/Google Drive/gps2net/Data/test_data/just_one_taxi/new_abboip_copy_check_wrong_outliers.txt'
 
-    filepath1 = '/Users/Joechi/Google Drive/gps2net/Data/test_data/just_one_taxi/new_abboip_copy.txt'
-    filepath2 = '/Users/Joechi/Google Drive/gps2net/Data/test_data/other_taxi/new_abgibo_copy.txt'
-    filepath3 = '/Users/Joechi/Google Drive/gps2net/Data/test_data/other_taxi/new_abmuyawm_copy.txt'
-    filepath4 = '/Users/Joechi/Google Drive/gps2net/Data/test_data/other_taxi/new_abniar_copy.txt'
-    filepath5 = '/Users/Joechi/Google Drive/gps2net/Data/test_data/other_taxi/new_abnovkak_copy.txt'
+    #filepath1 = '/Users/Joechi/Google Drive/gps2net/Data/test_data/just_one_taxi/new_abboip_copy.txt'
+    #filepath2 = '/Users/Joechi/Google Drive/gps2net/Data/test_data/other_taxi/new_abgibo_copy.txt'
+    #filepath3 = '/Users/Joechi/Google Drive/gps2net/Data/test_data/other_taxi/new_abmuyawm_copy.txt'
+    #filepath4 = '/Users/Joechi/Google Drive/gps2net/Data/test_data/other_taxi/new_abniar_copy.txt'
+    #filepath5 = '/Users/Joechi/Google Drive/gps2net/Data/test_data/other_taxi/new_abnovkak_copy.txt'
     filepath6 = '/Users/Joechi/Google Drive/gps2net/Data/test_data/other_taxi/new_abtyff_copy.txt'
     filepath7 = '/Users/Joechi/Google Drive/gps2net/Data/test_data/other_taxi/new_abwecnij_copy.txt'
 
