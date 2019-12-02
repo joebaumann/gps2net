@@ -1631,18 +1631,24 @@ def main():
     # loop through all the filepaths
     for path in filepaths:
 
-        dirName = 'output_files/'
         filepathIndex = path.rfind('/')
         filepathIndex2 = path.rfind('.')
         new_filename = path[filepathIndex+1:filepathIndex2]
-        dirName += new_filename
 
-        os.makedirs(dirName)
+        dirName = os.path.join("output_files", new_filename)
+
+        #dirName += new_filename
+
+        #os.makedirs(dirName)
+
+        # Create target directory & all intermediate directories if don't exists
+        try:
+            os.makedirs(dirName)    
+            print("Directory " , dirName ,  " created.")
+        except FileExistsError:
+            print("Directory " , dirName ,  " already exists.")
 
 
-
-        print('X')
-        print(path)
         #caculationForOneTXTFile(filepath_shp, path, '_returnStatistics_Parallel_ALL_1')
 
         # get all timestamp differences of a text file
