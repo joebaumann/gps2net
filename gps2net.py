@@ -1404,15 +1404,19 @@ def getTimeDifferences(filepath, timestampPosition):
     return timeDifferences
 
 
-def plotHistogram(input, maxXLabel, binSize):
+def plotAndSaveHistogram(input, maxXLabel, binSize, filename):
     # get the max value of the imputs
     maxInput = max(input)
 
     # create the bins (as a range from 0 to maxXLabel or maxInput depending on which one is smaller). +2 is needed to display also the max number.
     myBins = range(0, min(maxXLabel, maxInput)+2, binSize)
 
+    # initialize the figure
+    fig = plt.figure()
+    ax = fig.add_subplot(1, 1, 1)
+
     # plot the histogram. 'np.clip' makes sure that the time differences which are bigger then the max X value are visualized in the last bin.
-    n, bins, patches = plt.hist(x=np.clip(
+    n, bins, patches = ax.hist(x=np.clip(
         input, 0, myBins[-1]), bins=myBins, color='#0504aa', alpha=0.7, rwidth=0.85)
 
     plt.grid(axis='y', alpha=0.75)
@@ -1431,7 +1435,11 @@ def plotHistogram(input, maxXLabel, binSize):
     xlabels[-1] += '+'
 
     myXTicks = np.array(myBins)
+    # set the x ticks for the figure
     plt.xticks(myXTicks, xlabels)
+    #save the figure in the folder of the current taxi
+    plt.savefig(filename)
+    #plt.show()
 
 
 # %%
@@ -1458,27 +1466,6 @@ def main():
 
         myHeader, myCalculatedSolution, mySolutionStatistics = calculateClosestPointAndShortestPath(
             filepath, filepath_shp, minNumberOfLines=2, aStar=1)
-
-        print('')
-        print('')
-        print('')
-        print('')
-        print('')
-        print('')
-        print('')
-        #print('NEW returned calculated solution: ')
-        # print(myCalculatedSolution)
-        print('')
-        print('')
-        print('')
-        print('')
-        print('')
-        print('')
-
-        # print(myHeader)
-        # print("data:")
-        # print(myCalculatedSolution)
-        # print("data end.")
 
         # this saves a new text file which includes the calculated parameters
 
@@ -1536,7 +1523,7 @@ def main():
                 new_file.write(';')
                 new_file.write(str(location_result['comment']))
                 new_file.write('\n')
-                # new_file.writelines(myCalculatedSolution)
+
 
         # SAVE STATISTICS IN NEW FILE
 
@@ -1601,18 +1588,7 @@ def main():
         print('STATISTICS:')
         print(mySolutionStatistics)
 
-        path = '/Users/Joechi/Google Drive/gps2net/Data/test_data/just_one_taxi/new_abboip_copy_verysmall_closestIsBest_1stSolution.txt'
-        path2 = '/Users/Joechi/Google Drive/gps2net/Data/test_data/just_one_taxi/new_abboip_copy_small.txt'
-        path3 = '/Users/Joechi/Google Drive/gps2net/Data/test_data/just_one_taxi/new_abboip_copy_small_verysmall_3.txt'
-        path4 = '/Users/Joechi/Google Drive/gps2net/Data/test_data/just_one_taxi/new_abboip_copy.txt'
 
-        # get all timestamp differences of a text file
-
-        #timeDifferences = getTimeDifferences(filepath, 3)
-
-        # plot the timeDifferences in a histogram
-
-        #plotHistogram(timeDifferences, 300, 25)
 
     #filepath = '/Users/Joechi/Google Drive/HS19 – PathPy/2_Taxi data/Tests/Exports/AllPointsForOneTaxi/new_abboip_copy.txt'
 
@@ -1631,11 +1607,11 @@ def main():
 
     #filepath = '/Users/Joechi/Google Drive/gps2net/Data/test_data/just_one_taxi/new_abboip_copy_check_wrong_outliers.txt'
 
-    #filepath1 = '/Users/Joechi/Google Drive/gps2net/Data/test_data/just_one_taxi/new_abboip_copy.txt'
-    #filepath2 = '/Users/Joechi/Google Drive/gps2net/Data/test_data/other_taxi/new_abgibo_copy.txt'
-    #filepath3 = '/Users/Joechi/Google Drive/gps2net/Data/test_data/other_taxi/new_abmuyawm_copy.txt'
-    #filepath4 = '/Users/Joechi/Google Drive/gps2net/Data/test_data/other_taxi/new_abniar_copy.txt'
-    #filepath5 = '/Users/Joechi/Google Drive/gps2net/Data/test_data/other_taxi/new_abnovkak_copy.txt'
+    filepath1 = '/Users/Joechi/Google Drive/gps2net/Data/test_data/just_one_taxi/new_abboip_copy.txt'
+    filepath2 = '/Users/Joechi/Google Drive/gps2net/Data/test_data/other_taxi/new_abgibo_copy.txt'
+    filepath3 = '/Users/Joechi/Google Drive/gps2net/Data/test_data/other_taxi/new_abmuyawm_copy.txt'
+    filepath4 = '/Users/Joechi/Google Drive/gps2net/Data/test_data/other_taxi/new_abniar_copy.txt'
+    filepath5 = '/Users/Joechi/Google Drive/gps2net/Data/test_data/other_taxi/new_abnovkak_copy.txt'
     filepath6 = '/Users/Joechi/Google Drive/gps2net/Data/test_data/other_taxi/new_abtyff_copy.txt'
     filepath7 = '/Users/Joechi/Google Drive/gps2net/Data/test_data/other_taxi/new_abwecnij_copy.txt'
 
@@ -1644,19 +1620,39 @@ def main():
     filepath_shp = '/Users/Joechi/Google Drive/gps2net/Data/taxi_san_francisco/San Francisco Basemap Street Centerlines/geo_export_e5dd0539-2344-4e87-b198-d50274be8e1d.shp'
 
     filepaths = []
-    filepaths.append(filepath1)
-    filepaths.append(filepath2)
-    filepaths.append(filepath3)
-    filepaths.append(filepath4)
-    filepaths.append(filepath5)
+    #filepaths.append(filepath1)
+    #filepaths.append(filepath2)
+    #filepaths.append(filepath3)
+    #filepaths.append(filepath4)
+    #filepaths.append(filepath5)
     filepaths.append(filepath6)
     filepaths.append(filepath7)
 
+    # loop through all the filepaths
     for path in filepaths:
+
+        dirName = 'output_files/'
+        filepathIndex = path.rfind('/')
+        filepathIndex2 = path.rfind('.')
+        new_filename = path[filepathIndex+1:filepathIndex2]
+        dirName += new_filename
+
+        os.makedirs(dirName)
+
+
+
         print('X')
         print(path)
-        caculationForOneTXTFile(
-            filepath_shp, path, '_returnStatistics_Parallel_ALL_1')
+        #caculationForOneTXTFile(filepath_shp, path, '_returnStatistics_Parallel_ALL_1')
+
+        # get all timestamp differences of a text file
+        timeDifferences = getTimeDifferences(path, 3)
+
+        timedifferencesFileName= dirName + '/timedifferencesPLOT.png'
+
+        # plot the timeDifferences in a histogram
+        plotAndSaveHistogram(timeDifferences, 300, 25, timedifferencesFileName)
+
 
 
 # %%
