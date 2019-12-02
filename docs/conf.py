@@ -33,7 +33,7 @@ release = '1.1.2020'
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = ['numpydoc', 'sphinx.ext.autodoc', 'sphinx.ext.autosummary','sphinx.ext.doctest']
+extensions = ['sphinx.ext.autodoc', 'sphinx.ext.autosummary','sphinx.ext.doctest', 'numpydoc']
 
 # generate autosummary even if no references
 autosummary_generate = True

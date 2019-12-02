@@ -68,10 +68,11 @@ timeClosestPoint = 0
 
 # Print iterations progress
 def printProgressBar(iteration, total, prefix='', suffix='', decimals=1, length=100, fill='█', printEnd="\r"):
-    """Call in a loop to create terminal progress bar
+    """Call in a loop to create terminal progress bar.
 
     Parameters
-    ----------        iteration   - Required  : current iteration (Int)
+    ----------
+        iteration   - Required  : current iteration (Int)
         total       - Required  : total iterations (Int)
         prefix      - Optional  : prefix string (Str)
         suffix      - Optional  : suffix string (Str)
@@ -172,7 +173,7 @@ def cut(line, distance, point):
     if distance <= 0.0 or distance >= line.length:
         return [LineString(line)]
     coords = list(line.coords)
-    
+
     # loop through all all points (nodes) of the linestring
     for i, p in enumerate(coords):
         # i is the index
@@ -187,9 +188,8 @@ def cut(line, distance, point):
                 LineString(coords[i:])]
         # pd>distance means that a line segment of the line has to be cut
         # If the line is a circle (start of the line equals the end of the line) and the line has to be cut in the last line segment 'pd>distance' is not enough as pd=0.0 for the end point.
-        if (pd > distance or (i!=0 and pd==0.0 and coords[0] == coords[len(coords)-1])):
-            cp = line.interpolate(distance)
-            #return the cut line
+        if (pd > distance or (i != 0 and pd == 0.0 and coords[0] == coords[len(coords)-1])):
+            # return the cut line
             return [
                 LineString(coords[:i] + [(point.x, point.y)]),
                 LineString([(point.x, point.y)] + coords[i:])]
@@ -218,8 +218,8 @@ def createGraphFromSHPInput(filepath_shp):
 
     nr_elements_in_SHP_file = 0
     with fiona.open(filepath_shp) as input_lines:
-        for i in input_lines:
-            nr_elements_in_SHP_file += 1
+        nr_elements_in_SHP_file = sum(1 for line in input_lines)
+
     print("nr_elements_in_SHP_file: ", nr_elements_in_SHP_file)
 
     # Initial call to print 0% progress ProgressBar
@@ -914,6 +914,11 @@ def calculateClosestPointAndShortestPath(filepath, filepath_shp, minNumberOfLine
 
                 comment += 'source==target. Taxi did not move. '
 
+                location_result['path_length'] = 0
+                location_result['air_line_length'] = 0
+                location_result['path_length/air_line_length'] = 1
+                location_result['velocity_m_s'] = 0
+
                 # update statistics
                 statistics['taxi_did_not_move'] += 1
 
@@ -1040,8 +1045,8 @@ def calculateClosestPointAndShortestPath(filepath, filepath_shp, minNumberOfLine
     # lines_in_textfile=sum(1 for line in open(filepath))
     lines_in_textfile = 0
     with open(filepath, "r") as f:
-        for line in f:
-            lines_in_textfile += 1
+        lines_in_textfile = sum(1 for line in f)
+
     print(lines_in_textfile)
 
     # Initial call to print 0% progress ProgressBar
@@ -1344,9 +1349,9 @@ def calculateClosestPointAndShortestPath(filepath, filepath_shp, minNumberOfLine
             # stop algorithm after a few lines (for testing reasons)
             counter += 1
             print(counter)
-            if (counter > 50):
+            if (counter > 10):
                 print("ende")
-                #break
+                break
 
             # Update Progress Bar
 
@@ -1404,12 +1409,23 @@ def getTimeDifferences(filepath, timestampPosition):
     return timeDifferences
 
 
-def plotAndSaveHistogram(input, maxXLabel, binSize, filename):
+def plotAndSaveHistogram(input, minXLabel, maxXLabel, binSize, filename, title, xlabel):
     # get the max value of the imputs
     maxInput = max(input)
 
+    # check if inputs are floats (as in the case of velocities)
+    if isinstance(maxInput, float):
+        # round the float to the next higher number and then convert it to int
+        maxInput = int(math.ceil(maxInput))
+
+
     # create the bins (as a range from 0 to maxXLabel or maxInput depending on which one is smaller). +2 is needed to display also the max number.
-    myBins = range(0, min(maxXLabel, maxInput)+2, binSize)
+    if isinstance(binSize, float):
+        # create a range with floats
+        myBins = np.arange(minXLabel, min(maxXLabel, maxInput)+(min(2*binSize,2)), binSize)
+    else:
+        # create a range with ints
+        myBins = range(minXLabel, min(maxXLabel, maxInput)+(min(2*binSize,2)), binSize)
 
     # initialize the figure
     fig = plt.figure()
@@ -1420,26 +1436,62 @@ def plotAndSaveHistogram(input, maxXLabel, binSize, filename):
         input, 0, myBins[-1]), bins=myBins, color='#0504aa', alpha=0.7, rwidth=0.85)
 
     plt.grid(axis='y', alpha=0.75)
-    plt.xlabel('time difference in seconds')
+    plt.xlabel(xlabel)
     plt.ylabel('Frequency')
-    plt.title('Histogram of time differences between gps points')
+    plt.title(title)
     maxfreq = n.max()
     # Set a clean upper y-axis limit.
     plt.ylim(ymax=np.ceil(maxfreq / 10) * 10 if maxfreq % 10 else maxfreq + 10)
 
-    xlabels = bins[0:].astype(str)
+    
+    if isinstance(binSize, float):
+        xlabels = bins[0:].astype('|S3')
+    else:
+        xlabels = bins[0:].astype(str)
 
     # remove the last x label
     xlabels = xlabels[:-1]
     # add a '+' to the label of the last bin to visualize that this bin contains all timeDifferences  which are equal or bigger than the xTick.
-    xlabels[-1] += '+'
+    if not isinstance(binSize, float):
+        xlabels[-1] += '+'
 
     myXTicks = np.array(myBins)
     # set the x ticks for the figure
     plt.xticks(myXTicks, xlabels)
-    #save the figure in the folder of the current taxi
+
+    # save the figure in the folder of the current taxi
     plt.savefig(filename)
-    #plt.show()
+    # plt.show()
+
+# %%
+
+
+def getFilename(path):
+    """Returns the name of a file from a specific path (excluding directories and extension).
+
+    Parameters
+    ----------
+    path : [string]
+        The path of a specific data file.
+
+    Returns
+    -------
+    string
+        The name of the file. Namely, the last part of the path (excluding the extgension).
+
+
+    Examples
+    --------
+
+    >>> myPath = 'dir1/dir2/MyFilename.txt'
+    >>> filename = getFilename(myPath)
+    >>> filename
+    'MyFilename'
+
+    """
+    # get the name of the file from the path (without the directories and without extension)
+    filename = os.path.splitext(os.path.basename(os.path.normpath(path)))[0]
+    return filename
 
 
 # %%
@@ -1453,16 +1505,14 @@ def main():
     # blockPrint()
     startTotal = timer()
 
-    def caculationForOneTXTFile(filepath_shp, filepath, NEWFilename):
-        filepathIndex = filepath.rfind('/')
-        filepathIndex2 = filepath.rfind('.')
-        new_filename = filepath[filepathIndex+1:filepathIndex2]
-        new_filename += NEWFilename
+    def caculationForOneTXTFile(filepath_shp, dirName, filepath):
 
-        new_filename_statistics = new_filename
-        new_filename_statistics += 'STATISTICS.txt'
-
-        new_filename += '.txt'
+        new_filename_solution = os.path.join(
+            dirName, 'calculatedSolution') + '.txt'
+        new_filename_statistics = os.path.join(dirName, 'STATISTICS') + '.txt'
+        new_filename_velocities = os.path.join(dirName, "velocitiesPLOT.png")
+        new_filename_path_length_air_line_length = os.path.join(
+            dirName, "path_length_air_line_length_PLOT.png")
 
         myHeader, myCalculatedSolution, mySolutionStatistics = calculateClosestPointAndShortestPath(
             filepath, filepath_shp, minNumberOfLines=2, aStar=1)
@@ -1471,7 +1521,7 @@ def main():
 
         # with open("CreatedFiles3/ImprovedAlgorithm/"+new_filename, "w") as new_file:
         # with open("2_Taxi data/CreatedFiles3/ImprovedAlgorithm2/"+new_filename, "w") as new_file:
-        with open("output_files/"+new_filename, "w") as new_file:
+        with open(new_filename_solution, "w") as new_file:
             new_file.writelines(myHeader)
 
             for location_result in myCalculatedSolution:
@@ -1524,10 +1574,34 @@ def main():
                 new_file.write(str(location_result['comment']))
                 new_file.write('\n')
 
+        # initialise empty set
+        velocities = []
+        velocities_none_counter = 0
+        path_length_air_line_length = []
+
+        # get all velocities of the solution
+        for location_result in myCalculatedSolution:
+            if (location_result['velocity_m_s'] == ''):
+                velocities_none_counter += 1
+            else:
+                velocities.append(float(location_result['velocity_m_s']))
+
+            if (location_result['path_length/air_line_length'] != ''):
+                path_length_air_line_length.append(
+                    float(location_result['path_length/air_line_length']))
+
+        # plot the timeDifferences in a histogram
+        plotAndSaveHistogram(velocities, 0, 80, 5, new_filename_velocities,
+                             'Histogram of velocities between gps points', 'velocity in m/s')
+
+        # plot the the path_length/air_line_length in a histogram
+        plotAndSaveHistogram(path_length_air_line_length, 1.0, 2.5, 0.1, new_filename_path_length_air_line_length,
+                             'Histogram of path lengths divided by air line lengths', 'path length / air line length')
 
         # SAVE STATISTICS IN NEW FILE
 
-        with open("output_files/"+new_filename_statistics, "w") as new_file:
+        with open(new_filename_statistics, "w") as new_file:
+            # write statistics to the file
             new_file.write('path of shp file: ')
             new_file.write(str(filepath_shp))
             new_file.write('\n')
@@ -1535,15 +1609,31 @@ def main():
             new_file.write(str(filepath))
             new_file.write('\n')
             new_file.write('name of new file: ')
-            new_file.write(str(new_filename))
+            new_file.write(str(new_filename_solution))
+
+            # calculate the number of lines in the txt file
+            with open(filepath, "r") as f:
+                num_lines = sum(1 for line in f)
+            new_file.write('number of lines in txt file: ')
+            new_file.write(str(num_lines))
+
             new_file.write('\n')
             new_file.write('\n')
 
+            # write the statistics whcih were returned from the algorithm to the file
             for item in mySolutionStatistics.items():
                 new_file.write(str(item[0]))
                 new_file.write(': ')
                 new_file.write(str(item[1]))
                 new_file.write('\n')
+
+            new_file.write('\n')
+            new_file.write('VELOCITIES PLOT: ')
+            new_file.write('\n')
+            new_file.write('The Velocity plot contains velocities from {} data points. For the remaining {} data points the velocity could not be calculated (e.g. because it is an outlier).'.format(
+                num_lines-velocities_none_counter, velocities_none_counter))
+            new_file.write('\n')
+            new_file.write('\n')
 
         endTotal = timer()
 
@@ -1588,8 +1678,6 @@ def main():
         print('STATISTICS:')
         print(mySolutionStatistics)
 
-
-
     #filepath = '/Users/Joechi/Google Drive/HS19 – PathPy/2_Taxi data/Tests/Exports/AllPointsForOneTaxi/new_abboip_copy.txt'
 
     # filepath = '/Users/Joechi/Google Drive/HS19 – PathPy/2_Taxi data/Tests/Exports/AllPointsForOneTaxi/new_abboip_copy_small.txt'
@@ -1620,50 +1708,46 @@ def main():
     filepath_shp = '/Users/Joechi/Google Drive/gps2net/Data/taxi_san_francisco/San Francisco Basemap Street Centerlines/geo_export_e5dd0539-2344-4e87-b198-d50274be8e1d.shp'
 
     filepaths = []
-    #filepaths.append(filepath1)
-    #filepaths.append(filepath2)
-    #filepaths.append(filepath3)
-    #filepaths.append(filepath4)
-    #filepaths.append(filepath5)
+    # filepaths.append(filepath1)
+    # filepaths.append(filepath2)
+    # filepaths.append(filepath3)
+    # filepaths.append(filepath4)
+    # filepaths.append(filepath5)
     filepaths.append(filepath6)
     filepaths.append(filepath7)
 
     # loop through all the filepaths
     for path in filepaths:
 
-        filepathIndex = path.rfind('/')
-        filepathIndex2 = path.rfind('.')
-        new_filename = path[filepathIndex+1:filepathIndex2]
+        new_filename = getFilename(path)
 
-        dirName = os.path.join("output_files", new_filename)
+        dirName = os.path.join('output_files', new_filename)
 
         #dirName += new_filename
 
-        #os.makedirs(dirName)
+        # os.makedirs(dirName)
 
         # Create target directory & all intermediate directories if don't exists
         try:
-            os.makedirs(dirName)    
-            print("Directory " , dirName ,  " created.")
+            os.makedirs(dirName)
+            print("Directory ", dirName,  " created.")
         except FileExistsError:
-            print("Directory " , dirName ,  " already exists.")
+            print("Directory ", dirName,  " already exists.")
 
-
-        #caculationForOneTXTFile(filepath_shp, path, '_returnStatistics_Parallel_ALL_1')
+        caculationForOneTXTFile(filepath_shp, dirName, path)
 
         # get all timestamp differences of a text file
         timeDifferences = getTimeDifferences(path, 3)
 
-        timedifferencesFileName= dirName + '/timedifferencesPLOT.png'
+        timedifferencesFileName = os.path.join(
+            dirName, "timedifferencesPLOT.png")
 
         # plot the timeDifferences in a histogram
-        plotAndSaveHistogram(timeDifferences, 300, 25, timedifferencesFileName)
-
+        plotAndSaveHistogram(timeDifferences, 0, 300, 25, timedifferencesFileName,
+                             'Histogram of time differences between gps points', 'time difference in seconds')
 
 
 # %%
-
-
 if __name__ == "__main__":
     import doctest
     # test the examples with the following command: python gps2net.py -v

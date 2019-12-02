@@ -155,7 +155,7 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>lng1</strong><span class="classifier">float</span></dt><dd><p>This fff float is the longitude of the source.</p>
+<dt><strong>lng1x</strong><span class="classifier">int</span></dt><dd><p>This fff float is the longitude of the source.</p>
 </dd>
 <dt><strong>lat1</strong><span class="classifier">float</span></dt><dd><p>This float is the latitude of the source.</p>
 </dd>
@@ -196,13 +196,34 @@ However, this function was used to be able to run the code independently of QGIS
 </dd></dl>
 
 <dl class="function">
-<dt id="gps2net.printProgressBar">
-<code class="sig-prename descclassname">gps2net.</code><code class="sig-name descname">printProgressBar</code><span class="sig-paren">(</span><em class="sig-param">iteration</em>, <em class="sig-param">total</em>, <em class="sig-param">prefix=''</em>, <em class="sig-param">suffix=''</em>, <em class="sig-param">decimals=1</em>, <em class="sig-param">length=100</em>, <em class="sig-param">fill='█'</em>, <em class="sig-param">printEnd='r'</em><span class="sig-paren">)</span><a class="headerlink" href="#gps2net.printProgressBar" title="Permalink to this definition">¶</a></dt>
-<dd><p>Call in a loop to create terminal progress bar</p>
+<dt id="gps2net.getFilename">
+<code class="sig-prename descclassname">gps2net.</code><code class="sig-name descname">getFilename</code><span class="sig-paren">(</span><em class="sig-param">path</em><span class="sig-paren">)</span><a class="headerlink" href="#gps2net.getFilename" title="Permalink to this definition">¶</a></dt>
+<dd><p>[summary]</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>total       - Required</strong><span class="classifier">total iterations (Int)</span></dt><dd><p>prefix      - Optional  : prefix string (Str)
+<dt><strong>path</strong><span class="classifier">[string]</span></dt><dd><p>[the path of a specific data file]</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>[string]</dt><dd><p>[the name of the file. Namely, the last part of the path (excluding the extgension).]</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="gps2net.printProgressBar">
+<code class="sig-prename descclassname">gps2net.</code><code class="sig-name descname">printProgressBar</code><span class="sig-paren">(</span><em class="sig-param">iteration</em>, <em class="sig-param">total</em>, <em class="sig-param">prefix=''</em>, <em class="sig-param">suffix=''</em>, <em class="sig-param">decimals=1</em>, <em class="sig-param">length=100</em>, <em class="sig-param">fill='█'</em>, <em class="sig-param">printEnd='r'</em><span class="sig-paren">)</span><a class="headerlink" href="#gps2net.printProgressBar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Call in a loop to create terminal progress bar.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>iteration   - Required</strong><span class="classifier">current iteration (Int)</span></dt><dd><p>total       - Required  : total iterations (Int)
+prefix      - Optional  : prefix string (Str)
 suffix      - Optional  : suffix string (Str)
 decimals    - Optional  : positive number of decimals in percent complete (Int)
 length      - Optional  : character length of bar (Int)
