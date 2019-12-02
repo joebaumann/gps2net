@@ -1,0 +1,15 @@
+path of shp file: /Users/Joechi/Google Drive/gps2net/Data/taxi_san_francisco/San Francisco Basemap Street Centerlines/geo_export_e5dd0539-2344-4e87-b198-d50274be8e1d.shp
+path of old file: /Users/Joechi/Google Drive/gps2net/Data/test_data/other_taxi/new_abgibo_copy.txt
+name of new file: new_abgibo_copy_returnStatistics_Parallel_ALL_1.txt
+
+outlier: 3037
+taxi_did_not_move: 606
+no_path_found: 24
+cannot_compute_shortest_path_as_previous_point_is_0_0: 105
+path_from_target_to_source: 733
+checked_other_solution_index: 3487
+chose_other_solution_index: 1350
+solution_already_lies_on_shortest_path: 1341
+no_solution_lies_on_shortest_path: 687
+other_solution_is_worse: 98
+other_solution_no_path_found: 11

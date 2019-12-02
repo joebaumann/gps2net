@@ -1,0 +1,15 @@
+path of shp file: /Users/Joechi/Google Drive/gps2net/Data/taxi_san_francisco/San Francisco Basemap Street Centerlines/geo_export_e5dd0539-2344-4e87-b198-d50274be8e1d.shp
+path of old file: /Users/Joechi/Google Drive/gps2net/Data/test_data/other_taxi/new_abniar_copy.txt
+name of new file: new_abniar_copy_returnStatistics_Parallel_ALL_1.txt
+
+outlier: 2280
+taxi_did_not_move: 647
+no_path_found: 9
+cannot_compute_shortest_path_as_previous_point_is_0_0: 89
+path_from_target_to_source: 697
+checked_other_solution_index: 3023
+chose_other_solution_index: 1182
+solution_already_lies_on_shortest_path: 1062
+no_solution_lies_on_shortest_path: 706
+other_solution_is_worse: 63
+other_solution_no_path_found: 10
