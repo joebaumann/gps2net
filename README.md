@@ -1,7 +1,10 @@
 # gps2net
 ***Extraction of path data from GPS trajectories considering the underlying network topology.***
 
-Joachim Baumann  Data and Analytics Group  University of Zurich  Fall 2019
+Joachim Baumann  
+Data and Analytics Group  
+University of Zurich  
+Fall 2019
 
 ## Content
 ...
