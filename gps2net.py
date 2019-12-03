@@ -38,22 +38,6 @@ def enablePrint():
 # global variable: empty Directed Graph
 DG = nx.DiGraph()
 
-timeAStar = 0
-time_aStar_path = 0
-time_aStar_length = 0
-
-astar_copyGraph = 0
-astar_addTarget = 0
-astar_addSource = 0
-astar_numberOfEdges = 0
-astar_getEdgeData = 0
-astar_addEdge = 0
-
-no_path_AStar = 0
-
-aStar_write = 0
-timeClosestPoint = 0
-
 
 # %%
 
@@ -196,7 +180,6 @@ def createGraphFromSHPInput(filepath_shp):
 
     counter = 0
 
-    startGraph2 = timer()
     print("Graph already exists")
 
     nr_elements_in_SHP_file = 0
@@ -332,10 +315,9 @@ def getShortestPathAStar(source, target, source_line, target_line, source_line_o
         distance = distFrom(source[0], source[1], target[0], target[1])
         return distance
 
-    
     def temporarily_add_edge_to_graph(startNode, endNode, edgeWeight, edgeId, direction):
         """Temporarily adds an edge to the global graph.
-        
+
         Parameters
         ----------
         startNode : tuple (float, float)
@@ -348,7 +330,7 @@ def getShortestPathAStar(source, target, source_line, target_line, source_line_o
             [description]
         direction : 
             [description]
-        
+
         Notes
         -----
         This function temporarily adds an edge to the global graph. It only adds the edge if it deosn't exist in the graph yet. Further, the new edge is added to the list 'all_added_edges' so that it can be removed again in the end.
@@ -366,12 +348,9 @@ def getShortestPathAStar(source, target, source_line, target_line, source_line_o
             # print("edge:",DG.get_edge_data(startNode, endNode))
             # print('')
 
-
     # check if the global variable 'DG' is an empty directed graph. If yes, create a graph from the shp-file content.
     if(nx.is_empty(DG)):
         DG = (createGraphFromSHPInput(filepath_shp))
-
-
 
     # check if target lies exactly on the beginning/end of a line segment
     # if yes, target already exists as a node
@@ -387,8 +366,6 @@ def getShortestPathAStar(source, target, source_line, target_line, source_line_o
         len_line_segment = len(new_line_target_after_cut[0])
         edge_to_remove_T_source = new_line_target_after_cut[0][len_line_segment-2]
         edge_to_remove_T_target = new_line_target_after_cut[1][1]
-
-        astar_getEdgeData_start = timer()
 
         # get the edge (including the attributes) that should be removed from the graph
 
@@ -407,9 +384,6 @@ def getShortestPathAStar(source, target, source_line, target_line, source_line_o
                 edge_to_remove_T_target, edge_to_remove_T_source)
             print("T:", edge_to_remove_from_graph)
 
-        astar_getEdgeData_end = timer()
-        astar_getEdgeData += (astar_getEdgeData_end-astar_getEdgeData_start)
-
         edge_to_remove_from_graph_id = edge_to_remove_from_graph['id']
         edge_to_remove_from_graph_oneway = edge_to_remove_from_graph['oneway']
 
@@ -426,8 +400,6 @@ def getShortestPathAStar(source, target, source_line, target_line, source_line_o
         print("edge_to_remove_from_graph after removed: ",
               DG.get_edge_data(edge_to_remove_source,edge_to_remove_target))
         """
-
-        astar_addEdge_start = timer()
 
         # add the line segments for the target
         print("source_line_oneway:", source_line_oneway)
@@ -462,21 +434,8 @@ def getShortestPathAStar(source, target, source_line, target_line, source_line_o
             temporarily_add_edge_to_graph(edge_to_remove_T_target, target, distFrom(
                 edge_to_remove_T_target[0], edge_to_remove_T_target[1], target[0], target[1]), edge_to_remove_from_graph_id, edge_to_remove_from_graph_oneway)
 
-        astar_addEdge_end = timer()
-        astar_addEdge += (astar_addEdge_end-astar_addEdge_start)
-
-        astar_getEdgeData_start = timer()
-
-        astar_getEdgeData_end = timer()
-        astar_getEdgeData += (astar_getEdgeData_end-astar_getEdgeData_start)
-
     else:
         print("no need to add additional edges target")
-
-    astar_addTarget_end = timer()
-    astar_addTarget += (astar_addTarget_end-astar_addTarget_start)
-
-    astar_addSource_start = timer()
 
     # check if source lies exactly on the beginning/end of a line segment
     # if yes, source already exists as a node
@@ -493,8 +452,6 @@ def getShortestPathAStar(source, target, source_line, target_line, source_line_o
         edge_to_remove_S_source = new_line_source_after_cut[0][len_line_segment-2]
         edge_to_remove_S_target = new_line_source_after_cut[1][1]
 
-        astar_getEdgeData_start = timer()
-
         # get the edge (including the attributes) that should be removed from the graph
 
         if(source_line_oneway == 'B'):
@@ -509,13 +466,8 @@ def getShortestPathAStar(source, target, source_line, target_line, source_line_o
             edge_to_remove_from_graph = DG.get_edge_data(
                 edge_to_remove_S_target, edge_to_remove_S_source)
 
-        astar_getEdgeData_end = timer()
-        astar_getEdgeData += (astar_getEdgeData_end-astar_getEdgeData_start)
-
         edge_to_remove_from_graph_id = edge_to_remove_from_graph['id']
         edge_to_remove_from_graph_oneway = edge_to_remove_from_graph['oneway']
-
-        astar_addEdge_start = timer()
 
         # if source and target line on the same line segment, add a connection between the two
         if((source_line == target_line) and (target not in target_line) and (edge_to_remove_T_source == edge_to_remove_S_source)and (edge_to_remove_T_target == edge_to_remove_S_target)):
@@ -575,33 +527,11 @@ def getShortestPathAStar(source, target, source_line, target_line, source_line_o
             temporarily_add_edge_to_graph(source, edge_to_remove_S_source, distFrom(
                 edge_to_remove_S_source[0], edge_to_remove_S_source[1], source[0], source[1]), edge_to_remove_from_graph_id, edge_to_remove_from_graph_oneway)
 
-        astar_addEdge_end = timer()
-        astar_addEdge += (astar_addEdge_end-astar_addEdge_start)
-
-        astar_getEdgeData_start = timer()
-
-        astar_getEdgeData_end = timer()
-        astar_getEdgeData += (astar_getEdgeData_end-astar_getEdgeData_start)
-
-    astar_addSource_end = timer()
-    astar_addSource += (astar_addSource_end-astar_addSource_start)
-
-    astar_numberOfEdges_start = timer()
-
-    astar_numberOfEdges_end = timer()
-    astar_numberOfEdges += (astar_numberOfEdges_end-astar_numberOfEdges_start)
-
     try:
         # try to find a path
-        time_aStar_path_start = timer()
 
         path = nx.astar_path(DG, source, target,
                              heuristic=air_line_distance, weight='weight')
-
-        time_aStar_path_end = timer()
-        time_aStar_path += (time_aStar_path_end-time_aStar_path_start)
-
-        time_aStar_length_start = timer()
 
         path_length = nx.astar_path_length(
             DG, source, target, heuristic=air_line_distance, weight='weight')
@@ -629,24 +559,9 @@ def getShortestPathAStar(source, target, source_line, target_line, source_line_o
             prevNode = node
         print("path_IDs2:", path_IDs)
 
-        time_aStar_length_end = timer()
-        time_aStar_length += (time_aStar_length_end-time_aStar_length_start)
-
     except:
-        no_path_AStar += 1
-        """
-        print("neighbors: ", list(DG.neighbors(source)))
-        print("predecessors: ", list(DG.predecessors(source)))
-        print("successors: ", list(DG.successors(source)))
-        print("data: ", list(DG[source]))
-        print("")
-        print("---")
-        print("")
-        print("neighbors: ", list(DG.neighbors(target)))
-        print("predecessors: ", list(DG.predecessors(target)))
-        print("successors: ", list(DG.successors(target)))
-        print("data: ", list(DG[target]))
-        """
+        # no path was found
+        pass
 
     # remove all the edges which where added to the graph.
     print("GraphFromSHP nr of edges 1: ", DG.number_of_edges())
@@ -660,18 +575,12 @@ def getShortestPathAStar(source, target, source_line, target_line, source_line_o
 
 
 def calculateClosestPointAndShortestPath(filepath, filepath_shp, minNumberOfLines=2, aStar=1):
+    """
 
-    global timeClosestPoint
 
-    timeClosestPointStart = timer()
 
+    """
     # blockPrint()
-
-    """
-
-
-
-    """
 
     # header = ["latitude(y);longitude(x);hasPassenger;time;closest_intersection_x;closest_intersection_y;intersected_line_as_linestring;linestring_adjustment_visualization;path_time;path_as_linestring;path_length;air_line_length;path_length/air_line_length;velocity_m_s;A_path_as_linestring;A_path_length;A_air_line_length;A_path_length/air_line_length;A_velocity_m_s\n"]
     header = ['latitude(y);longitude(x);hasPassenger;time;closest_intersection_x;closest_intersection_y;relative_position;relative_position_normalized;intersected_line_oneway;intersected_line_as_linestring;linestring_adjustment_visualization;path_time']
@@ -718,11 +627,6 @@ def calculateClosestPointAndShortestPath(filepath, filepath_shp, minNumberOfLine
         print(previous_intersected_line)
         print(previous_timestamp)
         print(previous_intersected_line_oneway)
-
-        global timeAStar
-        global time_aStar_path
-        global time_aStar_length
-        global aStar_write
 
         location_result = {}
         # all the paths who were not changed from source-->target to target-->source have the following property
@@ -933,38 +837,15 @@ def calculateClosestPointAndShortestPath(filepath, filepath_shp, minNumberOfLine
 
                 if(aStar == 1):
 
-                    aStarStart = timer()
-
                     path = None
                     path2 = None
                     # calculate the shortest path with A STAR algorithm
                     path, path_length, pathIDs = getShortestPathAStar((closest_intersection_x, closest_intersection_y), previous_point, list(
                         intersected_line.coords), list(previous_intersected_line.coords), intersected_line_oneway, previous_intersected_line_oneway, filepath_shp)
 
-                    print("")
-                    print("path:", path)
-                    print("")
-
-                    aStarEnd = timer()
-                    timeAStar += (aStarEnd-aStarStart)
-
-                    aStar_write_Start = timer()
-
                     # calculate air line distance between source and target
                     air_line_length = distFrom(
                         closest_intersection_x, closest_intersection_y, previous_point[0], previous_point[1])
-
-                    """
-                    print("air_line_length s to t:", air_line_length)
-                    print("path_length:", path_length)
-
-                    print("if statement")
-                    print(air_line_length < 20)
-                    print(intersected_line_oneway != 'B')
-                    print(previous_intersected_line_oneway != 'B')
-                    print(list(intersected_line.coords) == list(
-                        previous_intersected_line.coords))
-                    """
 
                     # if this is true, it is possible that a taxi has to ride all around the block because it is a oneway street and source and target lie on the same line
                     if(air_line_length < 20 and intersected_line_oneway != 'B' and previous_intersected_line_oneway != 'B' and (list(intersected_line.coords) == list(previous_intersected_line.coords))):
@@ -1035,9 +916,6 @@ def calculateClosestPointAndShortestPath(filepath, filepath_shp, minNumberOfLine
 
                         # update statistics
                         statistics['no_path_found'] += 1
-
-                    aStar_write_End = timer()
-                    aStar_write += (aStar_write_End-aStar_write_Start)
 
         location_result['path_from_target_to_source'] = path_from_target_to_source
         location_result['comment'] = comment
@@ -1379,10 +1257,6 @@ def calculateClosestPointAndShortestPath(filepath, filepath_shp, minNumberOfLine
         lines_for_new_text_file.append(previous_location_result)
         """
 
-    timeClosestPointEnd = timer()
-
-    timeClosestPoint += (timeClosestPointEnd-timeClosestPointStart)
-
     return header, lines_for_new_text_file, statistics
 
 
@@ -1506,7 +1380,6 @@ def getFilename(path):
 def main():
 
     # blockPrint()
-    startTotal = timer()
 
     def caculationForOneTXTFile(filepath_shp, dirName, filepath):
 
@@ -1638,44 +1511,7 @@ def main():
             new_file.write('\n')
             new_file.write('\n')
 
-        endTotal = timer()
-
         # enablePrint()
-
-        print("no_path_AStar :", no_path_AStar)
-        print("---")
-        print("timeTotal :", endTotal-startTotal)
-        print("timeCreatingGraph :", timeCreatingGraph)
-        print("timeCreatingGraph2 :", timeCreatingGraph2)
-        print("timeAStar :", timeAStar)
-        print("time_aStar_path :", time_aStar_path)
-        print("time_aStar_length :", time_aStar_length)
-
-        print("")
-        print("XXXXXXXX")
-        print("")
-
-        print("astar_copyGraph: ", astar_copyGraph)
-        print("astar_addTarget: ", astar_addTarget)
-        print("astar_addSource: ", astar_addSource)
-        print("astar_numberOfEdges: ", astar_numberOfEdges)
-        print("astar_getEdgeData: ", astar_getEdgeData)
-        print("astar_addEdge: ", astar_addEdge)
-
-        print("")
-
-        print("-------")
-        print("")
-
-        print("aStar_write :", aStar_write)
-        print("timeClosestPoint Total :", timeClosestPoint)
-        print("timeClosestPoint without graphs :",
-              timeClosestPoint-timeAStar)
-        print("")
-        print("-------")
-        print("")
-
-        print("GraphFromSHP nr of edges END: ", DG.number_of_edges())
 
         print('')
         print('STATISTICS:')
