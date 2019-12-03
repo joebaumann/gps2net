@@ -10,26 +10,23 @@ import fiona
 import networkx as nx
 import math
 
-
 import matplotlib.pyplot as plt
 import numpy as np
-
 
 import time
 from timeit import default_timer as timer
 import doctest
 
-
 import sys
 import os
 
-# Disable
+# Disable 'print()'
 
 
 def blockPrint():
     sys.stdout = open(os.devnull, 'w')
 
-# Restore
+# Restore 'print()'
 
 
 def enablePrint():
@@ -39,14 +36,8 @@ def enablePrint():
 # %%
 
 # global variable: empty Directed Graph
-
-# TODO: uncomment lines (just done for testing reasons so that graph is not recreated every time)
 DG = nx.DiGraph()
-# print("GraphFromSHP nr of edges START: ", DG.number_of_edges())
 
-# constants used to measure used time of specific code fragements
-timeCreatingGraph = 0
-timeCreatingGraph2 = 0
 timeAStar = 0
 time_aStar_path = 0
 time_aStar_length = 0
@@ -111,7 +102,7 @@ def distFrom(lng1, lat1, lng2, lat2):
     Parameters
     ----------
     lng1 : float
-        This fff float is the longitude of the source.
+        This float is the longitude of the source.
     lat1 : float
         This float is the latitude of the source.
     lng2 : float
@@ -203,18 +194,10 @@ def createGraphFromSHPInput(filepath_shp):
 
     # blockPrint()
 
-    global timeCreatingGraph
-    global timeCreatingGraph2
-
     counter = 0
 
     startGraph2 = timer()
     print("Graph already exists")
-
-    endGraph2 = timer()
-    timeCreatingGraph2 += (endGraph2-startGraph2)
-
-    startGraph = timer()
 
     nr_elements_in_SHP_file = 0
     with fiona.open(filepath_shp) as input_lines:
@@ -292,16 +275,11 @@ def createGraphFromSHPInput(filepath_shp):
 
     # blockPrint()
 
-    endGraph = timer()
-    timeCreatingGraph += (endGraph-startGraph)
-
     # print("GraphFromSHP: ", (GraphFromSHP.edges(data=True)))
 
     # enablePrint()
 
     # print("graph nr of edges: ", GraphFromSHP.number_of_edges())
-
-    # print("timeCreatingGraph: ", timeCreatingGraph)
 
     # blockPrint()
 
@@ -312,34 +290,69 @@ def createGraphFromSHPInput(filepath_shp):
 
 def getShortestPathAStar(source, target, source_line, target_line, source_line_oneway, target_line_oneway, filepath_shp, ignore_oneway=False):
 
+    # make sure global variable is used. 'DG' is a Directed Graph
     global DG
 
     # blockPrint()
-
-    global no_path_AStar
-    global time_aStar_path
-    global time_aStar_length
-
-    global astar_copyGraph
-    global astar_addTarget
-    global astar_addSource
-    global astar_numberOfEdges
-    global astar_getEdgeData
-    global astar_addEdge
 
     path = None
     path_length = None
     path_IDs = []
     all_added_edges = []
 
-    # heuristic function for A star: returns the air line distance from source to the target
-
     def air_line_distance(source, target):
+        """Heuristic function for A star algorithm: returns the air line distance from the source to the target.
+
+        Parameters
+        ----------
+        source : tuple (float, float)
+            This is the source point. It is a tuple of the form (lng1, lat1) where lng1 is the longitude of the source and lat1 is the latitude of the source.
+        target : tuple (float, float)
+            This is the source point. It is a tuple of the form (lng2, lat2) where lng2 is the longitude of the target and lat2 is the latitude of the target.
+
+        Notes
+        -----
+        This function is used as the heuristic function for the A Star algorithm.
+        It calculates the air line distance between two gps points.
+        The result is not 100% correct as the function does not consider the elipsis-like shape of the earth. Instead it just uses an earth radius of 6371000 meters for the calculation.
+
+        Examples
+        --------
+
+        >>> myAirLineDist = distFrom((-122.115, 37.115), (-122.111, 37.111))
+        >>> myAirLineDist
+        568.8872918546489
+
+
+        Returns
+        -------
+        int
+            The air line distance between two points (source and target) in meters.
+        """
         distance = distFrom(source[0], source[1], target[0], target[1])
         return distance
 
-    # function to temporarily add an edge to the graph. Only adds the edge if it deosn't exist yet. Further, new edge is added to list so that it can be removed again in the end
+    
     def temporarily_add_edge_to_graph(startNode, endNode, edgeWeight, edgeId, direction):
+        """Temporarily adds an edge to the global graph.
+        
+        Parameters
+        ----------
+        startNode : tuple (float, float)
+            [description]
+        endNode : tuple (float, float)
+            [description]
+        edgeWeight : int
+            The edgeweight is the distance between the startNode and the endNode in meters.
+        edgeId : [type]
+            [description]
+        direction : 
+            [description]
+        
+        Notes
+        -----
+        This function temporarily adds an edge to the global graph. It only adds the edge if it deosn't exist in the graph yet. Further, the new edge is added to the list 'all_added_edges' so that it can be removed again in the end.
+        """
         if (not DG.has_edge(startNode, endNode)):
             # print('edge has to be added')
             # print("adding ({},{})".format(startNode, endNode))
@@ -353,22 +366,12 @@ def getShortestPathAStar(source, target, source_line, target_line, source_line_o
             # print("edge:",DG.get_edge_data(startNode, endNode))
             # print('')
 
-    astar_copyGraph_start = timer()
 
-    # nrOfEdges=DG.number_of_edges()
-
-    # if(nrOfEdges==0):
+    # check if the global variable 'DG' is an empty directed graph. If yes, create a graph from the shp-file content.
     if(nx.is_empty(DG)):
-
         DG = (createGraphFromSHPInput(filepath_shp))
 
-    # DG=(createGraphFromSHPInput(filepath_shp)).copy()
-    # print(DG.number_of_edges())
 
-    astar_copyGraph_end = timer()
-    astar_copyGraph += (astar_copyGraph_end-astar_copyGraph_start)
-
-    astar_addTarget_start = timer()
 
     # check if target lies exactly on the beginning/end of a line segment
     # if yes, target already exists as a node
@@ -1418,14 +1421,15 @@ def plotAndSaveHistogram(input, minXLabel, maxXLabel, binSize, filename, title, 
         # round the float to the next higher number and then convert it to int
         maxInput = int(math.ceil(maxInput))
 
-
     # create the bins (as a range from 0 to maxXLabel or maxInput depending on which one is smaller). +2 is needed to display also the max number.
     if isinstance(binSize, float):
         # create a range with floats
-        myBins = np.arange(minXLabel, min(maxXLabel, maxInput)+(min(2*binSize,2)), binSize)
+        myBins = np.arange(minXLabel, min(
+            maxXLabel, maxInput)+(min(2*binSize, 2)), binSize)
     else:
         # create a range with ints
-        myBins = range(minXLabel, min(maxXLabel, maxInput)+(min(2*binSize,2)), binSize)
+        myBins = range(minXLabel, min(maxXLabel, maxInput) +
+                       (min(2*binSize, 2)), binSize)
 
     # initialize the figure
     fig = plt.figure()
@@ -1443,7 +1447,6 @@ def plotAndSaveHistogram(input, minXLabel, maxXLabel, binSize, filename, title, 
     # Set a clean upper y-axis limit.
     plt.ylim(ymax=np.ceil(maxfreq / 10) * 10 if maxfreq % 10 else maxfreq + 10)
 
-    
     if isinstance(binSize, float):
         xlabels = bins[0:].astype('|S3')
     else:
