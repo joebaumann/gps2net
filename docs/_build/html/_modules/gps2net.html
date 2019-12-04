@@ -1,154 +1,44 @@
 
-
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
-<head>
-  <meta charset="utf-8">
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <title>gps2net &mdash; gps2net 1.1.2020 documentation</title>
-  
 
-  
-  
-  
-  
-
-  
-  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
-  
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>gps2net &#8212; gps2net 1.1.2020 documentation</title>
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
     
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-
-    
-
-  
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
-</head>
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">gps2net 1.1.2020 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>  
 
-<body class="wy-body-for-nav">
-
-   
-  <div class="wy-grid-for-nav">
-    
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
-          
-
-          
-            <a href="../index.html" class="icon icon-home"> gps2net
-          
-
-          
-          </a>
-
-          
-            
-            
-          
-
-          
-<div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
-    <input type="hidden" name="check_keywords" value="yes" />
-    <input type="hidden" name="area" value="default" />
-  </form>
-</div>
-
-          
-        </div>
-
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
-              <!-- Local TOC -->
-              <div class="local-toc"></div>
-            
-          
-        </div>
-      </div>
-    </nav>
-
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">gps2net</a>
-        
-      </nav>
-
-
-      <div class="wy-nav-content">
-        
-        <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
-  <ul class="wy-breadcrumbs">
-    
-      <li><a href="../index.html">Docs</a> &raquo;</li>
-        
-          <li><a href="index.html">Module code</a> &raquo;</li>
-        
-      <li>gps2net</li>
-    
-    
-      <li class="wy-breadcrumbs-aside">
-        
-      </li>
-    
-  </ul>
-
-  
-  <hr/>
-</div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
             
   <h1>Source code for gps2net</h1><div class="highlight"><pre>
-<span></span><span class="c1"># %%</span>
-<span class="c1"># imports</span>
-
-<span class="kn">from</span> <span class="nn">shapely.geometry</span> <span class="k">import</span> <span class="n">LineString</span>
-<span class="c1">#from matplotlib import pyplot</span>
-<span class="kn">from</span> <span class="nn">shapely.geometry</span> <span class="k">import</span> <span class="n">Point</span><span class="p">,</span> <span class="n">LineString</span><span class="p">,</span> <span class="n">MultiLineString</span><span class="p">,</span> <span class="n">mapping</span><span class="p">,</span> <span class="n">shape</span>
-<span class="kn">from</span> <span class="nn">shapely.ops</span> <span class="k">import</span> <span class="n">cascaded_union</span>
-<span class="kn">from</span> <span class="nn">shapely</span> <span class="k">import</span> <span class="n">affinity</span>
+<span></span><span class="kn">from</span> <span class="nn">shapely.geometry</span> <span class="k">import</span> <span class="n">LineString</span>
+<span class="kn">from</span> <span class="nn">shapely.geometry</span> <span class="k">import</span> <span class="n">Point</span><span class="p">,</span> <span class="n">LineString</span>
 <span class="kn">import</span> <span class="nn">fiona</span>
 <span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
 <span class="kn">import</span> <span class="nn">math</span>
@@ -156,66 +46,55 @@
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-<span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">from</span> <span class="nn">timeit</span> <span class="k">import</span> <span class="n">default_timer</span> <span class="k">as</span> <span class="n">timer</span>
 <span class="kn">import</span> <span class="nn">doctest</span>
 
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">os</span>
 
-<span class="c1"># Disable &#39;print()&#39;</span>
-
-
-<span class="k">def</span> <span class="nf">blockPrint</span><span class="p">():</span>
-    <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">devnull</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
-
-<span class="c1"># Restore &#39;print()&#39;</span>
-
-
-<span class="k">def</span> <span class="nf">enablePrint</span><span class="p">():</span>
-    <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">__stdout__</span>
-
-
-<span class="c1"># %%</span>
 
 <span class="c1"># global variable: empty Directed Graph</span>
 <span class="n">DG</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">()</span>
 
-<span class="n">timeAStar</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="n">time_aStar_path</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="n">time_aStar_length</span> <span class="o">=</span> <span class="mi">0</span>
 
-<span class="n">astar_copyGraph</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="n">astar_addTarget</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="n">astar_addSource</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="n">astar_numberOfEdges</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="n">astar_getEdgeData</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="n">astar_addEdge</span> <span class="o">=</span> <span class="mi">0</span>
-
-<span class="n">no_path_AStar</span> <span class="o">=</span> <span class="mi">0</span>
-
-<span class="n">aStar_write</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="n">timeClosestPoint</span> <span class="o">=</span> <span class="mi">0</span>
+<div class="viewcode-block" id="blockPrint"><a class="viewcode-back" href="../index.html#gps2net.blockPrint">[docs]</a><span class="k">def</span> <span class="nf">blockPrint</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;This method is used to disable print() messages.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">devnull</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span></div>
 
 
-<span class="c1"># %%</span>
+<div class="viewcode-block" id="enablePrint"><a class="viewcode-back" href="../index.html#gps2net.enablePrint">[docs]</a><span class="k">def</span> <span class="nf">enablePrint</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;This method restores print() messages. </span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">__stdout__</span></div>
+
 
 <span class="c1"># Print iterations progress</span>
-<div class="viewcode-block" id="printProgressBar"><a class="viewcode-back" href="../index.html#gps2net.printProgressBar">[docs]</a><span class="k">def</span> <span class="nf">printProgressBar</span><span class="p">(</span><span class="n">iteration</span><span class="p">,</span> <span class="n">total</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">decimals</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="s1">&#39;█&#39;</span><span class="p">,</span> <span class="n">printEnd</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\r</span><span class="s2">&quot;</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Call in a loop to create terminal progress bar.</span>
+<div class="viewcode-block" id="printProgressBar"><a class="viewcode-back" href="../index.html#gps2net.printProgressBar">[docs]</a><span class="k">def</span> <span class="nf">printProgressBar</span><span class="p">(</span><span class="n">iteration</span><span class="p">,</span> <span class="n">total</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">decimals</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="s1">&#39;█&#39;</span><span class="p">,</span> <span class="n">printEnd</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\r</span><span class="s1">&#39;</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&#39;&#39;&#39;Call in a loop to create terminal progress bar.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">        iteration   - Required  : current iteration (Int)</span>
-<span class="sd">        total       - Required  : total iterations (Int)</span>
-<span class="sd">        prefix      - Optional  : prefix string (Str)</span>
-<span class="sd">        suffix      - Optional  : suffix string (Str)</span>
-<span class="sd">        decimals    - Optional  : positive number of decimals in percent complete (Int)</span>
-<span class="sd">        length      - Optional  : character length of bar (Int)</span>
-<span class="sd">        fill        - Optional  : bar fill character (Str)</span>
-<span class="sd">        printEnd    - Optional  : end character (e.g. &quot;\r&quot;, &quot;\r\n&quot;) (Str)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">percent</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;{0:.&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">decimals</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;f}&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="mi">100</span> <span class="o">*</span>
+<span class="sd">    iteration : int</span>
+<span class="sd">        current iteration</span>
+<span class="sd">    total : Int</span>
+<span class="sd">        total iterations</span>
+<span class="sd">    prefix : str, optional</span>
+<span class="sd">        prefix string, by default &#39;&#39;</span>
+<span class="sd">    suffix : str, optional</span>
+<span class="sd">        suffix string, by default &#39;&#39;</span>
+<span class="sd">    decimals : int, optional</span>
+<span class="sd">        positive number of decimals in percent complete, by default 1</span>
+<span class="sd">    length : int, optional</span>
+<span class="sd">        character length of bar, by default 100</span>
+<span class="sd">    fill : str, optional</span>
+<span class="sd">        bar fill character, by default &#39;█&#39;</span>
+<span class="sd">    printEnd : str, optional</span>
+<span class="sd">        end character (e.g. &#39;\\r&#39;, &#39;\\r\\n&#39;), by default &#39;\\r&#39;</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="n">percent</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;{0:.&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">decimals</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;f}&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="mi">100</span> <span class="o">*</span>
                                                      <span class="p">(</span><span class="n">iteration</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">total</span><span class="p">)))</span>
     <span class="n">filledLength</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">length</span> <span class="o">*</span> <span class="n">iteration</span> <span class="o">//</span> <span class="n">total</span><span class="p">)</span>
     <span class="n">bar</span> <span class="o">=</span> <span class="n">fill</span> <span class="o">*</span> <span class="n">filledLength</span> <span class="o">+</span> <span class="s1">&#39;-&#39;</span> <span class="o">*</span> <span class="p">(</span><span class="n">length</span> <span class="o">-</span> <span class="n">filledLength</span><span class="p">)</span>
@@ -230,17 +109,8 @@
     <span class="c1"># blockPrint()</span>
 
 
-<span class="c1"># print(&quot;done&quot;)</span>
-
-<span class="c1"># %%</span>
-
-<span class="c1"># returns distance in meters</span>
-
-<span class="c1"># APPROXIMATION</span>
-<span class="c1"># QGIS could calculate accurate distance</span>
-
 <div class="viewcode-block" id="distFrom"><a class="viewcode-back" href="../index.html#gps2net.distFrom">[docs]</a><span class="k">def</span> <span class="nf">distFrom</span><span class="p">(</span><span class="n">lng1</span><span class="p">,</span> <span class="n">lat1</span><span class="p">,</span> <span class="n">lng2</span><span class="p">,</span> <span class="n">lat2</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Returns the distance between two points in meters.</span>
+    <span class="sd">&#39;&#39;&#39;Returns the distance between two points in meters.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -277,14 +147,12 @@
 <span class="sd">    5</span>
 
 
-<span class="sd">    &gt;&gt;&gt; print(myDistance) // prints 568.8872918 ...</span>
-
 <span class="sd">    Returns</span>
 <span class="sd">    --------</span>
 <span class="sd">    dist : int</span>
 <span class="sd">        The distance between two points in meters.</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    &#39;&#39;&#39;</span>
 
     <span class="n">earthRadius</span> <span class="o">=</span> <span class="mi">6371000</span>  <span class="c1"># meters</span>
     <span class="n">dLat</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">lat2</span><span class="o">-</span><span class="n">lat1</span><span class="p">)</span>
@@ -298,10 +166,29 @@
     <span class="k">return</span> <span class="n">dist</span></div>
 
 
-<span class="c1"># %%</span>
-<span class="c1"># how to cut a line</span>
-<span class="k">def</span> <span class="nf">cut</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">distance</span><span class="p">,</span> <span class="n">point</span><span class="p">):</span>
-    <span class="c1"># Cuts a line in two at a distance from its starting point</span>
+<div class="viewcode-block" id="cut"><a class="viewcode-back" href="../index.html#gps2net.cut">[docs]</a><span class="k">def</span> <span class="nf">cut</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">distance</span><span class="p">,</span> <span class="n">point</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Cuts a line in two at a distance from its starting point.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    line : Shapely &#39;LineString&#39; object</span>
+<span class="sd">        [description]</span>
+<span class="sd">    distance : float</span>
+<span class="sd">        [description]</span>
+<span class="sd">    point : Shapely Point object</span>
+<span class="sd">        [description]</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    ...</span>
+<span class="sd">    &#39;line.interpolate(distance)&#39; should be equal to the parameter &#39;point&#39;. However, due to precision errors &#39;point&#39; is used.</span>
+<span class="sd">    ...</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    list with LineStrings</span>
+<span class="sd">        Two LineStrings are returned. &#39;point&#39; is the end point of the first LineString and the start point of the second LineString.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
 
     <span class="c1"># check if point lies on line. If not, return uncut line.</span>
     <span class="k">if</span> <span class="n">distance</span> <span class="o">&lt;=</span> <span class="mf">0.0</span> <span class="ow">or</span> <span class="n">distance</span> <span class="o">&gt;=</span> <span class="n">line</span><span class="o">.</span><span class="n">length</span><span class="p">:</span>
@@ -326,12 +213,33 @@
             <span class="c1"># return the cut line</span>
             <span class="k">return</span> <span class="p">[</span>
                 <span class="n">LineString</span><span class="p">(</span><span class="n">coords</span><span class="p">[:</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="p">[(</span><span class="n">point</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">point</span><span class="o">.</span><span class="n">y</span><span class="p">)]),</span>
-                <span class="n">LineString</span><span class="p">([(</span><span class="n">point</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">point</span><span class="o">.</span><span class="n">y</span><span class="p">)]</span> <span class="o">+</span> <span class="n">coords</span><span class="p">[</span><span class="n">i</span><span class="p">:])]</span>
-
-<span class="c1"># %%</span>
+                <span class="n">LineString</span><span class="p">([(</span><span class="n">point</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">point</span><span class="o">.</span><span class="n">y</span><span class="p">)]</span> <span class="o">+</span> <span class="n">coords</span><span class="p">[</span><span class="n">i</span><span class="p">:])]</span></div>
 
 
-<span class="k">def</span> <span class="nf">createGraphFromSHPInput</span><span class="p">(</span><span class="n">filepath_shp</span><span class="p">):</span>
+<div class="viewcode-block" id="createGraphFromSHPInput"><a class="viewcode-back" href="../index.html#gps2net.createGraphFromSHPInput">[docs]</a><span class="k">def</span> <span class="nf">createGraphFromSHPInput</span><span class="p">(</span><span class="n">filepath_shp</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Creates a directed graph from a shp file.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    filepath_shp : str</span>
+<span class="sd">        The path where the shp file (which contains the street data) is stored.</span>
+
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    This graph is only initialized once in the beginning of the script. The DiGraph contains all linesegment of the shp file as directed edges. The start and end node of each edge are tuples containing the coordinates of the position. The weight of an edge is the air_line_distance from the start to the end of the linesegment. Each edge containes the following attributes:</span>
+<span class="sd">    </span>
+<span class="sd">    - id : int</span>
+<span class="sd">        The id of the street (LineString) which the linesegment belongs to according to the shapefile.</span>
+<span class="sd">    - oneway : {&#39;B&#39;, &#39;F&#39;, &#39;T&#39;}</span>
+<span class="sd">        The &#39;oneway&#39;-property of the street (LineString) which the linesegment belongs to according to the shapefile. The &#39;oneway&#39;-property indicates if a street is bi-directional (B), or one way heading from the from-node to the to-node (F), or one way heading from the to-node to the from-node (T).</span>
+
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Directed Graph</span>
+<span class="sd">        The Directed Graph which contains all linesegments of the shapefiles as edges is returned.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
 
     <span class="n">GraphFromSHP</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">()</span>
 
@@ -339,14 +247,13 @@
 
     <span class="n">counter</span> <span class="o">=</span> <span class="mi">0</span>
 
-    <span class="n">startGraph2</span> <span class="o">=</span> <span class="n">timer</span><span class="p">()</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Graph already exists&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Graph already exists&#39;</span><span class="p">)</span>
 
     <span class="n">nr_elements_in_SHP_file</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="k">with</span> <span class="n">fiona</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">filepath_shp</span><span class="p">)</span> <span class="k">as</span> <span class="n">input_lines</span><span class="p">:</span>
         <span class="n">nr_elements_in_SHP_file</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="mi">1</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">input_lines</span><span class="p">)</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;nr_elements_in_SHP_file: &quot;</span><span class="p">,</span> <span class="n">nr_elements_in_SHP_file</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;nr_elements_in_SHP_file: &#39;</span><span class="p">,</span> <span class="n">nr_elements_in_SHP_file</span><span class="p">)</span>
 
     <span class="c1"># Initial call to print 0% progress ProgressBar</span>
     <span class="n">suffix</span> <span class="o">=</span> <span class="s1">&#39;| SHP file items: </span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
@@ -354,8 +261,8 @@
     <span class="n">printProgressBar</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">nr_elements_in_SHP_file</span><span class="p">,</span>
                      <span class="n">prefix</span><span class="o">=</span><span class="s1">&#39;Creating Graph:&#39;</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="n">suffix</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
 
-    <span class="c1"># print(&quot;graph nr of edges: &quot;, GraphFromSHP.number_of_edges())</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;starting to build graph: &quot;</span><span class="p">)</span>
+    <span class="c1"># print(&#39;graph nr of edges: &#39;, GraphFromSHP.number_of_edges())</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;starting to build graph: &#39;</span><span class="p">)</span>
 
     <span class="k">with</span> <span class="n">fiona</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">filepath_shp</span><span class="p">)</span> <span class="k">as</span> <span class="n">input_lines</span><span class="p">:</span>
 
@@ -366,14 +273,14 @@
             <span class="nb">id</span> <span class="o">=</span> <span class="n">line</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span>
             <span class="n">oneway</span> <span class="o">=</span> <span class="n">line</span><span class="p">[</span><span class="s1">&#39;properties&#39;</span><span class="p">][</span><span class="s1">&#39;oneway&#39;</span><span class="p">]</span>
 
-            <span class="c1"># print(&quot;id: &quot;, id)</span>
-            <span class="c1"># print(&quot;oneway: &quot;, oneway)</span>
+            <span class="c1"># print(&#39;id: &#39;, id)</span>
+            <span class="c1"># print(&#39;oneway: &#39;, oneway)</span>
 
             <span class="k">for</span> <span class="n">coord</span> <span class="ow">in</span> <span class="n">line</span><span class="p">[</span><span class="s1">&#39;geometry&#39;</span><span class="p">][</span><span class="s1">&#39;coordinates&#39;</span><span class="p">]:</span>
 
                 <span class="k">if</span> <span class="p">(</span><span class="n">previous_coord</span> <span class="o">!=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)):</span>
-                    <span class="c1"># print(&quot;previous_coord: &quot;, previous_coord)</span>
-                    <span class="c1"># print(&quot;coord: &quot;, coord)</span>
+                    <span class="c1"># print(&#39;previous_coord: &#39;, previous_coord)</span>
+                    <span class="c1"># print(&#39;coord: &#39;, coord)</span>
 
                     <span class="n">calculated_length</span> <span class="o">=</span> <span class="n">distFrom</span><span class="p">(</span>
                         <span class="n">coord</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">coord</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">previous_coord</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">previous_coord</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
@@ -394,7 +301,7 @@
                             <span class="n">coord</span><span class="p">,</span> <span class="n">previous_coord</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="n">calculated_length</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">,</span> <span class="n">oneway</span><span class="o">=</span><span class="n">oneway</span><span class="p">)</span>
 
                 <span class="c1"># else:</span>
-                    <span class="c1"># print(&quot;revious_coord    ==    (0,0)   --------------&quot;)</span>
+                    <span class="c1"># print(&#39;revious_coord    ==    (0,0)   --------------&#39;)</span>
 
                 <span class="c1"># print(counter_inner)</span>
                 <span class="n">counter_inner</span> <span class="o">+=</span> <span class="mi">1</span>
@@ -414,19 +321,19 @@
 
     <span class="c1"># enablePrint()</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;graph nr of edges AFTER CREATION: &quot;</span><span class="p">,</span> <span class="n">GraphFromSHP</span><span class="o">.</span><span class="n">number_of_edges</span><span class="p">())</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;graph nr of edges AFTER CREATION: &#39;</span><span class="p">,</span> <span class="n">GraphFromSHP</span><span class="o">.</span><span class="n">number_of_edges</span><span class="p">())</span>
 
     <span class="c1"># blockPrint()</span>
 
-    <span class="c1"># print(&quot;GraphFromSHP: &quot;, (GraphFromSHP.edges(data=True)))</span>
+    <span class="c1"># print(&#39;GraphFromSHP: &#39;, (GraphFromSHP.edges(data=True)))</span>
 
     <span class="c1"># enablePrint()</span>
 
-    <span class="c1"># print(&quot;graph nr of edges: &quot;, GraphFromSHP.number_of_edges())</span>
+    <span class="c1"># print(&#39;graph nr of edges: &#39;, GraphFromSHP.number_of_edges())</span>
 
     <span class="c1"># blockPrint()</span>
 
-    <span class="k">return</span> <span class="n">GraphFromSHP</span>
+    <span class="k">return</span> <span class="n">GraphFromSHP</span></div>
 
 
 <span class="c1"># %%</span>
@@ -444,7 +351,7 @@
     <span class="n">all_added_edges</span> <span class="o">=</span> <span class="p">[]</span>
 
     <span class="k">def</span> <span class="nf">air_line_distance</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">target</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Heuristic function for A star algorithm: returns the air line distance from the source to the target.</span>
+        <span class="sd">&#39;&#39;&#39;Heuristic function for A star algorithm: returns the air line distance from the source to the target.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -471,14 +378,13 @@
 <span class="sd">        -------</span>
 <span class="sd">        int</span>
 <span class="sd">            The air line distance between two points (source and target) in meters.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">distance</span> <span class="o">=</span> <span class="n">distFrom</span><span class="p">(</span><span class="n">source</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">source</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">target</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">target</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
         <span class="k">return</span> <span class="n">distance</span>
 
-    
     <span class="k">def</span> <span class="nf">temporarily_add_edge_to_graph</span><span class="p">(</span><span class="n">startNode</span><span class="p">,</span> <span class="n">endNode</span><span class="p">,</span> <span class="n">edgeWeight</span><span class="p">,</span> <span class="n">edgeId</span><span class="p">,</span> <span class="n">direction</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Temporarily adds an edge to the global graph.</span>
-<span class="sd">        </span>
+        <span class="sd">&#39;&#39;&#39;Temporarily adds an edge to the global graph.</span>
+
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        startNode : tuple (float, float)</span>
@@ -487,34 +393,32 @@
 <span class="sd">            [description]</span>
 <span class="sd">        edgeWeight : int</span>
 <span class="sd">            The edgeweight is the distance between the startNode and the endNode in meters.</span>
-<span class="sd">        edgeId : [type]</span>
-<span class="sd">            [description]</span>
-<span class="sd">        direction : </span>
-<span class="sd">            [description]</span>
-<span class="sd">        </span>
+<span class="sd">        edgeId : int</span>
+<span class="sd">            The id of the street (LineString) which the linesegment belongs to according to the shapefile.</span>
+<span class="sd">        direction : {&#39;B&#39;, &#39;F&#39;, &#39;T&#39;}</span>
+<span class="sd">            The &#39;oneway&#39;-property of the street (LineString) which the linesegment belongs to according to the shapefile.</span>
+<span class="sd">            The &#39;oneway&#39;-property indicates if a street is bi-directional (B), or one way heading from the from-node to the to-node (F), or one way heading from the to-node to the from-node (T).</span>
+
 <span class="sd">        Notes</span>
 <span class="sd">        -----</span>
 <span class="sd">        This function temporarily adds an edge to the global graph. It only adds the edge if it deosn&#39;t exist in the graph yet. Further, the new edge is added to the list &#39;all_added_edges&#39; so that it can be removed again in the end.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">DG</span><span class="o">.</span><span class="n">has_edge</span><span class="p">(</span><span class="n">startNode</span><span class="p">,</span> <span class="n">endNode</span><span class="p">)):</span>
             <span class="c1"># print(&#39;edge has to be added&#39;)</span>
-            <span class="c1"># print(&quot;adding ({},{})&quot;.format(startNode, endNode))</span>
+            <span class="c1"># print(&#39;adding ({},{})&#39;.format(startNode, endNode))</span>
             <span class="c1"># print(&#39;&#39;)</span>
 
             <span class="n">DG</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">startNode</span><span class="p">,</span> <span class="n">endNode</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="n">edgeWeight</span><span class="p">,</span>
                         <span class="nb">id</span><span class="o">=</span><span class="n">edgeId</span><span class="p">,</span> <span class="n">oneway</span><span class="o">=</span><span class="n">direction</span><span class="p">)</span>
             <span class="n">all_added_edges</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">startNode</span><span class="p">,</span> <span class="n">endNode</span><span class="p">))</span>
         <span class="c1"># else:</span>
-            <span class="c1"># print(&quot;graph does have({},{})&quot;.format(startNode,endNode))</span>
-            <span class="c1"># print(&quot;edge:&quot;,DG.get_edge_data(startNode, endNode))</span>
+            <span class="c1"># print(&#39;graph does have({},{})&#39;.format(startNode,endNode))</span>
+            <span class="c1"># print(&#39;edge:&#39;,DG.get_edge_data(startNode, endNode))</span>
             <span class="c1"># print(&#39;&#39;)</span>
-
 
     <span class="c1"># check if the global variable &#39;DG&#39; is an empty directed graph. If yes, create a graph from the shp-file content.</span>
     <span class="k">if</span><span class="p">(</span><span class="n">nx</span><span class="o">.</span><span class="n">is_empty</span><span class="p">(</span><span class="n">DG</span><span class="p">)):</span>
         <span class="n">DG</span> <span class="o">=</span> <span class="p">(</span><span class="n">createGraphFromSHPInput</span><span class="p">(</span><span class="n">filepath_shp</span><span class="p">))</span>
-
-
 
     <span class="c1"># check if target lies exactly on the beginning/end of a line segment</span>
     <span class="c1"># if yes, target already exists as a node</span>
@@ -524,58 +428,34 @@
         <span class="n">d_target</span> <span class="o">=</span> <span class="n">LineString</span><span class="p">(</span><span class="n">target_line</span><span class="p">)</span><span class="o">.</span><span class="n">project</span><span class="p">(</span><span class="n">Point</span><span class="p">(</span><span class="n">target</span><span class="p">))</span>
 
         <span class="n">cut_line_target</span> <span class="o">=</span> <span class="n">cut</span><span class="p">(</span><span class="n">LineString</span><span class="p">(</span><span class="n">target_line</span><span class="p">),</span> <span class="n">d_target</span><span class="p">,</span> <span class="n">Point</span><span class="p">(</span><span class="n">target</span><span class="p">))</span>
-        <span class="c1"># print(&quot;cut_line_target: &quot;, cut_line_target)</span>
+        <span class="c1"># print(&#39;cut_line_target: &#39;, cut_line_target)</span>
         <span class="n">new_line_target_after_cut</span> <span class="o">=</span> <span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">coords</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">cut_line_target</span><span class="p">]</span>
 
         <span class="n">len_line_segment</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">new_line_target_after_cut</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
         <span class="n">edge_to_remove_T_source</span> <span class="o">=</span> <span class="n">new_line_target_after_cut</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">len_line_segment</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
         <span class="n">edge_to_remove_T_target</span> <span class="o">=</span> <span class="n">new_line_target_after_cut</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
 
-        <span class="n">astar_getEdgeData_start</span> <span class="o">=</span> <span class="n">timer</span><span class="p">()</span>
-
         <span class="c1"># get the edge (including the attributes) that should be removed from the graph</span>
 
         <span class="k">if</span><span class="p">(</span><span class="n">target_line_oneway</span> <span class="o">==</span> <span class="s1">&#39;B&#39;</span><span class="p">):</span>
             <span class="n">edge_to_remove_from_graph</span> <span class="o">=</span> <span class="n">DG</span><span class="o">.</span><span class="n">get_edge_data</span><span class="p">(</span>
                 <span class="n">edge_to_remove_T_source</span><span class="p">,</span> <span class="n">edge_to_remove_T_target</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;B:&quot;</span><span class="p">,</span> <span class="n">edge_to_remove_from_graph</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;B:&#39;</span><span class="p">,</span> <span class="n">edge_to_remove_from_graph</span><span class="p">)</span>
 
         <span class="k">elif</span><span class="p">(</span><span class="n">target_line_oneway</span> <span class="o">==</span> <span class="s1">&#39;F&#39;</span><span class="p">):</span>
             <span class="n">edge_to_remove_from_graph</span> <span class="o">=</span> <span class="n">DG</span><span class="o">.</span><span class="n">get_edge_data</span><span class="p">(</span>
                 <span class="n">edge_to_remove_T_source</span><span class="p">,</span> <span class="n">edge_to_remove_T_target</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;F:&quot;</span><span class="p">,</span> <span class="n">edge_to_remove_from_graph</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;F:&#39;</span><span class="p">,</span> <span class="n">edge_to_remove_from_graph</span><span class="p">)</span>
 
         <span class="k">elif</span><span class="p">(</span><span class="n">target_line_oneway</span> <span class="o">==</span> <span class="s1">&#39;T&#39;</span><span class="p">):</span>
             <span class="n">edge_to_remove_from_graph</span> <span class="o">=</span> <span class="n">DG</span><span class="o">.</span><span class="n">get_edge_data</span><span class="p">(</span>
                 <span class="n">edge_to_remove_T_target</span><span class="p">,</span> <span class="n">edge_to_remove_T_source</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;T:&quot;</span><span class="p">,</span> <span class="n">edge_to_remove_from_graph</span><span class="p">)</span>
-
-        <span class="n">astar_getEdgeData_end</span> <span class="o">=</span> <span class="n">timer</span><span class="p">()</span>
-        <span class="n">astar_getEdgeData</span> <span class="o">+=</span> <span class="p">(</span><span class="n">astar_getEdgeData_end</span><span class="o">-</span><span class="n">astar_getEdgeData_start</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;T:&#39;</span><span class="p">,</span> <span class="n">edge_to_remove_from_graph</span><span class="p">)</span>
 
         <span class="n">edge_to_remove_from_graph_id</span> <span class="o">=</span> <span class="n">edge_to_remove_from_graph</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span>
         <span class="n">edge_to_remove_from_graph_oneway</span> <span class="o">=</span> <span class="n">edge_to_remove_from_graph</span><span class="p">[</span><span class="s1">&#39;oneway&#39;</span><span class="p">]</span>
 
-        <span class="sd">&quot;&quot;&quot;</span>
-
-<span class="sd">        # i think that it is not necessary to remove an edge</span>
-
-<span class="sd">        # remove the edge from the graph</span>
-<span class="sd">        if(remove_reverse==1):</span>
-<span class="sd">            DG.remove_edge(edge_to_remove_source, edge_to_remove_target)</span>
-<span class="sd">        else:</span>
-<span class="sd">            DG.remove_edge(edge_to_remove_target, edge_to_remove_source)</span>
-
-<span class="sd">        print(&quot;edge_to_remove_from_graph after removed: &quot;,</span>
-<span class="sd">              DG.get_edge_data(edge_to_remove_source,edge_to_remove_target))</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="n">astar_addEdge_start</span> <span class="o">=</span> <span class="n">timer</span><span class="p">()</span>
-
         <span class="c1"># add the line segments for the target</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;source_line_oneway:&quot;</span><span class="p">,</span> <span class="n">source_line_oneway</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;source_line_oneway:&quot;</span><span class="p">,</span> <span class="n">source_line_oneway</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;check if ignore oneway is true:&quot;</span><span class="p">,</span> <span class="n">ignore_oneway</span><span class="p">)</span>
 
         <span class="k">if</span><span class="p">(</span><span class="n">edge_to_remove_from_graph_oneway</span> <span class="o">==</span> <span class="s1">&#39;B&#39;</span> <span class="ow">or</span> <span class="n">ignore_oneway</span> <span class="o">==</span> <span class="kc">True</span><span class="p">):</span>
 
@@ -605,21 +485,8 @@
             <span class="n">temporarily_add_edge_to_graph</span><span class="p">(</span><span class="n">edge_to_remove_T_target</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">distFrom</span><span class="p">(</span>
                 <span class="n">edge_to_remove_T_target</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">edge_to_remove_T_target</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">target</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">target</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">edge_to_remove_from_graph_id</span><span class="p">,</span> <span class="n">edge_to_remove_from_graph_oneway</span><span class="p">)</span>
 
-        <span class="n">astar_addEdge_end</span> <span class="o">=</span> <span class="n">timer</span><span class="p">()</span>
-        <span class="n">astar_addEdge</span> <span class="o">+=</span> <span class="p">(</span><span class="n">astar_addEdge_end</span><span class="o">-</span><span class="n">astar_addEdge_start</span><span class="p">)</span>
-
-        <span class="n">astar_getEdgeData_start</span> <span class="o">=</span> <span class="n">timer</span><span class="p">()</span>
-
-        <span class="n">astar_getEdgeData_end</span> <span class="o">=</span> <span class="n">timer</span><span class="p">()</span>
-        <span class="n">astar_getEdgeData</span> <span class="o">+=</span> <span class="p">(</span><span class="n">astar_getEdgeData_end</span><span class="o">-</span><span class="n">astar_getEdgeData_start</span><span class="p">)</span>
-
     <span class="k">else</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;no need to add additional edges target&quot;</span><span class="p">)</span>
-
-    <span class="n">astar_addTarget_end</span> <span class="o">=</span> <span class="n">timer</span><span class="p">()</span>
-    <span class="n">astar_addTarget</span> <span class="o">+=</span> <span class="p">(</span><span class="n">astar_addTarget_end</span><span class="o">-</span><span class="n">astar_addTarget_start</span><span class="p">)</span>
-
-    <span class="n">astar_addSource_start</span> <span class="o">=</span> <span class="n">timer</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;no need to add additional edges target&#39;</span><span class="p">)</span>
 
     <span class="c1"># check if source lies exactly on the beginning/end of a line segment</span>
     <span class="c1"># if yes, source already exists as a node</span>
@@ -636,8 +503,6 @@
         <span class="n">edge_to_remove_S_source</span> <span class="o">=</span> <span class="n">new_line_source_after_cut</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">len_line_segment</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
         <span class="n">edge_to_remove_S_target</span> <span class="o">=</span> <span class="n">new_line_source_after_cut</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
 
-        <span class="n">astar_getEdgeData_start</span> <span class="o">=</span> <span class="n">timer</span><span class="p">()</span>
-
         <span class="c1"># get the edge (including the attributes) that should be removed from the graph</span>
 
         <span class="k">if</span><span class="p">(</span><span class="n">source_line_oneway</span> <span class="o">==</span> <span class="s1">&#39;B&#39;</span><span class="p">):</span>
@@ -652,13 +517,8 @@
             <span class="n">edge_to_remove_from_graph</span> <span class="o">=</span> <span class="n">DG</span><span class="o">.</span><span class="n">get_edge_data</span><span class="p">(</span>
                 <span class="n">edge_to_remove_S_target</span><span class="p">,</span> <span class="n">edge_to_remove_S_source</span><span class="p">)</span>
 
-        <span class="n">astar_getEdgeData_end</span> <span class="o">=</span> <span class="n">timer</span><span class="p">()</span>
-        <span class="n">astar_getEdgeData</span> <span class="o">+=</span> <span class="p">(</span><span class="n">astar_getEdgeData_end</span><span class="o">-</span><span class="n">astar_getEdgeData_start</span><span class="p">)</span>
-
         <span class="n">edge_to_remove_from_graph_id</span> <span class="o">=</span> <span class="n">edge_to_remove_from_graph</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span>
         <span class="n">edge_to_remove_from_graph_oneway</span> <span class="o">=</span> <span class="n">edge_to_remove_from_graph</span><span class="p">[</span><span class="s1">&#39;oneway&#39;</span><span class="p">]</span>
-
-        <span class="n">astar_addEdge_start</span> <span class="o">=</span> <span class="n">timer</span><span class="p">()</span>
 
         <span class="c1"># if source and target line on the same line segment, add a connection between the two</span>
         <span class="k">if</span><span class="p">((</span><span class="n">source_line</span> <span class="o">==</span> <span class="n">target_line</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">target</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">target_line</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">edge_to_remove_T_source</span> <span class="o">==</span> <span class="n">edge_to_remove_S_source</span><span class="p">)</span><span class="ow">and</span> <span class="p">(</span><span class="n">edge_to_remove_T_target</span> <span class="o">==</span> <span class="n">edge_to_remove_S_target</span><span class="p">)):</span>
@@ -718,83 +578,35 @@
             <span class="n">temporarily_add_edge_to_graph</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">edge_to_remove_S_source</span><span class="p">,</span> <span class="n">distFrom</span><span class="p">(</span>
                 <span class="n">edge_to_remove_S_source</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">edge_to_remove_S_source</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">source</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">source</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">edge_to_remove_from_graph_id</span><span class="p">,</span> <span class="n">edge_to_remove_from_graph_oneway</span><span class="p">)</span>
 
-        <span class="n">astar_addEdge_end</span> <span class="o">=</span> <span class="n">timer</span><span class="p">()</span>
-        <span class="n">astar_addEdge</span> <span class="o">+=</span> <span class="p">(</span><span class="n">astar_addEdge_end</span><span class="o">-</span><span class="n">astar_addEdge_start</span><span class="p">)</span>
-
-        <span class="n">astar_getEdgeData_start</span> <span class="o">=</span> <span class="n">timer</span><span class="p">()</span>
-
-        <span class="n">astar_getEdgeData_end</span> <span class="o">=</span> <span class="n">timer</span><span class="p">()</span>
-        <span class="n">astar_getEdgeData</span> <span class="o">+=</span> <span class="p">(</span><span class="n">astar_getEdgeData_end</span><span class="o">-</span><span class="n">astar_getEdgeData_start</span><span class="p">)</span>
-
-    <span class="n">astar_addSource_end</span> <span class="o">=</span> <span class="n">timer</span><span class="p">()</span>
-    <span class="n">astar_addSource</span> <span class="o">+=</span> <span class="p">(</span><span class="n">astar_addSource_end</span><span class="o">-</span><span class="n">astar_addSource_start</span><span class="p">)</span>
-
-    <span class="n">astar_numberOfEdges_start</span> <span class="o">=</span> <span class="n">timer</span><span class="p">()</span>
-
-    <span class="n">astar_numberOfEdges_end</span> <span class="o">=</span> <span class="n">timer</span><span class="p">()</span>
-    <span class="n">astar_numberOfEdges</span> <span class="o">+=</span> <span class="p">(</span><span class="n">astar_numberOfEdges_end</span><span class="o">-</span><span class="n">astar_numberOfEdges_start</span><span class="p">)</span>
-
     <span class="k">try</span><span class="p">:</span>
-        <span class="c1"># try to find a path</span>
-        <span class="n">time_aStar_path_start</span> <span class="o">=</span> <span class="n">timer</span><span class="p">()</span>
 
+        <span class="c1"># try to find a path</span>
         <span class="n">path</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">astar_path</span><span class="p">(</span><span class="n">DG</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span>
                              <span class="n">heuristic</span><span class="o">=</span><span class="n">air_line_distance</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="s1">&#39;weight&#39;</span><span class="p">)</span>
-
-        <span class="n">time_aStar_path_end</span> <span class="o">=</span> <span class="n">timer</span><span class="p">()</span>
-        <span class="n">time_aStar_path</span> <span class="o">+=</span> <span class="p">(</span><span class="n">time_aStar_path_end</span><span class="o">-</span><span class="n">time_aStar_path_start</span><span class="p">)</span>
-
-        <span class="n">time_aStar_length_start</span> <span class="o">=</span> <span class="n">timer</span><span class="p">()</span>
 
         <span class="n">path_length</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">astar_path_length</span><span class="p">(</span>
             <span class="n">DG</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">heuristic</span><span class="o">=</span><span class="n">air_line_distance</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="s1">&#39;weight&#39;</span><span class="p">)</span>
 
         <span class="c1"># get the IDs of the traversed lines</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;get the IDs of the traversed lines&#39;</span><span class="p">)</span>
         <span class="n">prevNode</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">path</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;prevNode:&#39;</span><span class="p">,</span> <span class="n">prevNode</span><span class="p">)</span>
             <span class="k">if</span> <span class="p">(</span><span class="n">prevNode</span> <span class="o">!=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)):</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;node&#39;</span><span class="p">,</span> <span class="n">node</span><span class="p">)</span>
 
                 <span class="k">if</span><span class="p">(</span><span class="n">DG</span><span class="o">.</span><span class="n">get_edge_data</span><span class="p">(</span><span class="n">prevNode</span><span class="p">,</span> <span class="n">node</span><span class="p">)</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">):</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="n">DG</span><span class="o">.</span><span class="n">get_edge_data</span><span class="p">(</span><span class="n">prevNode</span><span class="p">,</span> <span class="n">node</span><span class="p">)[</span><span class="s1">&#39;id&#39;</span><span class="p">])</span>
-                    <span class="k">if</span><span class="p">(</span><span class="n">DG</span><span class="o">.</span><span class="n">get_edge_data</span><span class="p">(</span><span class="n">prevNode</span><span class="p">,</span> <span class="n">node</span><span class="p">)[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="n">path_IDs</span><span class="p">):</span>
-                        <span class="c1">#sys.exit(&#39;id already exists&#39;)</span>
-                        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;id already exists&#39;</span><span class="p">)</span>
-                        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;path_IDs1:&quot;</span><span class="p">,</span> <span class="n">path_IDs</span><span class="p">)</span>
-                    <span class="k">else</span><span class="p">:</span>
-                        <span class="n">path_IDs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">DG</span><span class="o">.</span><span class="n">get_edge_data</span><span class="p">(</span><span class="n">prevNode</span><span class="p">,</span> <span class="n">node</span><span class="p">)[</span><span class="s1">&#39;id&#39;</span><span class="p">])</span>
+                    <span class="c1"># get id of edge</span>
+                    <span class="n">path_IDs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">DG</span><span class="o">.</span><span class="n">get_edge_data</span><span class="p">(</span><span class="n">prevNode</span><span class="p">,</span> <span class="n">node</span><span class="p">)[</span><span class="s1">&#39;id&#39;</span><span class="p">])</span>
                 <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># edge was not found</span>
                     <span class="n">path_IDs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;edge not found! -- prevNode:&#39;</span><span class="p">,</span> <span class="n">prevNode</span><span class="p">)</span>
                     <span class="n">path_IDs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;edge not found! -- node:&#39;</span><span class="p">,</span> <span class="n">node</span><span class="p">)</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
             <span class="n">prevNode</span> <span class="o">=</span> <span class="n">node</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;path_IDs2:&quot;</span><span class="p">,</span> <span class="n">path_IDs</span><span class="p">)</span>
-
-        <span class="n">time_aStar_length_end</span> <span class="o">=</span> <span class="n">timer</span><span class="p">()</span>
-        <span class="n">time_aStar_length</span> <span class="o">+=</span> <span class="p">(</span><span class="n">time_aStar_length_end</span><span class="o">-</span><span class="n">time_aStar_length_start</span><span class="p">)</span>
 
     <span class="k">except</span><span class="p">:</span>
-        <span class="n">no_path_AStar</span> <span class="o">+=</span> <span class="mi">1</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        print(&quot;neighbors: &quot;, list(DG.neighbors(source)))</span>
-<span class="sd">        print(&quot;predecessors: &quot;, list(DG.predecessors(source)))</span>
-<span class="sd">        print(&quot;successors: &quot;, list(DG.successors(source)))</span>
-<span class="sd">        print(&quot;data: &quot;, list(DG[source]))</span>
-<span class="sd">        print(&quot;&quot;)</span>
-<span class="sd">        print(&quot;---&quot;)</span>
-<span class="sd">        print(&quot;&quot;)</span>
-<span class="sd">        print(&quot;neighbors: &quot;, list(DG.neighbors(target)))</span>
-<span class="sd">        print(&quot;predecessors: &quot;, list(DG.predecessors(target)))</span>
-<span class="sd">        print(&quot;successors: &quot;, list(DG.successors(target)))</span>
-<span class="sd">        print(&quot;data: &quot;, list(DG[target]))</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># no path was found</span>
+        <span class="k">pass</span>
 
     <span class="c1"># remove all the edges which where added to the graph.</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;GraphFromSHP nr of edges 1: &quot;</span><span class="p">,</span> <span class="n">DG</span><span class="o">.</span><span class="n">number_of_edges</span><span class="p">())</span>
     <span class="n">DG</span><span class="o">.</span><span class="n">remove_edges_from</span><span class="p">(</span><span class="n">all_added_edges</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;GraphFromSHP nr of edges 1: &quot;</span><span class="p">,</span> <span class="n">DG</span><span class="o">.</span><span class="n">number_of_edges</span><span class="p">())</span>
 
     <span class="k">return</span> <span class="n">path</span><span class="p">,</span> <span class="n">path_length</span><span class="p">,</span> <span class="n">path_IDs</span>
 
@@ -802,32 +614,68 @@
 <span class="c1"># %%</span>
 
 
-<span class="k">def</span> <span class="nf">calculateClosestPointAndShortestPath</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="n">filepath_shp</span><span class="p">,</span> <span class="n">minNumberOfLines</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">aStar</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<div class="viewcode-block" id="calculateClosestPointAndShortestPath"><a class="viewcode-back" href="../index.html#gps2net.calculateClosestPointAndShortestPath">[docs]</a><span class="k">def</span> <span class="nf">calculateClosestPointAndShortestPath</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="n">filepath_shp</span><span class="p">,</span> <span class="n">minNumberOfLines</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">aStar</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;[summary]</span>
 
-    <span class="k">global</span> <span class="n">timeClosestPoint</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    filepath : str</span>
+<span class="sd">        The path where the txt file (which contains the gps trajectories) is stored.</span>
+<span class="sd">    filepath_shp : str</span>
+<span class="sd">        The path where the shp file (which contains the street data) is stored.</span>
+<span class="sd">    minNumberOfLines : int, optional</span>
+<span class="sd">        [description], by default 2</span>
+<span class="sd">    aStar : int, optional</span>
+<span class="sd">        [description], by default 1</span>
 
-    <span class="n">timeClosestPointStart</span> <span class="o">=</span> <span class="n">timer</span><span class="p">()</span>
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+
+
+<span class="sd">    - outlier : Number of data points which where flagged as outliers.</span>
+<span class="sd">    - taxi_did_not_move : x</span>
+<span class="sd">    - no_path_found : </span>
+<span class="sd">    - cannot_compute_shortest_path_as_previous_point_is_0_0 : </span>
+<span class="sd">    - path_from_target_to_source : </span>
+<span class="sd">    - checked_other_solution_index : </span>
+<span class="sd">    - chose_other_solution_index : </span>
+<span class="sd">    - solution_already_lies_on_shortest_path : </span>
+<span class="sd">    - no_solution_lies_on_shortest_path : </span>
+<span class="sd">    - other_solution_is_worse : </span>
+<span class="sd">    - other_solution_no_path_found : </span>
+
+
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    calculatedSolution : list</span>
+
+
+<span class="sd">    statistics : list</span>
+<span class="sd">        Statistics for the txt file (containing gps trajectories) for which the solution is calculated.</span>
+<span class="sd">        The statistics contain the following numbers (all of type int):</span>
+
+<span class="sd">        - outlier : Number of data points which where flagged as outliers.</span>
+<span class="sd">        - taxi_did_not_move : Number of times when a data point&#39;s gps position was identical to the gps position of the previous data point.</span>
+<span class="sd">        - no_path_found : Number of times no path was found with the A Star algorithm. </span>
+<span class="sd">        - cannot_compute_shortest_path_as_previous_point_is_0_0 : </span>
+<span class="sd">        - path_from_target_to_source : </span>
+<span class="sd">        - checked_other_solution_index : </span>
+<span class="sd">        - chose_other_solution_index : </span>
+<span class="sd">        - solution_already_lies_on_shortest_path : </span>
+<span class="sd">        - no_solution_lies_on_shortest_path : </span>
+<span class="sd">        - other_solution_is_worse : </span>
+<span class="sd">        - other_solution_no_path_found : </span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
 
     <span class="c1"># blockPrint()</span>
 
-    <span class="sd">&quot;&quot;&quot;</span>
-
-
-
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="c1"># header = [&quot;latitude(y);longitude(x);hasPassenger;time;closest_intersection_x;closest_intersection_y;intersected_line_as_linestring;linestring_adjustment_visualization;path_time;path_as_linestring;path_length;air_line_length;path_length/air_line_length;velocity_m_s;A_path_as_linestring;A_path_length;A_air_line_length;A_path_length/air_line_length;A_velocity_m_s\n&quot;]</span>
-    <span class="n">header</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;latitude(y);longitude(x);hasPassenger;time;closest_intersection_x;closest_intersection_y;relative_position;relative_position_normalized;intersected_line_oneway;intersected_line_as_linestring;linestring_adjustment_visualization;path_time&#39;</span><span class="p">]</span>
-
-    <span class="k">if</span><span class="p">(</span><span class="n">aStar</span> <span class="o">==</span> <span class="mi">1</span><span class="p">):</span>
-        <span class="n">header</span> <span class="o">+=</span> <span class="s1">&#39;;path_as_linestring;path_length;air_line_length;path_length/air_line_length;velocity_m_s;pathIDs;solution_id;solution_index;path_from_target_to_source;comment&#39;</span>
-
-    <span class="n">header</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
-
     <span class="n">counter</span> <span class="o">=</span> <span class="mi">0</span>
 
-    <span class="n">lines_for_new_text_file</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">calculatedSolution</span> <span class="o">=</span> <span class="p">[]</span>
 
+    <span class="c1"># initialize the dict in which all the statistics of the currently calculated solution will be stored.</span>
     <span class="n">statistics</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="n">statistics</span><span class="p">[</span><span class="s1">&#39;outlier&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">statistics</span><span class="p">[</span><span class="s1">&#39;taxi_did_not_move&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
@@ -861,11 +709,6 @@
         <span class="nb">print</span><span class="p">(</span><span class="n">previous_intersected_line</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="n">previous_timestamp</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="n">previous_intersected_line_oneway</span><span class="p">)</span>
-
-        <span class="k">global</span> <span class="n">timeAStar</span>
-        <span class="k">global</span> <span class="n">time_aStar_path</span>
-        <span class="k">global</span> <span class="n">time_aStar_length</span>
-        <span class="k">global</span> <span class="n">aStar_write</span>
 
         <span class="n">location_result</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="c1"># all the paths who were not changed from source--&gt;target to target--&gt;source have the following property</span>
@@ -953,7 +796,7 @@
 
         <span class="c1"># point is oulier only if no line was found</span>
         <span class="k">if</span><span class="p">(</span><span class="n">number_of_lines</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;This point is an outlier.&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;This point is an outlier.&#39;</span><span class="p">)</span>
             <span class="n">comment</span> <span class="o">+=</span> <span class="s1">&#39;This point is an outlier.&#39;</span>
 
             <span class="c1"># makes sure that next point doesn&#39;t calculate shortest path</span>
@@ -982,12 +825,12 @@
 
                 <span class="n">inter_dict_point</span> <span class="o">=</span> <span class="p">{}</span>
 
-                <span class="n">inter_dict_point</span><span class="p">[</span><span class="s2">&quot;closest_point_on_line&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">closest_point_on_line</span>
-                <span class="n">inter_dict_point</span><span class="p">[</span><span class="s2">&quot;relative_position_closest_point_on_line&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">relative_position</span>
-                <span class="n">inter_dict_point</span><span class="p">[</span><span class="s2">&quot;relative_position_normalized_closest_point_on_line&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">relative_position_normalized</span>
-                <span class="n">inter_dict_point</span><span class="p">[</span><span class="s2">&quot;input_line&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">newLS</span>
+                <span class="n">inter_dict_point</span><span class="p">[</span><span class="s1">&#39;closest_point_on_line&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">closest_point_on_line</span>
+                <span class="n">inter_dict_point</span><span class="p">[</span><span class="s1">&#39;relative_position_closest_point_on_line&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">relative_position</span>
+                <span class="n">inter_dict_point</span><span class="p">[</span><span class="s1">&#39;relative_position_normalized_closest_point_on_line&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">relative_position_normalized</span>
+                <span class="n">inter_dict_point</span><span class="p">[</span><span class="s1">&#39;input_line&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">newLS</span>
 
-                <span class="n">inter_dict_point</span><span class="p">[</span><span class="s2">&quot;oneway&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">input_line</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;properties&#39;</span><span class="p">][</span><span class="s1">&#39;oneway&#39;</span><span class="p">]</span>
+                <span class="n">inter_dict_point</span><span class="p">[</span><span class="s1">&#39;oneway&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">input_line</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;properties&#39;</span><span class="p">][</span><span class="s1">&#39;oneway&#39;</span><span class="p">]</span>
 
                 <span class="c1"># distance needs to be float so that it can be sorted appropriately afterwards</span>
                 <span class="n">inter_dict_point</span><span class="p">[</span><span class="s1">&#39;distance&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span>
@@ -1000,7 +843,7 @@
             <span class="n">solution_dict_sorted_by_distance</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
                 <span class="n">solution_dict</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">kv</span><span class="p">:</span> <span class="p">(</span><span class="n">kv</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;distance&#39;</span><span class="p">]))</span>
 
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;solution NEW:&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;solution NEW:&#39;</span><span class="p">)</span>
             <span class="c1"># get the first element as it is the one with the smallest distance (which is the closest point)</span>
             <span class="n">solution_id</span> <span class="o">=</span> <span class="n">solution_dict_sorted_by_distance</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
             <span class="n">solution</span> <span class="o">=</span> <span class="n">solution_dict_sorted_by_distance</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
@@ -1011,13 +854,11 @@
             <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">solution</span><span class="p">:</span>
                 <span class="nb">print</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">s</span><span class="p">))</span>
                 <span class="nb">print</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">solution</span><span class="p">[</span><span class="n">s</span><span class="p">]))</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;end solution&quot;</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
-
-            <span class="c1"># sys.exit(&#39;id already exists&#39;)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;end solution&#39;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
 
             <span class="n">closest_intersection_x</span> <span class="o">=</span> <span class="n">solution</span><span class="p">[</span><span class="s1">&#39;closest_point_on_line&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">x</span>
             <span class="n">closest_intersection_y</span> <span class="o">=</span> <span class="n">solution</span><span class="p">[</span><span class="s1">&#39;closest_point_on_line&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">y</span>
@@ -1048,7 +889,7 @@
             <span class="c1"># check if previous point is set. if yes: calculate the shortest path from current point to previous point</span>
             <span class="k">if</span><span class="p">(</span><span class="n">previous_point</span> <span class="o">==</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)):</span>
                 <span class="c1"># no previous point set, do not calculate shortest path.</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;cannot compute shortest path as previous point is (0,0)&quot;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;cannot compute shortest path as previous point is (0,0)&#39;</span><span class="p">)</span>
                 <span class="n">comment</span> <span class="o">+=</span> <span class="s1">&#39;Cannot compute shortest path as previous point is (0,0). &#39;</span>
 
                 <span class="c1"># update statistics</span>
@@ -1056,7 +897,7 @@
 
             <span class="k">elif</span><span class="p">((</span><span class="n">closest_intersection_x</span><span class="p">,</span> <span class="n">closest_intersection_y</span><span class="p">)</span> <span class="o">==</span> <span class="n">previous_point</span><span class="p">):</span>
                 <span class="c1"># if the taxi did not move, path is not created</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;source==target. Taxi did not move.&quot;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;source==target. Taxi did not move.&#39;</span><span class="p">)</span>
 
                 <span class="n">comment</span> <span class="o">+=</span> <span class="s1">&#39;source==target. Taxi did not move. &#39;</span>
 
@@ -1076,42 +917,19 @@
 
                 <span class="k">if</span><span class="p">(</span><span class="n">aStar</span> <span class="o">==</span> <span class="mi">1</span><span class="p">):</span>
 
-                    <span class="n">aStarStart</span> <span class="o">=</span> <span class="n">timer</span><span class="p">()</span>
-
                     <span class="n">path</span> <span class="o">=</span> <span class="kc">None</span>
                     <span class="n">path2</span> <span class="o">=</span> <span class="kc">None</span>
                     <span class="c1"># calculate the shortest path with A STAR algorithm</span>
                     <span class="n">path</span><span class="p">,</span> <span class="n">path_length</span><span class="p">,</span> <span class="n">pathIDs</span> <span class="o">=</span> <span class="n">getShortestPathAStar</span><span class="p">((</span><span class="n">closest_intersection_x</span><span class="p">,</span> <span class="n">closest_intersection_y</span><span class="p">),</span> <span class="n">previous_point</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span>
                         <span class="n">intersected_line</span><span class="o">.</span><span class="n">coords</span><span class="p">),</span> <span class="nb">list</span><span class="p">(</span><span class="n">previous_intersected_line</span><span class="o">.</span><span class="n">coords</span><span class="p">),</span> <span class="n">intersected_line_oneway</span><span class="p">,</span> <span class="n">previous_intersected_line_oneway</span><span class="p">,</span> <span class="n">filepath_shp</span><span class="p">)</span>
 
-                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;path:&quot;</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
-
-                    <span class="n">aStarEnd</span> <span class="o">=</span> <span class="n">timer</span><span class="p">()</span>
-                    <span class="n">timeAStar</span> <span class="o">+=</span> <span class="p">(</span><span class="n">aStarEnd</span><span class="o">-</span><span class="n">aStarStart</span><span class="p">)</span>
-
-                    <span class="n">aStar_write_Start</span> <span class="o">=</span> <span class="n">timer</span><span class="p">()</span>
-
                     <span class="c1"># calculate air line distance between source and target</span>
                     <span class="n">air_line_length</span> <span class="o">=</span> <span class="n">distFrom</span><span class="p">(</span>
                         <span class="n">closest_intersection_x</span><span class="p">,</span> <span class="n">closest_intersection_y</span><span class="p">,</span> <span class="n">previous_point</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">previous_point</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
 
-                    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">                    print(&quot;air_line_length s to t:&quot;, air_line_length)</span>
-<span class="sd">                    print(&quot;path_length:&quot;, path_length)</span>
-
-<span class="sd">                    print(&quot;if statement&quot;)</span>
-<span class="sd">                    print(air_line_length &lt; 20)</span>
-<span class="sd">                    print(intersected_line_oneway != &#39;B&#39;)</span>
-<span class="sd">                    print(previous_intersected_line_oneway != &#39;B&#39;)</span>
-<span class="sd">                    print(list(intersected_line.coords) == list(</span>
-<span class="sd">                        previous_intersected_line.coords))</span>
-<span class="sd">                    &quot;&quot;&quot;</span>
-
                     <span class="c1"># if this is true, it is possible that a taxi has to ride all around the block because it is a oneway street and source and target lie on the same line</span>
                     <span class="k">if</span><span class="p">(</span><span class="n">air_line_length</span> <span class="o">&lt;</span> <span class="mi">20</span> <span class="ow">and</span> <span class="n">intersected_line_oneway</span> <span class="o">!=</span> <span class="s1">&#39;B&#39;</span> <span class="ow">and</span> <span class="n">previous_intersected_line_oneway</span> <span class="o">!=</span> <span class="s1">&#39;B&#39;</span> <span class="ow">and</span> <span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">intersected_line</span><span class="o">.</span><span class="n">coords</span><span class="p">)</span> <span class="o">==</span> <span class="nb">list</span><span class="p">(</span><span class="n">previous_intersected_line</span><span class="o">.</span><span class="n">coords</span><span class="p">))):</span>
-                        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;if statement inside&quot;</span><span class="p">)</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;if statement inside&#39;</span><span class="p">)</span>
 
                         <span class="c1"># calculate where the source lies on the line</span>
                         <span class="n">d_source</span> <span class="o">=</span> <span class="n">LineString</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">intersected_line</span><span class="o">.</span><span class="n">coords</span><span class="p">))</span><span class="o">.</span><span class="n">project</span><span class="p">(</span>
@@ -1121,33 +939,33 @@
                         <span class="n">d_target</span> <span class="o">=</span> <span class="n">LineString</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">previous_intersected_line</span><span class="o">.</span><span class="n">coords</span><span class="p">))</span><span class="o">.</span><span class="n">project</span><span class="p">(</span>
                             <span class="n">Point</span><span class="p">(</span><span class="n">previous_point</span><span class="p">))</span>
 
-                        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;d_source:&quot;</span><span class="p">,</span> <span class="n">d_source</span><span class="p">)</span>
-                        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;d_target:&quot;</span><span class="p">,</span> <span class="n">d_target</span><span class="p">)</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;d_source:&#39;</span><span class="p">,</span> <span class="n">d_source</span><span class="p">)</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;d_target:&#39;</span><span class="p">,</span> <span class="n">d_target</span><span class="p">)</span>
 
                         <span class="c1"># check if there was a glipse in the gps coordinates which resulted in a situation where the source lies after the target</span>
                         <span class="c1"># if it is a oneway line from the FROM-node to the TO-node and source lies AFTER the target   OR   if it is a oneway line from the TO-node to the FROM-node and source lies BEFORE the target</span>
                         <span class="k">if</span><span class="p">((</span><span class="n">intersected_line_oneway</span> <span class="o">==</span> <span class="s1">&#39;F&#39;</span> <span class="ow">and</span> <span class="n">d_source</span> <span class="o">&gt;</span> <span class="n">d_target</span><span class="p">)</span><span class="ow">or</span><span class="p">(</span><span class="n">intersected_line_oneway</span> <span class="o">==</span> <span class="s1">&#39;T&#39;</span> <span class="ow">and</span> <span class="n">d_source</span> <span class="o">&lt;</span> <span class="n">d_target</span><span class="p">)):</span>
-                            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;if statement inside SECOND!!!&quot;</span><span class="p">)</span>
+                            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;if statement inside SECOND!!!&#39;</span><span class="p">)</span>
 
                             <span class="c1"># calculate the shortest path with A STAR algorithm</span>
                             <span class="c1"># set ignore_oneway=True : this makes sure that the source_line and the target_line both are treated as lines where driving in both directions is allowed (so feature &#39;oneway&#39; is ignored)</span>
                             <span class="n">path2</span><span class="p">,</span> <span class="n">path_length2</span><span class="p">,</span> <span class="n">pathIDs2</span> <span class="o">=</span> <span class="n">getShortestPathAStar</span><span class="p">((</span><span class="n">closest_intersection_x</span><span class="p">,</span> <span class="n">closest_intersection_y</span><span class="p">),</span> <span class="n">previous_point</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">intersected_line</span><span class="o">.</span><span class="n">coords</span><span class="p">),</span> <span class="nb">list</span><span class="p">(</span>
                                 <span class="n">previous_intersected_line</span><span class="o">.</span><span class="n">coords</span><span class="p">),</span> <span class="n">intersected_line_oneway</span><span class="p">,</span> <span class="n">previous_intersected_line_oneway</span><span class="p">,</span> <span class="n">filepath_shp</span><span class="p">,</span> <span class="n">ignore_oneway</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-                            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;path_length:&quot;</span><span class="p">,</span> <span class="n">path_length</span><span class="p">)</span>
-                            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;path_length2:&quot;</span><span class="p">,</span> <span class="n">path_length2</span><span class="p">)</span>
-                            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;path:&quot;</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
-                            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;path2:&quot;</span><span class="p">,</span> <span class="n">path2</span><span class="p">)</span>
-                            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
-                            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;check if path2 is better:&quot;</span><span class="p">)</span>
+                            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;path_length:&#39;</span><span class="p">,</span> <span class="n">path_length</span><span class="p">)</span>
+                            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;path_length2:&#39;</span><span class="p">,</span> <span class="n">path_length2</span><span class="p">)</span>
+                            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;path:&#39;</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
+                            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;path2:&#39;</span><span class="p">,</span> <span class="n">path2</span><span class="p">)</span>
+                            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+                            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;check if path2 is better:&#39;</span><span class="p">)</span>
                             <span class="nb">print</span><span class="p">(</span><span class="n">path</span> <span class="o">==</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">path2</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">)</span>
-                            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;.. or ..&quot;</span><span class="p">)</span>
+                            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;.. or ..&#39;</span><span class="p">)</span>
                             <span class="nb">print</span><span class="p">(</span><span class="n">path</span> <span class="o">!=</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">path2</span> <span class="o">!=</span> <span class="kc">None</span> <span class="ow">and</span> <span class="p">(</span>
                                 <span class="n">path_length</span> <span class="o">&gt;</span> <span class="n">path_length2</span><span class="p">))</span>
 
                         <span class="c1"># override path/path_lenght/pathIDs to make sure to use the solution which ignores the &#39;oneway&#39; property</span>
                         <span class="k">if</span><span class="p">((</span><span class="n">path</span> <span class="o">==</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">path2</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">path</span> <span class="o">!=</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">path2</span> <span class="o">!=</span> <span class="kc">None</span> <span class="ow">and</span> <span class="p">(</span><span class="n">path_length</span> <span class="o">&gt;</span> <span class="n">path_length2</span><span class="p">))):</span>
-                            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;OVERRIDING THE PATH&quot;</span><span class="p">)</span>
+                            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;OVERRIDING THE PATH&#39;</span><span class="p">)</span>
                             <span class="n">path</span> <span class="o">=</span> <span class="n">path2</span>
                             <span class="n">path_length</span> <span class="o">=</span> <span class="n">path_length2</span>
                             <span class="n">pathIDs</span> <span class="o">=</span> <span class="n">pathIDs2</span>
@@ -1157,7 +975,7 @@
                             <span class="c1"># update statistics</span>
                             <span class="n">statistics</span><span class="p">[</span><span class="s1">&#39;path_from_target_to_source&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
 
-                    <span class="c1"># if a path was found, append the solution to the lines_for_new_text_file</span>
+                    <span class="c1"># if a path was found, append the solution to the calculatedSolution</span>
                     <span class="k">if</span><span class="p">(</span><span class="n">path</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">):</span>
                         <span class="n">velocity_m_s</span> <span class="o">=</span> <span class="n">path_length</span><span class="o">/</span><span class="n">path_time</span>
 
@@ -1174,13 +992,7 @@
 
                         <span class="c1"># no previous point set, do not calculate shortest path.</span>
                         <span class="n">comment</span> <span class="o">+=</span> <span class="s1">&#39;No path was found with A Star algorithm. &#39;</span>
-                        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No path was found with A Star algorithm.&quot;</span><span class="p">)</span>
-
-                        <span class="c1"># update statistics</span>
-                        <span class="n">statistics</span><span class="p">[</span><span class="s1">&#39;no_path_found&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
-
-                    <span class="n">aStar_write_End</span> <span class="o">=</span> <span class="n">timer</span><span class="p">()</span>
-                    <span class="n">aStar_write</span> <span class="o">+=</span> <span class="p">(</span><span class="n">aStar_write_End</span><span class="o">-</span><span class="n">aStar_write_Start</span><span class="p">)</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;No path was found with A Star algorithm.&#39;</span><span class="p">)</span>
 
         <span class="n">location_result</span><span class="p">[</span><span class="s1">&#39;path_from_target_to_source&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">path_from_target_to_source</span>
         <span class="n">location_result</span><span class="p">[</span><span class="s1">&#39;comment&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">comment</span>
@@ -1190,7 +1002,7 @@
     <span class="c1"># calculate the number of lines of the file we are looking at</span>
     <span class="c1"># lines_in_textfile=sum(1 for line in open(filepath))</span>
     <span class="n">lines_in_textfile</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
         <span class="n">lines_in_textfile</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="mi">1</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="p">)</span>
 
     <span class="nb">print</span><span class="p">(</span><span class="n">lines_in_textfile</span><span class="p">)</span>
@@ -1202,7 +1014,7 @@
 
     <span class="n">previous_location_result</span> <span class="o">=</span> <span class="p">{}</span>
 
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
         <span class="n">mylist</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
 
         <span class="c1"># append an artificaial line at the end. This will make sure that also the path from the last to the second-last element will be calculated and possible improvements will be checked.</span>
@@ -1213,7 +1025,7 @@
             <span class="c1"># the last line of the text file is artificial as it was added before. this line is just needed to make sure the second last line (which is actually the last actual line of the text file is calculated correctly)</span>
             <span class="k">if</span><span class="p">(</span><span class="n">lines</span> <span class="o">!=</span> <span class="s1">&#39;artificialline&#39;</span><span class="p">):</span>
 
-                <span class="n">values</span> <span class="o">=</span> <span class="n">lines</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+                <span class="n">values</span> <span class="o">=</span> <span class="n">lines</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
                 <span class="c1"># the longitude and latitude were read from the txt file an saved as a string, here we transform it to a float</span>
                 <span class="n">x</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">values</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
                 <span class="n">y</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
@@ -1301,11 +1113,11 @@
                               <span class="n">pathIDs_to_previous_target</span><span class="p">)</span>
                         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
                         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
-                        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;all_solutions_sorted:&quot;</span><span class="p">,</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;all_solutions_sorted:&#39;</span><span class="p">,</span>
                               <span class="n">previous_location_result</span><span class="p">[</span><span class="s1">&#39;all_solutions_sorted&#39;</span><span class="p">])</span>
-                        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;solution_id:&quot;</span><span class="p">,</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;solution_id:&#39;</span><span class="p">,</span>
                               <span class="n">previous_location_result</span><span class="p">[</span><span class="s1">&#39;solution_id&#39;</span><span class="p">])</span>
-                        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;solution:&quot;</span><span class="p">,</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;solution:&#39;</span><span class="p">,</span>
                               <span class="n">previous_location_result</span><span class="p">[</span><span class="s1">&#39;solution&#39;</span><span class="p">])</span>
 
                         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
@@ -1331,8 +1143,8 @@
                                     <span class="n">new_solution</span> <span class="o">=</span> <span class="n">v</span>
                                     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;now break&#39;</span><span class="p">)</span>
                                     <span class="k">break</span>
-                                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;k:&quot;</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
-                                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;v:&quot;</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+                                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;k:&#39;</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+                                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;v:&#39;</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
                                 <span class="n">new_solution_index</span> <span class="o">+=</span> <span class="mi">1</span>
 
                             <span class="k">if</span> <span class="p">(</span><span class="n">new_solution_id</span> <span class="o">==</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)):</span>
@@ -1458,13 +1270,16 @@
                                     <span class="c1"># update statistics</span>
                                     <span class="n">statistics</span><span class="p">[</span><span class="s1">&#39;other_solution_no_path_found&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
 
-                        <span class="c1">#sys.exit(&#39;WE STOP HERE&#39;)</span>
-
                 <span class="k">else</span><span class="p">:</span>
                     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Tried to check other solution but the target is not known. &#39;</span><span class="p">)</span>
 
                 <span class="c1"># append the result of the previous location to the entire solution</span>
-                <span class="n">lines_for_new_text_file</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">previous_location_result</span><span class="p">)</span>
+                <span class="n">calculatedSolution</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">previous_location_result</span><span class="p">)</span>
+
+                <span class="c1"># check if a path was found xxx</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">previous_location_result</span><span class="p">[</span><span class="s1">&#39;path&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">):</span>
+                    <span class="c1"># update statistics</span>
+                    <span class="n">statistics</span><span class="p">[</span><span class="s1">&#39;no_path_found&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
 
             <span class="c1"># set the result of the current location as the result of the previous location</span>
             <span class="n">previous_location_result</span> <span class="o">=</span> <span class="n">current_location_result</span>
@@ -1492,11 +1307,12 @@
             <span class="n">previous_intersected_line_oneway</span> <span class="o">=</span> <span class="n">intersected_line_oneway</span>
             <span class="n">previous_target_intersected_line_oneway</span> <span class="o">=</span> <span class="n">target_intersected_line_oneway</span>
 
-            <span class="c1"># stop algorithm after a few lines (for testing reasons)</span>
+            <span class="c1"># TODO: Delete the following lines as this is just for testing.</span>
+            <span class="c1"># stop script after a few lines (for testing reasons)</span>
             <span class="n">counter</span> <span class="o">+=</span> <span class="mi">1</span>
             <span class="nb">print</span><span class="p">(</span><span class="n">counter</span><span class="p">)</span>
             <span class="k">if</span> <span class="p">(</span><span class="n">counter</span> <span class="o">&gt;</span> <span class="mi">10</span><span class="p">):</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ende&quot;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;ende&#39;</span><span class="p">)</span>
                 <span class="k">break</span>
 
             <span class="c1"># Update Progress Bar</span>
@@ -1514,35 +1330,31 @@
 
             <span class="c1"># blockPrint()</span>
 
-        <span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        NOT NEEDED ANYMORE, as we have artificial line now</span>
 
 <span class="sd">        # the result of a location is only added to the intire solution after it is confirmed as the best solution by the next location</span>
 <span class="sd">        # for this reason the result of the last location of the text_file has to be added to the entire solution (since there isn&#39;t a next solution that will do that)</span>
-<span class="sd">        lines_for_new_text_file.append(previous_location_result)</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        calculatedSolution.append(previous_location_result)</span>
+<span class="sd">        &#39;&#39;&#39;</span>
 
-    <span class="n">timeClosestPointEnd</span> <span class="o">=</span> <span class="n">timer</span><span class="p">()</span>
-
-    <span class="n">timeClosestPoint</span> <span class="o">+=</span> <span class="p">(</span><span class="n">timeClosestPointEnd</span><span class="o">-</span><span class="n">timeClosestPointStart</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">header</span><span class="p">,</span> <span class="n">lines_for_new_text_file</span><span class="p">,</span> <span class="n">statistics</span>
+    <span class="k">return</span> <span class="n">calculatedSolution</span><span class="p">,</span> <span class="n">statistics</span></div>
 
 
 <span class="k">def</span> <span class="nf">getTimeDifferences</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="n">timestampPosition</span><span class="p">):</span>
 
-    <span class="c1"># initialise empty set</span>
+    <span class="c1"># initialise empty list</span>
     <span class="n">timeDifferences</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="c1"># set previousTimestamp to 0</span>
     <span class="n">previousTimestamp</span> <span class="o">=</span> <span class="mi">0</span>
 
     <span class="c1"># open the file</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
         <span class="n">mylist</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
 
         <span class="c1"># loop through the txt file</span>
         <span class="k">for</span> <span class="n">lines</span> <span class="ow">in</span> <span class="n">mylist</span><span class="p">:</span>
-            <span class="n">values</span> <span class="o">=</span> <span class="n">lines</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+            <span class="n">values</span> <span class="o">=</span> <span class="n">lines</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
             <span class="c1"># get the timestamp of the current line</span>
             <span class="n">timestamp</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">values</span><span class="p">[</span><span class="n">timestampPosition</span><span class="p">])</span>
 
@@ -1608,12 +1420,14 @@
     <span class="c1"># save the figure in the folder of the current taxi</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
     <span class="c1"># plt.show()</span>
+    <span class="c1"># close the current figure</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
 <span class="c1"># %%</span>
 
 
 <div class="viewcode-block" id="getFilename"><a class="viewcode-back" href="../index.html#gps2net.getFilename">[docs]</a><span class="k">def</span> <span class="nf">getFilename</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Returns the name of a file from a specific path (excluding directories and extension).</span>
+    <span class="sd">&#39;&#39;&#39;Returns the name of a file from a specific path (excluding directories and extension).</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -1634,7 +1448,7 @@
 <span class="sd">    &gt;&gt;&gt; filename</span>
 <span class="sd">    &#39;MyFilename&#39;</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    &#39;&#39;&#39;</span>
     <span class="c1"># get the name of the file from the path (without the directories and without extension)</span>
     <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">path</span><span class="p">)))[</span><span class="mi">0</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">filename</span></div>
@@ -1649,27 +1463,33 @@
 <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
 
     <span class="c1"># blockPrint()</span>
-    <span class="n">startTotal</span> <span class="o">=</span> <span class="n">timer</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">caculationForOneTXTFile</span><span class="p">(</span><span class="n">filepath_shp</span><span class="p">,</span> <span class="n">dirName</span><span class="p">,</span> <span class="n">filepath</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">caculationForOneTXTFile</span><span class="p">(</span><span class="n">filepath_shp</span><span class="p">,</span> <span class="n">dirName</span><span class="p">,</span> <span class="n">filepath</span><span class="p">,</span> <span class="n">aStar</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+
+        <span class="c1"># set the header of the output txt file which will contain the calculated solution.</span>
+        <span class="n">header</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;latitude(y);longitude(x);hasPassenger;time;closest_intersection_x;closest_intersection_y;relative_position;relative_position_normalized;intersected_line_oneway;intersected_line_as_linestring;linestring_adjustment_visualization;path_time&#39;</span><span class="p">]</span>
+
+        <span class="k">if</span><span class="p">(</span><span class="n">aStar</span> <span class="o">==</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">header</span> <span class="o">+=</span> <span class="s1">&#39;;path_as_linestring;path_length;air_line_length;path_length/air_line_length;velocity_m_s;pathIDs;solution_id;solution_index;path_from_target_to_source;comment&#39;</span>
+
+        <span class="n">header</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
 
         <span class="n">new_filename_solution</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
             <span class="n">dirName</span><span class="p">,</span> <span class="s1">&#39;calculatedSolution&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;.txt&#39;</span>
-        <span class="n">new_filename_statistics</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dirName</span><span class="p">,</span> <span class="s1">&#39;STATISTICS&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;.txt&#39;</span>
-        <span class="n">new_filename_velocities</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dirName</span><span class="p">,</span> <span class="s2">&quot;velocitiesPLOT.png&quot;</span><span class="p">)</span>
+        <span class="n">new_filename_statistics</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dirName</span><span class="p">,</span> <span class="s1">&#39;statistics&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;.txt&#39;</span>
+        <span class="n">new_filename_velocities</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dirName</span><span class="p">,</span> <span class="s1">&#39;velocitiesPLOT.png&#39;</span><span class="p">)</span>
         <span class="n">new_filename_path_length_air_line_length</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-            <span class="n">dirName</span><span class="p">,</span> <span class="s2">&quot;path_length_air_line_length_PLOT.png&quot;</span><span class="p">)</span>
+            <span class="n">dirName</span><span class="p">,</span> <span class="s1">&#39;path_length_air_line_length_PLOT.png&#39;</span><span class="p">)</span>
 
-        <span class="n">myHeader</span><span class="p">,</span> <span class="n">myCalculatedSolution</span><span class="p">,</span> <span class="n">mySolutionStatistics</span> <span class="o">=</span> <span class="n">calculateClosestPointAndShortestPath</span><span class="p">(</span>
-            <span class="n">filepath</span><span class="p">,</span> <span class="n">filepath_shp</span><span class="p">,</span> <span class="n">minNumberOfLines</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">aStar</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">myCalculatedSolution</span><span class="p">,</span> <span class="n">mySolutionStatistics</span> <span class="o">=</span> <span class="n">calculateClosestPointAndShortestPath</span><span class="p">(</span>
+            <span class="n">filepath</span><span class="p">,</span> <span class="n">filepath_shp</span><span class="p">,</span> <span class="n">minNumberOfLines</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">aStar</span><span class="o">=</span><span class="n">aStar</span><span class="p">)</span>
 
         <span class="c1"># this saves a new text file which includes the calculated parameters</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">new_filename_solution</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">new_file</span><span class="p">:</span>
+            <span class="c1"># write the header to the new txt file</span>
+            <span class="n">new_file</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="n">header</span><span class="p">)</span>
 
-        <span class="c1"># with open(&quot;CreatedFiles3/ImprovedAlgorithm/&quot;+new_filename, &quot;w&quot;) as new_file:</span>
-        <span class="c1"># with open(&quot;2_Taxi data/CreatedFiles3/ImprovedAlgorithm2/&quot;+new_filename, &quot;w&quot;) as new_file:</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">new_filename_solution</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">new_file</span><span class="p">:</span>
-            <span class="n">new_file</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="n">myHeader</span><span class="p">)</span>
-
+            <span class="c1"># write the calculated solution to the new txt file</span>
             <span class="k">for</span> <span class="n">location_result</span> <span class="ow">in</span> <span class="n">myCalculatedSolution</span><span class="p">:</span>
                 <span class="n">new_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">location_result</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]))</span>
                 <span class="n">new_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;;&#39;</span><span class="p">)</span>
@@ -1720,10 +1540,10 @@
                 <span class="n">new_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">location_result</span><span class="p">[</span><span class="s1">&#39;comment&#39;</span><span class="p">]))</span>
                 <span class="n">new_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 
-        <span class="c1"># initialise empty set</span>
+        <span class="c1"># initialise empty lists</span>
         <span class="n">velocities</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">velocities_none_counter</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">path_length_air_line_length</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">velocities_none_counter</span> <span class="o">=</span> <span class="mi">0</span>
 
         <span class="c1"># get all velocities of the solution</span>
         <span class="k">for</span> <span class="n">location_result</span> <span class="ow">in</span> <span class="n">myCalculatedSolution</span><span class="p">:</span>
@@ -1746,7 +1566,7 @@
 
         <span class="c1"># SAVE STATISTICS IN NEW FILE</span>
 
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">new_filename_statistics</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">new_file</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">new_filename_statistics</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">new_file</span><span class="p">:</span>
             <span class="c1"># write statistics to the file</span>
             <span class="n">new_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;path of shp file: &#39;</span><span class="p">)</span>
             <span class="n">new_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">filepath_shp</span><span class="p">))</span>
@@ -1754,11 +1574,12 @@
             <span class="n">new_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;path of old file: &#39;</span><span class="p">)</span>
             <span class="n">new_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">filepath</span><span class="p">))</span>
             <span class="n">new_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
-            <span class="n">new_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;name of new file: &#39;</span><span class="p">)</span>
+            <span class="n">new_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;path of new file: &#39;</span><span class="p">)</span>
             <span class="n">new_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">new_filename_solution</span><span class="p">))</span>
+            <span class="n">new_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 
             <span class="c1"># calculate the number of lines in the txt file</span>
-            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
                 <span class="n">num_lines</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="mi">1</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="p">)</span>
             <span class="n">new_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;number of lines in txt file: &#39;</span><span class="p">)</span>
             <span class="n">new_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">num_lines</span><span class="p">))</span>
@@ -1781,48 +1602,7 @@
             <span class="n">new_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
             <span class="n">new_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 
-        <span class="n">endTotal</span> <span class="o">=</span> <span class="n">timer</span><span class="p">()</span>
-
         <span class="c1"># enablePrint()</span>
-
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;no_path_AStar :&quot;</span><span class="p">,</span> <span class="n">no_path_AStar</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;---&quot;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;timeTotal :&quot;</span><span class="p">,</span> <span class="n">endTotal</span><span class="o">-</span><span class="n">startTotal</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;timeCreatingGraph :&quot;</span><span class="p">,</span> <span class="n">timeCreatingGraph</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;timeCreatingGraph2 :&quot;</span><span class="p">,</span> <span class="n">timeCreatingGraph2</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;timeAStar :&quot;</span><span class="p">,</span> <span class="n">timeAStar</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;time_aStar_path :&quot;</span><span class="p">,</span> <span class="n">time_aStar_path</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;time_aStar_length :&quot;</span><span class="p">,</span> <span class="n">time_aStar_length</span><span class="p">)</span>
-
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;XXXXXXXX&quot;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
-
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;astar_copyGraph: &quot;</span><span class="p">,</span> <span class="n">astar_copyGraph</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;astar_addTarget: &quot;</span><span class="p">,</span> <span class="n">astar_addTarget</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;astar_addSource: &quot;</span><span class="p">,</span> <span class="n">astar_addSource</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;astar_numberOfEdges: &quot;</span><span class="p">,</span> <span class="n">astar_numberOfEdges</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;astar_getEdgeData: &quot;</span><span class="p">,</span> <span class="n">astar_getEdgeData</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;astar_addEdge: &quot;</span><span class="p">,</span> <span class="n">astar_addEdge</span><span class="p">)</span>
-
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
-
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-------&quot;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
-
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;aStar_write :&quot;</span><span class="p">,</span> <span class="n">aStar_write</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;timeClosestPoint Total :&quot;</span><span class="p">,</span> <span class="n">timeClosestPoint</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;timeClosestPoint without graphs :&quot;</span><span class="p">,</span>
-              <span class="n">timeClosestPoint</span><span class="o">-</span><span class="n">timeAStar</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-------&quot;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
-
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;GraphFromSHP nr of edges END: &quot;</span><span class="p">,</span> <span class="n">DG</span><span class="o">.</span><span class="n">number_of_edges</span><span class="p">())</span>
-
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;STATISTICS:&#39;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">mySolutionStatistics</span><span class="p">)</span>
 
     <span class="c1">#filepath = &#39;/Users/Joechi/Google Drive/HS19 – PathPy/2_Taxi data/Tests/Exports/AllPointsForOneTaxi/new_abboip_copy.txt&#39;</span>
 
@@ -1854,13 +1634,13 @@
     <span class="n">filepath_shp</span> <span class="o">=</span> <span class="s1">&#39;/Users/Joechi/Google Drive/gps2net/Data/taxi_san_francisco/San Francisco Basemap Street Centerlines/geo_export_e5dd0539-2344-4e87-b198-d50274be8e1d.shp&#39;</span>
 
     <span class="n">filepaths</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="c1"># filepaths.append(filepath1)</span>
-    <span class="c1"># filepaths.append(filepath2)</span>
-    <span class="c1"># filepaths.append(filepath3)</span>
-    <span class="c1"># filepaths.append(filepath4)</span>
-    <span class="c1"># filepaths.append(filepath5)</span>
     <span class="n">filepaths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">filepath6</span><span class="p">)</span>
     <span class="n">filepaths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">filepath7</span><span class="p">)</span>
+    <span class="n">filepaths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">filepath1</span><span class="p">)</span>
+    <span class="n">filepaths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">filepath2</span><span class="p">)</span>
+    <span class="n">filepaths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">filepath3</span><span class="p">)</span>
+    <span class="n">filepaths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">filepath4</span><span class="p">)</span>
+    <span class="n">filepaths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">filepath5</span><span class="p">)</span>
 
     <span class="c1"># loop through all the filepaths</span>
     <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">filepaths</span><span class="p">:</span>
@@ -1876,17 +1656,17 @@
         <span class="c1"># Create target directory &amp; all intermediate directories if don&#39;t exists</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">dirName</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Directory &quot;</span><span class="p">,</span> <span class="n">dirName</span><span class="p">,</span>  <span class="s2">&quot; created.&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Directory &#39;</span><span class="p">,</span> <span class="n">dirName</span><span class="p">,</span>  <span class="s1">&#39; created.&#39;</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">FileExistsError</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Directory &quot;</span><span class="p">,</span> <span class="n">dirName</span><span class="p">,</span>  <span class="s2">&quot; already exists.&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Directory &#39;</span><span class="p">,</span> <span class="n">dirName</span><span class="p">,</span>  <span class="s1">&#39; already exists.&#39;</span><span class="p">)</span>
 
-        <span class="n">caculationForOneTXTFile</span><span class="p">(</span><span class="n">filepath_shp</span><span class="p">,</span> <span class="n">dirName</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
+        <span class="n">caculationForOneTXTFile</span><span class="p">(</span><span class="n">filepath_shp</span><span class="p">,</span> <span class="n">dirName</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 
         <span class="c1"># get all timestamp differences of a text file</span>
         <span class="n">timeDifferences</span> <span class="o">=</span> <span class="n">getTimeDifferences</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
 
         <span class="n">timedifferencesFileName</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-            <span class="n">dirName</span><span class="p">,</span> <span class="s2">&quot;timedifferencesPLOT.png&quot;</span><span class="p">)</span>
+            <span class="n">dirName</span><span class="p">,</span> <span class="s1">&#39;timedifferencesPLOT.png&#39;</span><span class="p">)</span>
 
         <span class="c1"># plot the timeDifferences in a histogram</span>
         <span class="n">plotAndSaveHistogram</span><span class="p">(</span><span class="n">timeDifferences</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="n">timedifferencesFileName</span><span class="p">,</span>
@@ -1894,51 +1674,50 @@
 
 
 <span class="c1"># %%</span>
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
     <span class="kn">import</span> <span class="nn">doctest</span>
-    <span class="c1"># test the examples with the following command: python gps2net.py -v</span>
+    <span class="c1"># running &#39;doctest.testmod()&#39; test the examples in docstrings. Alternatively, the examples in docstrings can be tested by navigating to the &#39;docs&#39; directory and running the following command in the terminal: python gps2net.py -v</span>
     <span class="n">doctest</span><span class="o">.</span><span class="n">testmod</span><span class="p">()</span>
 
+    <span class="c1"># run the main method</span>
     <span class="n">main</span><span class="p">()</span>
 </pre></div>
 
-           </div>
-           
           </div>
-          <footer>
-  
-
-  <hr/>
-
-  <div role="contentinfo">
-    <p>
-        &copy; Copyright 2019, Joachim Baumann
-
-    </p>
-  </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
-
-</footer>
-
         </div>
       </div>
-
-    </section>
-
-  </div>
-  
-
-
-  <script type="text/javascript">
-      jQuery(function () {
-          SphinxRtdTheme.Navigation.enable(true);
-      });
-  </script>
-
-  
-  
-    
-   
-
-</body>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">gps2net 1.1.2020 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Joachim Baumann.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.
+    </div>
+  </body>
 </html>

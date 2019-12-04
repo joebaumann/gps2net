@@ -67,8 +67,8 @@
 \addto\captionsenglish{\renewcommand{\contentsname}{Contents:}}
 
 \usepackage{sphinxmessages}
-\setcounter{tocdepth}{1}
-
+\setcounter{tocdepth}{3}
+\setcounter{secnumdepth}{3}
 
 
 \title{gps2net}
@@ -87,114 +87,46 @@
 \pagestyle{normal}
 \phantomsection\label{\detokenize{index::doc}}
 
-\index{gps2net (module)@\spxentry{gps2net}\spxextra{module}}\index{distFrom() (in module gps2net)@\spxentry{distFrom()}\spxextra{in module gps2net}}
+
+\#.. automodule:: gps2net
+\#    :members:
+\index{cut() (in module gps2net)@\spxentry{cut()}\spxextra{in module gps2net}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{index:gps2net.distFrom}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{gps2net.}}\sphinxbfcode{\sphinxupquote{distFrom}}}{\emph{lng1}, \emph{lat1}, \emph{lng2}, \emph{lat2}}{}
-Returns the distance between two points in meters.
+\phantomsection\label{\detokenize{index:gps2net.cut}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{gps2net.}}\sphinxbfcode{\sphinxupquote{cut}}}{\emph{line}, \emph{distance}, \emph{point}}{}
+Cuts a line in two at a distance from its starting point.
 \begin{quote}\begin{description}
 \item[{Parameters}] \leavevmode\begin{description}
-\item[{\sphinxstylestrong{lng1}}] \leavevmode{[}float{]}
-This fff float is the longitude of the source.
+\item[{\sphinxstylestrong{line}}] \leavevmode{[}Shapely ‘LineString’ object{]}
+{[}description{]}
 
-\item[{\sphinxstylestrong{lat1}}] \leavevmode{[}float{]}
-This float is the latitude of the source.
+\item[{\sphinxstylestrong{distance}}] \leavevmode{[}float{]}
+{[}description{]}
 
-\item[{\sphinxstylestrong{lng2}}] \leavevmode{[}float{]}
-This float is the longitude of the target.
-
-\item[{\sphinxstylestrong{lat2}}] \leavevmode{[}float{]}
-This float is the latitude of the target.
+\item[{\sphinxstylestrong{point}}] \leavevmode{[}Shapely Point object{]}
+{[}description{]}
 
 \end{description}
 
 \item[{Returns}] \leavevmode\begin{description}
-\item[{\sphinxstylestrong{dist}}] \leavevmode{[}int{]}
-The distance between two points in meters.
+\item[{{[}type{]}}] \leavevmode
+{[}description{]}
 
 \end{description}
 
 \end{description}\end{quote}
 \subsubsection*{Notes}
 
-This function calculates the distance between two gps points.
-The result is not 100\% correct as the function does not consider the elipsis-like shape of the earth. Instead it just uses an earth radius of 6371000 meters for the calculation.
-
-A more accurate calculation of the distance can be done in QGIS. For more details, please visit: \sphinxurl{http://www.qgistutorials.com/en/docs/calculating\_line\_lengths.html}
-However, this function was used to be able to run the code independently of QGIS.
-\subsubsection*{Examples}
-
-\begin{sphinxVerbatim}[commandchars=\\\{\}]
-\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{x}\PYG{o}{=}\PYG{l+m+mi}{12}
-\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{x}
-\PYG{g+go}{12}
-\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{p}{(}\PYG{l+m+mi}{5}\PYG{o}{\PYGZlt{}}\PYG{l+m+mi}{10}\PYG{p}{)}
-\PYG{g+go}{True}
-\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{myDist} \PYG{o}{=} \PYG{n}{distFrom}\PYG{p}{(}\PYG{o}{\PYGZhy{}}\PYG{l+m+mf}{122.115}\PYG{p}{,} \PYG{l+m+mf}{37.115}\PYG{p}{,} \PYG{o}{\PYGZhy{}}\PYG{l+m+mf}{122.111}\PYG{p}{,} \PYG{l+m+mf}{37.111}\PYG{p}{)}
-\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{myDist}
-\PYG{g+go}{568.8872918546489}
-\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{distFrom}\PYG{p}{(}\PYG{o}{\PYGZhy{}}\PYG{l+m+mf}{122.115}\PYG{p}{,} \PYG{l+m+mf}{37.115}\PYG{p}{,} \PYG{o}{\PYGZhy{}}\PYG{l+m+mf}{122.111}\PYG{p}{,} \PYG{l+m+mf}{37.111}\PYG{p}{)} 
-\PYG{g+go}{5}
-\end{sphinxVerbatim}
-
-\begin{sphinxVerbatim}[commandchars=\\\{\}]
-\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n+nb}{print}\PYG{p}{(}\PYG{n}{myDistance}\PYG{p}{)} \PYG{o}{/}\PYG{o}{/} \PYG{n}{prints} \PYG{l+m+mf}{568.8872918} \PYG{o}{.}\PYG{o}{.}\PYG{o}{.}
-\end{sphinxVerbatim}
+…
+cp = line.interpolate(distance)
+…
 
 \end{fulllineitems}
 
-\index{getFilename() (in module gps2net)@\spxentry{getFilename()}\spxextra{in module gps2net}}
+\index{getShortestPathAStar() (in module gps2net)@\spxentry{getShortestPathAStar()}\spxextra{in module gps2net}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{index:gps2net.getFilename}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{gps2net.}}\sphinxbfcode{\sphinxupquote{getFilename}}}{\emph{path}}{}
-Returns the name of a file from a specific path (excluding directories and extension).
-\begin{quote}\begin{description}
-\item[{Parameters}] \leavevmode\begin{description}
-\item[{\sphinxstylestrong{path}}] \leavevmode{[}{[}string{]}{]}
-The path of a specific data file.
-
-\end{description}
-
-\item[{Returns}] \leavevmode\begin{description}
-\item[{string}] \leavevmode
-The name of the file. Namely, the last part of the path (excluding the extgension).
-
-\end{description}
-
-\end{description}\end{quote}
-\subsubsection*{Examples}
-
-\begin{sphinxVerbatim}[commandchars=\\\{\}]
-\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{myPath} \PYG{o}{=} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{dir1/dir2/MyFilename.txt}\PYG{l+s+s1}{\PYGZsq{}}
-\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{filename} \PYG{o}{=} \PYG{n}{getFilename}\PYG{p}{(}\PYG{n}{myPath}\PYG{p}{)}
-\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{filename}
-\PYG{g+go}{\PYGZsq{}MyFilename\PYGZsq{}}
-\end{sphinxVerbatim}
-
-\end{fulllineitems}
-
-\index{printProgressBar() (in module gps2net)@\spxentry{printProgressBar()}\spxextra{in module gps2net}}
-
-\begin{fulllineitems}
-\phantomsection\label{\detokenize{index:gps2net.printProgressBar}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{gps2net.}}\sphinxbfcode{\sphinxupquote{printProgressBar}}}{\emph{iteration}, \emph{total}, \emph{prefix=''}, \emph{suffix=''}, \emph{decimals=1}, \emph{length=100}, \emph{fill='█'}, \emph{printEnd='r'}}{}
-Call in a loop to create terminal progress bar.
-\begin{quote}\begin{description}
-\item[{Parameters}] \leavevmode\begin{description}
-\item[{\sphinxstylestrong{iteration   - Required}}] \leavevmode{[}current iteration (Int){]}
-total       - Required  : total iterations (Int)
-prefix      - Optional  : prefix string (Str)
-suffix      - Optional  : suffix string (Str)
-decimals    - Optional  : positive number of decimals in percent complete (Int)
-length      - Optional  : character length of bar (Int)
-fill        - Optional  : bar fill character (Str)
-printEnd    - Optional  : end character (e.g. “
-
-\item[{\sphinxstylestrong{“, “}}] \leavevmode
-\item[{\sphinxstylestrong{“) (Str)}}] \leavevmode
-\end{description}
-
-\end{description}\end{quote}
-
+\phantomsection\label{\detokenize{index:gps2net.getShortestPathAStar}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{gps2net.}}\sphinxbfcode{\sphinxupquote{getShortestPathAStar}}}{\emph{source}, \emph{target}, \emph{source\_line}, \emph{target\_line}, \emph{source\_line\_oneway}, \emph{target\_line\_oneway}, \emph{filepath\_shp}, \emph{ignore\_oneway=False}}{}~
 \end{fulllineitems}
 
 
@@ -205,20 +137,11 @@ printEnd    - Optional  : end character (e.g. “
 \DUrole{xref,std,std-ref}{genindex}
 
 \item {} 
-\DUrole{xref,std,std-ref}{modindex}
-
-\item {} 
 \DUrole{xref,std,std-ref}{search}
 
 \end{itemize}
 
 
-\renewcommand{\indexname}{Python Module Index}
-\begin{sphinxtheindex}
-\let\bigletter\sphinxstyleindexlettergroup
-\bigletter{g}
-\item\relax\sphinxstyleindexentry{gps2net}\sphinxstyleindexpageref{index:\detokenize{module-gps2net}}
-\end{sphinxtheindex}
 
 \renewcommand{\indexname}{Index}
 \printindex

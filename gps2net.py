@@ -1,11 +1,5 @@
-# %%
-# imports
-
 from shapely.geometry import LineString
-#from matplotlib import pyplot
-from shapely.geometry import Point, LineString, MultiLineString, mapping, shape
-from shapely.ops import cascaded_union
-from shapely import affinity
+from shapely.geometry import Point, LineString
 import fiona
 import networkx as nx
 import math
@@ -13,50 +7,55 @@ import math
 import matplotlib.pyplot as plt
 import numpy as np
 
-import time
 from timeit import default_timer as timer
 import doctest
 
 import sys
 import os
 
-# Disable 'print()'
-
-
-def blockPrint():
-    sys.stdout = open(os.devnull, 'w')
-
-# Restore 'print()'
-
-
-def enablePrint():
-    sys.stdout = sys.__stdout__
-
-
-# %%
 
 # global variable: empty Directed Graph
 DG = nx.DiGraph()
 
 
-# %%
+def blockPrint():
+    '''This method is used to disable print() messages.
+    '''
+    sys.stdout = open(os.devnull, 'w')
+
+
+def enablePrint():
+    '''This method restores print() messages. 
+    '''
+    sys.stdout = sys.__stdout__
+
 
 # Print iterations progress
-def printProgressBar(iteration, total, prefix='', suffix='', decimals=1, length=100, fill='█', printEnd="\r"):
-    """Call in a loop to create terminal progress bar.
+def printProgressBar(iteration, total, prefix='', suffix='', decimals=1, length=100, fill='█', printEnd='\r'):
+    r'''Call in a loop to create terminal progress bar.
 
     Parameters
     ----------
-        iteration   - Required  : current iteration (Int)
-        total       - Required  : total iterations (Int)
-        prefix      - Optional  : prefix string (Str)
-        suffix      - Optional  : suffix string (Str)
-        decimals    - Optional  : positive number of decimals in percent complete (Int)
-        length      - Optional  : character length of bar (Int)
-        fill        - Optional  : bar fill character (Str)
-        printEnd    - Optional  : end character (e.g. "\r", "\r\n") (Str)
-    """
-    percent = ("{0:." + str(decimals) + "f}").format(100 *
+    iteration : int
+        current iteration
+    total : Int
+        total iterations
+    prefix : str, optional
+        prefix string, by default ''
+    suffix : str, optional
+        suffix string, by default ''
+    decimals : int, optional
+        positive number of decimals in percent complete, by default 1
+    length : int, optional
+        character length of bar, by default 100
+    fill : str, optional
+        bar fill character, by default '█'
+    printEnd : str, optional
+        end character (e.g. '\\r', '\\r\\n'), by default '\\r'
+
+    '''
+
+    percent = ('{0:.' + str(decimals) + 'f}').format(100 *
                                                      (iteration / float(total)))
     filledLength = int(length * iteration // total)
     bar = fill * filledLength + '-' * (length - filledLength)
@@ -71,17 +70,8 @@ def printProgressBar(iteration, total, prefix='', suffix='', decimals=1, length=
     # blockPrint()
 
 
-# print("done")
-
-# %%
-
-# returns distance in meters
-
-# APPROXIMATION
-# QGIS could calculate accurate distance
-
 def distFrom(lng1, lat1, lng2, lat2):
-    """Returns the distance between two points in meters.
+    '''Returns the distance between two points in meters.
 
     Parameters
     ----------
@@ -118,14 +108,12 @@ def distFrom(lng1, lat1, lng2, lat2):
     5
 
 
-    >>> print(myDistance) // prints 568.8872918 ...
-
     Returns
     --------
     dist : int
         The distance between two points in meters.
 
-    """
+    '''
 
     earthRadius = 6371000  # meters
     dLat = math.radians(lat2-lat1)
@@ -139,10 +127,29 @@ def distFrom(lng1, lat1, lng2, lat2):
     return dist
 
 
-# %%
-# how to cut a line
 def cut(line, distance, point):
-    # Cuts a line in two at a distance from its starting point
+    '''Cuts a line in two at a distance from its starting point.
+
+    Parameters
+    ----------
+    line : Shapely 'LineString' object
+        [description]
+    distance : float
+        [description]
+    point : Shapely Point object
+        [description]
+
+    Notes
+    -----
+    ...
+    'line.interpolate(distance)' should be equal to the parameter 'point'. However, due to precision errors 'point' is used.
+    ...
+
+    Returns
+    -------
+    list with LineStrings
+        Two LineStrings are returned. 'point' is the end point of the first LineString and the start point of the second LineString.
+    '''
 
     # check if point lies on line. If not, return uncut line.
     if distance <= 0.0 or distance >= line.length:
@@ -169,10 +176,31 @@ def cut(line, distance, point):
                 LineString(coords[:i] + [(point.x, point.y)]),
                 LineString([(point.x, point.y)] + coords[i:])]
 
-# %%
-
 
 def createGraphFromSHPInput(filepath_shp):
+    '''Creates a directed graph from a shp file.
+
+    Parameters
+    ----------
+    filepath_shp : str
+        The path where the shp file (which contains the street data) is stored.
+
+
+    Notes
+    -----
+    This graph is only initialized once in the beginning of the script. The DiGraph contains all linesegment of the shp file as directed edges. The start and end node of each edge are tuples containing the coordinates of the position. The weight of an edge is the air_line_distance from the start to the end of the linesegment. Each edge containes the following attributes:
+
+    - id : int
+        The id of the street (LineString) which the linesegment belongs to according to the shapefile.
+    - oneway : {'B', 'F', 'T'}
+        The 'oneway'-property of the street (LineString) which the linesegment belongs to according to the shapefile. The 'oneway'-property indicates if a street is bi-directional (B), or one way heading from the from-node to the to-node (F), or one way heading from the to-node to the from-node (T).
+
+
+    Returns
+    -------
+    Directed Graph
+        The Directed Graph which contains all linesegments of the shapefiles as edges is returned.
+    '''
 
     GraphFromSHP = nx.DiGraph()
 
@@ -180,13 +208,13 @@ def createGraphFromSHPInput(filepath_shp):
 
     counter = 0
 
-    print("Graph already exists")
+    print('Graph already exists')
 
     nr_elements_in_SHP_file = 0
     with fiona.open(filepath_shp) as input_lines:
         nr_elements_in_SHP_file = sum(1 for line in input_lines)
 
-    print("nr_elements_in_SHP_file: ", nr_elements_in_SHP_file)
+    print('nr_elements_in_SHP_file: ', nr_elements_in_SHP_file)
 
     # Initial call to print 0% progress ProgressBar
     suffix = '| SHP file items: {}/{}'.format(
@@ -194,8 +222,8 @@ def createGraphFromSHPInput(filepath_shp):
     printProgressBar(0, nr_elements_in_SHP_file,
                      prefix='Creating Graph:', suffix=suffix, length=50)
 
-    # print("graph nr of edges: ", GraphFromSHP.number_of_edges())
-    print("starting to build graph: ")
+    # print('graph nr of edges: ', GraphFromSHP.number_of_edges())
+    print('starting to build graph: ')
 
     with fiona.open(filepath_shp) as input_lines:
 
@@ -206,14 +234,14 @@ def createGraphFromSHPInput(filepath_shp):
             id = line['id']
             oneway = line['properties']['oneway']
 
-            # print("id: ", id)
-            # print("oneway: ", oneway)
+            # print('id: ', id)
+            # print('oneway: ', oneway)
 
             for coord in line['geometry']['coordinates']:
 
                 if (previous_coord != (0, 0)):
-                    # print("previous_coord: ", previous_coord)
-                    # print("coord: ", coord)
+                    # print('previous_coord: ', previous_coord)
+                    # print('coord: ', coord)
 
                     calculated_length = distFrom(
                         coord[0], coord[1], previous_coord[0], previous_coord[1])
@@ -234,7 +262,7 @@ def createGraphFromSHPInput(filepath_shp):
                             coord, previous_coord, weight=calculated_length, id=id, oneway=oneway)
 
                 # else:
-                    # print("revious_coord    ==    (0,0)   --------------")
+                    # print('revious_coord    ==    (0,0)   --------------')
 
                 # print(counter_inner)
                 counter_inner += 1
@@ -254,15 +282,15 @@ def createGraphFromSHPInput(filepath_shp):
 
     # enablePrint()
 
-    print("graph nr of edges AFTER CREATION: ", GraphFromSHP.number_of_edges())
+    print('graph nr of edges AFTER CREATION: ', GraphFromSHP.number_of_edges())
 
     # blockPrint()
 
-    # print("GraphFromSHP: ", (GraphFromSHP.edges(data=True)))
+    # print('GraphFromSHP: ', (GraphFromSHP.edges(data=True)))
 
     # enablePrint()
 
-    # print("graph nr of edges: ", GraphFromSHP.number_of_edges())
+    # print('graph nr of edges: ', GraphFromSHP.number_of_edges())
 
     # blockPrint()
 
@@ -284,7 +312,7 @@ def getShortestPathAStar(source, target, source_line, target_line, source_line_o
     all_added_edges = []
 
     def air_line_distance(source, target):
-        """Heuristic function for A star algorithm: returns the air line distance from the source to the target.
+        '''Heuristic function for A star algorithm: returns the air line distance from the source to the target.
 
         Parameters
         ----------
@@ -311,12 +339,12 @@ def getShortestPathAStar(source, target, source_line, target_line, source_line_o
         -------
         int
             The air line distance between two points (source and target) in meters.
-        """
+        '''
         distance = distFrom(source[0], source[1], target[0], target[1])
         return distance
 
     def temporarily_add_edge_to_graph(startNode, endNode, edgeWeight, edgeId, direction):
-        """Temporarily adds an edge to the global graph.
+        '''Temporarily adds an edge to the global graph.
 
         Parameters
         ----------
@@ -326,26 +354,27 @@ def getShortestPathAStar(source, target, source_line, target_line, source_line_o
             [description]
         edgeWeight : int
             The edgeweight is the distance between the startNode and the endNode in meters.
-        edgeId : [type]
-            [description]
-        direction : 
-            [description]
+        edgeId : int
+            The id of the street (LineString) which the linesegment belongs to according to the shapefile.
+        direction : {'B', 'F', 'T'}
+            The 'oneway'-property of the street (LineString) which the linesegment belongs to according to the shapefile.
+            The 'oneway'-property indicates if a street is bi-directional (B), or one way heading from the from-node to the to-node (F), or one way heading from the to-node to the from-node (T).
 
         Notes
         -----
         This function temporarily adds an edge to the global graph. It only adds the edge if it deosn't exist in the graph yet. Further, the new edge is added to the list 'all_added_edges' so that it can be removed again in the end.
-        """
+        '''
         if (not DG.has_edge(startNode, endNode)):
             # print('edge has to be added')
-            # print("adding ({},{})".format(startNode, endNode))
+            # print('adding ({},{})'.format(startNode, endNode))
             # print('')
 
             DG.add_edge(startNode, endNode, weight=edgeWeight,
                         id=edgeId, oneway=direction)
             all_added_edges.append((startNode, endNode))
         # else:
-            # print("graph does have({},{})".format(startNode,endNode))
-            # print("edge:",DG.get_edge_data(startNode, endNode))
+            # print('graph does have({},{})'.format(startNode,endNode))
+            # print('edge:',DG.get_edge_data(startNode, endNode))
             # print('')
 
     # check if the global variable 'DG' is an empty directed graph. If yes, create a graph from the shp-file content.
@@ -360,7 +389,7 @@ def getShortestPathAStar(source, target, source_line, target_line, source_line_o
         d_target = LineString(target_line).project(Point(target))
 
         cut_line_target = cut(LineString(target_line), d_target, Point(target))
-        # print("cut_line_target: ", cut_line_target)
+        # print('cut_line_target: ', cut_line_target)
         new_line_target_after_cut = [list(x.coords) for x in cut_line_target]
 
         len_line_segment = len(new_line_target_after_cut[0])
@@ -372,39 +401,22 @@ def getShortestPathAStar(source, target, source_line, target_line, source_line_o
         if(target_line_oneway == 'B'):
             edge_to_remove_from_graph = DG.get_edge_data(
                 edge_to_remove_T_source, edge_to_remove_T_target)
-            print("B:", edge_to_remove_from_graph)
+            print('B:', edge_to_remove_from_graph)
 
         elif(target_line_oneway == 'F'):
             edge_to_remove_from_graph = DG.get_edge_data(
                 edge_to_remove_T_source, edge_to_remove_T_target)
-            print("F:", edge_to_remove_from_graph)
+            print('F:', edge_to_remove_from_graph)
 
         elif(target_line_oneway == 'T'):
             edge_to_remove_from_graph = DG.get_edge_data(
                 edge_to_remove_T_target, edge_to_remove_T_source)
-            print("T:", edge_to_remove_from_graph)
+            print('T:', edge_to_remove_from_graph)
 
         edge_to_remove_from_graph_id = edge_to_remove_from_graph['id']
         edge_to_remove_from_graph_oneway = edge_to_remove_from_graph['oneway']
 
-        """
-
-        # i think that it is not necessary to remove an edge
-
-        # remove the edge from the graph
-        if(remove_reverse==1):
-            DG.remove_edge(edge_to_remove_source, edge_to_remove_target)
-        else:
-            DG.remove_edge(edge_to_remove_target, edge_to_remove_source)
-
-        print("edge_to_remove_from_graph after removed: ",
-              DG.get_edge_data(edge_to_remove_source,edge_to_remove_target))
-        """
-
         # add the line segments for the target
-        print("source_line_oneway:", source_line_oneway)
-        print("source_line_oneway:", source_line_oneway)
-        print("check if ignore oneway is true:", ignore_oneway)
 
         if(edge_to_remove_from_graph_oneway == 'B' or ignore_oneway == True):
 
@@ -435,7 +447,7 @@ def getShortestPathAStar(source, target, source_line, target_line, source_line_o
                 edge_to_remove_T_target[0], edge_to_remove_T_target[1], target[0], target[1]), edge_to_remove_from_graph_id, edge_to_remove_from_graph_oneway)
 
     else:
-        print("no need to add additional edges target")
+        print('no need to add additional edges target')
 
     # check if source lies exactly on the beginning/end of a line segment
     # if yes, source already exists as a node
@@ -528,8 +540,8 @@ def getShortestPathAStar(source, target, source_line, target_line, source_line_o
                 edge_to_remove_S_source[0], edge_to_remove_S_source[1], source[0], source[1]), edge_to_remove_from_graph_id, edge_to_remove_from_graph_oneway)
 
     try:
-        # try to find a path
 
+        # try to find a path
         path = nx.astar_path(DG, source, target,
                              heuristic=air_line_distance, weight='weight')
 
@@ -537,36 +549,25 @@ def getShortestPathAStar(source, target, source_line, target_line, source_line_o
             DG, source, target, heuristic=air_line_distance, weight='weight')
 
         # get the IDs of the traversed lines
-        print('get the IDs of the traversed lines')
         prevNode = (0, 0)
         for node in path:
-            print('prevNode:', prevNode)
             if (prevNode != (0, 0)):
-                print('node', node)
 
                 if(DG.get_edge_data(prevNode, node) != None):
-                    print(DG.get_edge_data(prevNode, node)['id'])
-                    if(DG.get_edge_data(prevNode, node)['id'] in path_IDs):
-                        #sys.exit('id already exists')
-                        print('id already exists')
-                        print("path_IDs1:", path_IDs)
-                    else:
-                        path_IDs.append(DG.get_edge_data(prevNode, node)['id'])
+                    # get id of edge
+                    path_IDs.append(DG.get_edge_data(prevNode, node)['id'])
                 else:
+                    # edge was not found
                     path_IDs.append('edge not found! -- prevNode:', prevNode)
                     path_IDs.append('edge not found! -- node:', node)
-                print("")
             prevNode = node
-        print("path_IDs2:", path_IDs)
 
     except:
         # no path was found
         pass
 
     # remove all the edges which where added to the graph.
-    print("GraphFromSHP nr of edges 1: ", DG.number_of_edges())
     DG.remove_edges_from(all_added_edges)
-    print("GraphFromSHP nr of edges 1: ", DG.number_of_edges())
 
     return path, path_length, path_IDs
 
@@ -575,25 +576,67 @@ def getShortestPathAStar(source, target, source_line, target_line, source_line_o
 
 
 def calculateClosestPointAndShortestPath(filepath, filepath_shp, minNumberOfLines=2, aStar=1):
-    """
+    '''[summary]
+
+    Parameters
+    ----------
+    filepath : str
+        The path where the txt file (which contains the gps trajectories) is stored.
+    filepath_shp : str
+        The path where the shp file (which contains the street data) is stored.
+    minNumberOfLines : int, optional
+        [description], by default 2
+    aStar : int, optional
+        [description], by default 1
+
+    Notes
+    -----
+
+
+    - outlier : Number of data points which where flagged as outliers.
+    - taxi_did_not_move : x
+    - no_path_found : 
+    - cannot_compute_shortest_path_as_previous_point_is_0_0 : 
+    - path_from_target_to_source : 
+    - checked_other_solution_index : 
+    - chose_other_solution_index : 
+    - solution_already_lies_on_shortest_path : 
+    - no_solution_lies_on_shortest_path : 
+    - other_solution_is_worse : 
+    - other_solution_no_path_found : 
 
 
 
-    """
+    Returns
+    -------
+    calculatedSolution : list
+
+
+    statistics : list
+        Statistics for the txt file (containing gps trajectories) for which the solution is calculated.
+        The statistics contain the following numbers (all of type int):
+
+        - outlier : Number of data points which where flagged as outliers.
+        - taxi_did_not_move : Number of times when a data point's gps position was identical to the gps position of the previous data point.
+        - no_path_found : Number of times no path was found with the A Star algorithm. 
+        - cannot_compute_shortest_path_as_previous_point_is_0_0 : 
+        - path_from_target_to_source : 
+        - checked_other_solution_index : 
+        - chose_other_solution_index : 
+        - solution_already_lies_on_shortest_path : 
+        - no_solution_lies_on_shortest_path : 
+        - other_solution_is_worse : 
+        - other_solution_no_path_found : 
+
+    '''
+
     # blockPrint()
-
-    # header = ["latitude(y);longitude(x);hasPassenger;time;closest_intersection_x;closest_intersection_y;intersected_line_as_linestring;linestring_adjustment_visualization;path_time;path_as_linestring;path_length;air_line_length;path_length/air_line_length;velocity_m_s;A_path_as_linestring;A_path_length;A_air_line_length;A_path_length/air_line_length;A_velocity_m_s\n"]
-    header = ['latitude(y);longitude(x);hasPassenger;time;closest_intersection_x;closest_intersection_y;relative_position;relative_position_normalized;intersected_line_oneway;intersected_line_as_linestring;linestring_adjustment_visualization;path_time']
-
-    if(aStar == 1):
-        header += ';path_as_linestring;path_length;air_line_length;path_length/air_line_length;velocity_m_s;pathIDs;solution_id;solution_index;path_from_target_to_source;comment'
-
-    header += '\n'
 
     counter = 0
 
-    lines_for_new_text_file = []
+    calculatedSolution = []
 
+    # initialize the dict in which all the statistics of the currently calculated solution will be stored.
     statistics = {}
     statistics['outlier'] = 0
     statistics['taxi_did_not_move'] = 0
@@ -714,7 +757,7 @@ def calculateClosestPointAndShortestPath(filepath, filepath_shp, minNumberOfLine
 
         # point is oulier only if no line was found
         if(number_of_lines == 0):
-            print("This point is an outlier.")
+            print('This point is an outlier.')
             comment += 'This point is an outlier.'
 
             # makes sure that next point doesn't calculate shortest path
@@ -743,12 +786,12 @@ def calculateClosestPointAndShortestPath(filepath, filepath_shp, minNumberOfLine
 
                 inter_dict_point = {}
 
-                inter_dict_point["closest_point_on_line"] = closest_point_on_line
-                inter_dict_point["relative_position_closest_point_on_line"] = relative_position
-                inter_dict_point["relative_position_normalized_closest_point_on_line"] = relative_position_normalized
-                inter_dict_point["input_line"] = newLS
+                inter_dict_point['closest_point_on_line'] = closest_point_on_line
+                inter_dict_point['relative_position_closest_point_on_line'] = relative_position
+                inter_dict_point['relative_position_normalized_closest_point_on_line'] = relative_position_normalized
+                inter_dict_point['input_line'] = newLS
 
-                inter_dict_point["oneway"] = input_line[1]['properties']['oneway']
+                inter_dict_point['oneway'] = input_line[1]['properties']['oneway']
 
                 # distance needs to be float so that it can be sorted appropriately afterwards
                 inter_dict_point['distance'] = float(
@@ -761,7 +804,7 @@ def calculateClosestPointAndShortestPath(filepath, filepath_shp, minNumberOfLine
             solution_dict_sorted_by_distance = sorted(
                 solution_dict.items(), key=lambda kv: (kv[1]['distance']))
 
-            print("solution NEW:")
+            print('solution NEW:')
             # get the first element as it is the one with the smallest distance (which is the closest point)
             solution_id = solution_dict_sorted_by_distance[0][0]
             solution = solution_dict_sorted_by_distance[0][1]
@@ -772,13 +815,11 @@ def calculateClosestPointAndShortestPath(filepath, filepath_shp, minNumberOfLine
             for s in solution:
                 print(str(s))
                 print(str(solution[s]))
-            print("")
-            print("end solution")
-            print("")
-            print("")
-            print("")
-
-            # sys.exit('id already exists')
+            print('')
+            print('end solution')
+            print('')
+            print('')
+            print('')
 
             closest_intersection_x = solution['closest_point_on_line'].x
             closest_intersection_y = solution['closest_point_on_line'].y
@@ -809,7 +850,7 @@ def calculateClosestPointAndShortestPath(filepath, filepath_shp, minNumberOfLine
             # check if previous point is set. if yes: calculate the shortest path from current point to previous point
             if(previous_point == (0, 0)):
                 # no previous point set, do not calculate shortest path.
-                print("cannot compute shortest path as previous point is (0,0)")
+                print('cannot compute shortest path as previous point is (0,0)')
                 comment += 'Cannot compute shortest path as previous point is (0,0). '
 
                 # update statistics
@@ -817,7 +858,7 @@ def calculateClosestPointAndShortestPath(filepath, filepath_shp, minNumberOfLine
 
             elif((closest_intersection_x, closest_intersection_y) == previous_point):
                 # if the taxi did not move, path is not created
-                print("source==target. Taxi did not move.")
+                print('source==target. Taxi did not move.')
 
                 comment += 'source==target. Taxi did not move. '
 
@@ -849,7 +890,7 @@ def calculateClosestPointAndShortestPath(filepath, filepath_shp, minNumberOfLine
 
                     # if this is true, it is possible that a taxi has to ride all around the block because it is a oneway street and source and target lie on the same line
                     if(air_line_length < 20 and intersected_line_oneway != 'B' and previous_intersected_line_oneway != 'B' and (list(intersected_line.coords) == list(previous_intersected_line.coords))):
-                        print("if statement inside")
+                        print('if statement inside')
 
                         # calculate where the source lies on the line
                         d_source = LineString(list(intersected_line.coords)).project(
@@ -859,33 +900,33 @@ def calculateClosestPointAndShortestPath(filepath, filepath_shp, minNumberOfLine
                         d_target = LineString(list(previous_intersected_line.coords)).project(
                             Point(previous_point))
 
-                        print("d_source:", d_source)
-                        print("d_target:", d_target)
+                        print('d_source:', d_source)
+                        print('d_target:', d_target)
 
                         # check if there was a glipse in the gps coordinates which resulted in a situation where the source lies after the target
                         # if it is a oneway line from the FROM-node to the TO-node and source lies AFTER the target   OR   if it is a oneway line from the TO-node to the FROM-node and source lies BEFORE the target
                         if((intersected_line_oneway == 'F' and d_source > d_target)or(intersected_line_oneway == 'T' and d_source < d_target)):
-                            print("if statement inside SECOND!!!")
+                            print('if statement inside SECOND!!!')
 
                             # calculate the shortest path with A STAR algorithm
                             # set ignore_oneway=True : this makes sure that the source_line and the target_line both are treated as lines where driving in both directions is allowed (so feature 'oneway' is ignored)
                             path2, path_length2, pathIDs2 = getShortestPathAStar((closest_intersection_x, closest_intersection_y), previous_point, list(intersected_line.coords), list(
                                 previous_intersected_line.coords), intersected_line_oneway, previous_intersected_line_oneway, filepath_shp, ignore_oneway=True)
 
-                            print("path_length:", path_length)
-                            print("path_length2:", path_length2)
-                            print("path:", path)
-                            print("path2:", path2)
-                            print("")
-                            print("check if path2 is better:")
+                            print('path_length:', path_length)
+                            print('path_length2:', path_length2)
+                            print('path:', path)
+                            print('path2:', path2)
+                            print('')
+                            print('check if path2 is better:')
                             print(path == None and path2 != None)
-                            print(".. or ..")
+                            print('.. or ..')
                             print(path != None and path2 != None and (
                                 path_length > path_length2))
 
                         # override path/path_lenght/pathIDs to make sure to use the solution which ignores the 'oneway' property
                         if((path == None and path2 != None) or (path != None and path2 != None and (path_length > path_length2))):
-                            print("OVERRIDING THE PATH")
+                            print('OVERRIDING THE PATH')
                             path = path2
                             path_length = path_length2
                             pathIDs = pathIDs2
@@ -895,7 +936,7 @@ def calculateClosestPointAndShortestPath(filepath, filepath_shp, minNumberOfLine
                             # update statistics
                             statistics['path_from_target_to_source'] += 1
 
-                    # if a path was found, append the solution to the lines_for_new_text_file
+                    # if a path was found, append the solution to the calculatedSolution
                     if(path != None):
                         velocity_m_s = path_length/path_time
 
@@ -912,10 +953,7 @@ def calculateClosestPointAndShortestPath(filepath, filepath_shp, minNumberOfLine
 
                         # no previous point set, do not calculate shortest path.
                         comment += 'No path was found with A Star algorithm. '
-                        print("No path was found with A Star algorithm.")
-
-                        # update statistics
-                        statistics['no_path_found'] += 1
+                        print('No path was found with A Star algorithm.')
 
         location_result['path_from_target_to_source'] = path_from_target_to_source
         location_result['comment'] = comment
@@ -925,7 +963,7 @@ def calculateClosestPointAndShortestPath(filepath, filepath_shp, minNumberOfLine
     # calculate the number of lines of the file we are looking at
     # lines_in_textfile=sum(1 for line in open(filepath))
     lines_in_textfile = 0
-    with open(filepath, "r") as f:
+    with open(filepath, 'r') as f:
         lines_in_textfile = sum(1 for line in f)
 
     print(lines_in_textfile)
@@ -937,7 +975,7 @@ def calculateClosestPointAndShortestPath(filepath, filepath_shp, minNumberOfLine
 
     previous_location_result = {}
 
-    with open(filepath, "r") as f:
+    with open(filepath, 'r') as f:
         mylist = f.read().splitlines()
 
         # append an artificaial line at the end. This will make sure that also the path from the last to the second-last element will be calculated and possible improvements will be checked.
@@ -948,7 +986,7 @@ def calculateClosestPointAndShortestPath(filepath, filepath_shp, minNumberOfLine
             # the last line of the text file is artificial as it was added before. this line is just needed to make sure the second last line (which is actually the last actual line of the text file is calculated correctly)
             if(lines != 'artificialline'):
 
-                values = lines.split(" ")
+                values = lines.split(' ')
                 # the longitude and latitude were read from the txt file an saved as a string, here we transform it to a float
                 x = float(values[1])
                 y = float(values[0])
@@ -1036,11 +1074,11 @@ def calculateClosestPointAndShortestPath(filepath, filepath_shp, minNumberOfLine
                               pathIDs_to_previous_target)
                         print('')
                         print('')
-                        print("all_solutions_sorted:",
+                        print('all_solutions_sorted:',
                               previous_location_result['all_solutions_sorted'])
-                        print("solution_id:",
+                        print('solution_id:',
                               previous_location_result['solution_id'])
-                        print("solution:",
+                        print('solution:',
                               previous_location_result['solution'])
 
                         print('')
@@ -1066,8 +1104,8 @@ def calculateClosestPointAndShortestPath(filepath, filepath_shp, minNumberOfLine
                                     new_solution = v
                                     print('now break')
                                     break
-                                print("k:", k)
-                                print("v:", v)
+                                print('k:', k)
+                                print('v:', v)
                                 new_solution_index += 1
 
                             if (new_solution_id == (-1)):
@@ -1193,13 +1231,16 @@ def calculateClosestPointAndShortestPath(filepath, filepath_shp, minNumberOfLine
                                     # update statistics
                                     statistics['other_solution_no_path_found'] += 1
 
-                        #sys.exit('WE STOP HERE')
-
                 else:
                     print('Tried to check other solution but the target is not known. ')
 
                 # append the result of the previous location to the entire solution
-                lines_for_new_text_file.append(previous_location_result)
+                calculatedSolution.append(previous_location_result)
+
+                # check if a path was found xxx
+                if (previous_location_result['path'] == ''):
+                    # update statistics
+                    statistics['no_path_found'] += 1
 
             # set the result of the current location as the result of the previous location
             previous_location_result = current_location_result
@@ -1227,12 +1268,13 @@ def calculateClosestPointAndShortestPath(filepath, filepath_shp, minNumberOfLine
             previous_intersected_line_oneway = intersected_line_oneway
             previous_target_intersected_line_oneway = target_intersected_line_oneway
 
-            # stop algorithm after a few lines (for testing reasons)
+            # TODO: Delete the following lines as this is just for testing.
+            # stop script after a few lines (for testing reasons)
             counter += 1
             print(counter)
             if (counter > 10):
-                print("ende")
-                break
+                print('ende')
+                #break
 
             # Update Progress Bar
 
@@ -1249,31 +1291,31 @@ def calculateClosestPointAndShortestPath(filepath, filepath_shp, minNumberOfLine
 
             # blockPrint()
 
-        """
+        '''
         NOT NEEDED ANYMORE, as we have artificial line now
 
         # the result of a location is only added to the intire solution after it is confirmed as the best solution by the next location
         # for this reason the result of the last location of the text_file has to be added to the entire solution (since there isn't a next solution that will do that)
-        lines_for_new_text_file.append(previous_location_result)
-        """
+        calculatedSolution.append(previous_location_result)
+        '''
 
-    return header, lines_for_new_text_file, statistics
+    return calculatedSolution, statistics
 
 
 def getTimeDifferences(filepath, timestampPosition):
 
-    # initialise empty set
+    # initialise empty list
     timeDifferences = []
     # set previousTimestamp to 0
     previousTimestamp = 0
 
     # open the file
-    with open(filepath, "r") as f:
+    with open(filepath, 'r') as f:
         mylist = f.read().splitlines()
 
         # loop through the txt file
         for lines in mylist:
-            values = lines.split(" ")
+            values = lines.split(' ')
             # get the timestamp of the current line
             timestamp = int(values[timestampPosition])
 
@@ -1339,12 +1381,14 @@ def plotAndSaveHistogram(input, minXLabel, maxXLabel, binSize, filename, title, 
     # save the figure in the folder of the current taxi
     plt.savefig(filename)
     # plt.show()
+    # close the current figure
+    plt.close()
 
 # %%
 
 
 def getFilename(path):
-    """Returns the name of a file from a specific path (excluding directories and extension).
+    '''Returns the name of a file from a specific path (excluding directories and extension).
 
     Parameters
     ----------
@@ -1365,7 +1409,7 @@ def getFilename(path):
     >>> filename
     'MyFilename'
 
-    """
+    '''
     # get the name of the file from the path (without the directories and without extension)
     filename = os.path.splitext(os.path.basename(os.path.normpath(path)))[0]
     return filename
@@ -1381,25 +1425,32 @@ def main():
 
     # blockPrint()
 
-    def caculationForOneTXTFile(filepath_shp, dirName, filepath):
+    def caculationForOneTXTFile(filepath_shp, dirName, filepath, aStar=1):
+
+        # set the header of the output txt file which will contain the calculated solution.
+        header = ['latitude(y);longitude(x);hasPassenger;time;closest_intersection_x;closest_intersection_y;relative_position;relative_position_normalized;intersected_line_oneway;intersected_line_as_linestring;linestring_adjustment_visualization;path_time']
+
+        if(aStar == 1):
+            header += ';path_as_linestring;path_length;air_line_length;path_length/air_line_length;velocity_m_s;pathIDs;solution_id;solution_index;path_from_target_to_source;comment'
+
+        header += '\n'
 
         new_filename_solution = os.path.join(
             dirName, 'calculatedSolution') + '.txt'
-        new_filename_statistics = os.path.join(dirName, 'STATISTICS') + '.txt'
-        new_filename_velocities = os.path.join(dirName, "velocitiesPLOT.png")
+        new_filename_statistics = os.path.join(dirName, 'statistics') + '.txt'
+        new_filename_velocities = os.path.join(dirName, 'velocitiesPLOT.png')
         new_filename_path_length_air_line_length = os.path.join(
-            dirName, "path_length_air_line_length_PLOT.png")
+            dirName, 'path_length_air_line_length_PLOT.png')
 
-        myHeader, myCalculatedSolution, mySolutionStatistics = calculateClosestPointAndShortestPath(
-            filepath, filepath_shp, minNumberOfLines=2, aStar=1)
+        myCalculatedSolution, mySolutionStatistics = calculateClosestPointAndShortestPath(
+            filepath, filepath_shp, minNumberOfLines=2, aStar=aStar)
 
         # this saves a new text file which includes the calculated parameters
+        with open(new_filename_solution, 'w') as new_file:
+            # write the header to the new txt file
+            new_file.writelines(header)
 
-        # with open("CreatedFiles3/ImprovedAlgorithm/"+new_filename, "w") as new_file:
-        # with open("2_Taxi data/CreatedFiles3/ImprovedAlgorithm2/"+new_filename, "w") as new_file:
-        with open(new_filename_solution, "w") as new_file:
-            new_file.writelines(myHeader)
-
+            # write the calculated solution to the new txt file
             for location_result in myCalculatedSolution:
                 new_file.write(str(location_result['y']))
                 new_file.write(';')
@@ -1450,10 +1501,10 @@ def main():
                 new_file.write(str(location_result['comment']))
                 new_file.write('\n')
 
-        # initialise empty set
+        # initialise empty lists
         velocities = []
-        velocities_none_counter = 0
         path_length_air_line_length = []
+        velocities_none_counter = 0
 
         # get all velocities of the solution
         for location_result in myCalculatedSolution:
@@ -1476,7 +1527,7 @@ def main():
 
         # SAVE STATISTICS IN NEW FILE
 
-        with open(new_filename_statistics, "w") as new_file:
+        with open(new_filename_statistics, 'w') as new_file:
             # write statistics to the file
             new_file.write('path of shp file: ')
             new_file.write(str(filepath_shp))
@@ -1484,11 +1535,12 @@ def main():
             new_file.write('path of old file: ')
             new_file.write(str(filepath))
             new_file.write('\n')
-            new_file.write('name of new file: ')
+            new_file.write('path of new file: ')
             new_file.write(str(new_filename_solution))
+            new_file.write('\n')
 
             # calculate the number of lines in the txt file
-            with open(filepath, "r") as f:
+            with open(filepath, 'r') as f:
                 num_lines = sum(1 for line in f)
             new_file.write('number of lines in txt file: ')
             new_file.write(str(num_lines))
@@ -1512,10 +1564,6 @@ def main():
             new_file.write('\n')
 
         # enablePrint()
-
-        print('')
-        print('STATISTICS:')
-        print(mySolutionStatistics)
 
     #filepath = '/Users/Joechi/Google Drive/HS19 – PathPy/2_Taxi data/Tests/Exports/AllPointsForOneTaxi/new_abboip_copy.txt'
 
@@ -1547,13 +1595,13 @@ def main():
     filepath_shp = '/Users/Joechi/Google Drive/gps2net/Data/taxi_san_francisco/San Francisco Basemap Street Centerlines/geo_export_e5dd0539-2344-4e87-b198-d50274be8e1d.shp'
 
     filepaths = []
-    # filepaths.append(filepath1)
-    # filepaths.append(filepath2)
-    # filepaths.append(filepath3)
-    # filepaths.append(filepath4)
-    # filepaths.append(filepath5)
     filepaths.append(filepath6)
     filepaths.append(filepath7)
+    filepaths.append(filepath1)
+    filepaths.append(filepath2)
+    filepaths.append(filepath3)
+    filepaths.append(filepath4)
+    filepaths.append(filepath5)
 
     # loop through all the filepaths
     for path in filepaths:
@@ -1569,17 +1617,17 @@ def main():
         # Create target directory & all intermediate directories if don't exists
         try:
             os.makedirs(dirName)
-            print("Directory ", dirName,  " created.")
+            print('Directory ', dirName,  ' created.')
         except FileExistsError:
-            print("Directory ", dirName,  " already exists.")
+            print('Directory ', dirName,  ' already exists.')
 
-        caculationForOneTXTFile(filepath_shp, dirName, path)
+        caculationForOneTXTFile(filepath_shp, dirName, path, 1)
 
         # get all timestamp differences of a text file
         timeDifferences = getTimeDifferences(path, 3)
 
         timedifferencesFileName = os.path.join(
-            dirName, "timedifferencesPLOT.png")
+            dirName, 'timedifferencesPLOT.png')
 
         # plot the timeDifferences in a histogram
         plotAndSaveHistogram(timeDifferences, 0, 300, 25, timedifferencesFileName,
@@ -1587,9 +1635,10 @@ def main():
 
 
 # %%
-if __name__ == "__main__":
+if __name__ == '__main__':
     import doctest
-    # test the examples with the following command: python gps2net.py -v
+    # running 'doctest.testmod()' test the examples in docstrings. Alternatively, the examples in docstrings can be tested by navigating to the 'docs' directory and running the following command in the terminal: python gps2net.py -v
     doctest.testmod()
 
+    # run the main method
     main()
