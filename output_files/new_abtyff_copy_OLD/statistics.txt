@@ -1,0 +1,20 @@
+path of shp file: /Users/Joechi/Google Drive/gps2net/Data/taxi_san_francisco/San Francisco Basemap Street Centerlines/geo_export_e5dd0539-2344-4e87-b198-d50274be8e1d.shp
+path of old file: /Users/Joechi/Google Drive/gps2net/Data/test_data/other_taxi/new_abtyff_copy.txt
+path of new file: output_files/new_abtyff_copy/calculatedSolution.txt
+number of lines in txt file: 20794
+
+outlier: 1649
+taxi_did_not_move: 730
+no_path_found: 2478
+cannot_compute_shortest_path_as_previous_point_is_0_0: 85
+path_from_target_to_source: 390
+checked_other_solution_index: 2753
+chose_other_solution_index: 1032
+solution_already_lies_on_shortest_path: 1048
+no_solution_lies_on_shortest_path: 612
+other_solution_is_worse: 61
+other_solution_no_path_found: 0
+
+VELOCITIES PLOT: 
+The Velocity plot contains velocities from 19046 data points. For the remaining 1748 data points the velocity could not be calculated (e.g. because it is an outlier).
+

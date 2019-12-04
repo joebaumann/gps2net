@@ -1,18 +1,14 @@
-from shapely.geometry import LineString
-from shapely.geometry import Point, LineString
-import fiona
-import networkx as nx
-import math
-
-import matplotlib.pyplot as plt
-import numpy as np
-
-from timeit import default_timer as timer
 import doctest
-
-import sys
+import math
 import os
+import sys
+from timeit import default_timer as timer
 
+import fiona
+import matplotlib.pyplot as plt
+import networkx as nx
+import numpy as np
+from shapely.geometry import LineString, Point
 
 # global variable: empty Directed Graph
 DG = nx.DiGraph()
@@ -188,13 +184,14 @@ def createGraphFromSHPInput(filepath_shp):
 
     Notes
     -----
-    This graph is only initialized once in the beginning of the script. The DiGraph contains all linesegment of the shp file as directed edges. The start and end node of each edge are tuples containing the coordinates of the position. The weight of an edge is the air_line_distance from the start to the end of the linesegment. Each edge containes the following attributes:
+    This graph is only initialized once in the beginning of the script. The DiGraph contains all linesegment of the shp file (i.e. streetsegments) as directed edges. The start and end node of each edge are tuples containing the coordinates of the position. The weight of an edge is the air_line_distance from the start to the end of the linesegment. Each edge containes the following attributes:
 
     - id : int
         The id of the street (LineString) which the linesegment belongs to according to the shapefile.
     - oneway : {'B', 'F', 'T'}
         The 'oneway'-property of the street (LineString) which the linesegment belongs to according to the shapefile. The 'oneway'-property indicates if a street is bi-directional (B), or one way heading from the from-node to the to-node (F), or one way heading from the to-node to the from-node (T).
 
+    Depending on the 'oneway'-property of the street either one or two edges are added to the graph. For 'B', two directed edges (from-node --> to-node AND to-node --> from-node) are added. For 'F' or 'T', only one directed edge is added to the graph.
 
     Returns
     -------
@@ -208,13 +205,9 @@ def createGraphFromSHPInput(filepath_shp):
 
     counter = 0
 
-    print('Graph already exists')
-
     nr_elements_in_SHP_file = 0
-    with fiona.open(filepath_shp) as input_lines:
-        nr_elements_in_SHP_file = sum(1 for line in input_lines)
-
-    print('nr_elements_in_SHP_file: ', nr_elements_in_SHP_file)
+    with fiona.open(filepath_shp) as street_lines:
+        nr_elements_in_SHP_file = sum(1 for street_segment in street_lines)
 
     # Initial call to print 0% progress ProgressBar
     suffix = '| SHP file items: {}/{}'.format(
@@ -222,22 +215,17 @@ def createGraphFromSHPInput(filepath_shp):
     printProgressBar(0, nr_elements_in_SHP_file,
                      prefix='Creating Graph:', suffix=suffix, length=50)
 
-    # print('graph nr of edges: ', GraphFromSHP.number_of_edges())
-    print('starting to build graph: ')
+    with fiona.open(filepath_shp) as street_lines:
 
-    with fiona.open(filepath_shp) as input_lines:
-
-        for line in list(input_lines):
+        for street_segment in list(street_lines):
             counter_inner = 0
 
             previous_coord = (0, 0)
-            id = line['id']
-            oneway = line['properties']['oneway']
+            # get the attributes from the street
+            id = street_segment['id']
+            oneway = street_segment['properties']['oneway']
 
-            # print('id: ', id)
-            # print('oneway: ', oneway)
-
-            for coord in line['geometry']['coordinates']:
+            for coord in street_segment['geometry']['coordinates']:
 
                 if (previous_coord != (0, 0)):
                     # print('previous_coord: ', previous_coord)
@@ -589,21 +577,6 @@ def calculateClosestPointAndShortestPath(filepath, filepath_shp, minNumberOfLine
     aStar : int, optional
         [description], by default 1
 
-    Notes
-    -----
-
-
-    - outlier : Number of data points which where flagged as outliers.
-    - taxi_did_not_move : x
-    - no_path_found : 
-    - cannot_compute_shortest_path_as_previous_point_is_0_0 : 
-    - path_from_target_to_source : 
-    - checked_other_solution_index : 
-    - chose_other_solution_index : 
-    - solution_already_lies_on_shortest_path : 
-    - no_solution_lies_on_shortest_path : 
-    - other_solution_is_worse : 
-    - other_solution_no_path_found : 
 
 
 
@@ -619,14 +592,17 @@ def calculateClosestPointAndShortestPath(filepath, filepath_shp, minNumberOfLine
         - outlier : Number of data points which where flagged as outliers.
         - taxi_did_not_move : Number of times when a data point's gps position was identical to the gps position of the previous data point.
         - no_path_found : Number of times no path was found with the A Star algorithm. 
-        - cannot_compute_shortest_path_as_previous_point_is_0_0 : 
-        - path_from_target_to_source : 
-        - checked_other_solution_index : 
-        - chose_other_solution_index : 
-        - solution_already_lies_on_shortest_path : 
-        - no_solution_lies_on_shortest_path : 
-        - other_solution_is_worse : 
-        - other_solution_no_path_found : 
+        - cannot_compute_shortest_path_as_previous_point_is_outlier : Number of times the path could not be computed since the previous point was an outlier.
+        - path_from_target_to_source : Number of times the 'oneway'-property was ignored. In this case the path is actually the path from the target to the source. This is done when the algorithm detects a GPS glipse (the vehicle seems to drive a tiny bit backwards on a oneway street which is not possible) which resulted in a wrong path.
+        - checked_other_solution_index : Number of times another solution was checked because a path either lead to a velocity of more than 35 m/s or a path length which is more than double the air line length.
+        - chose_other_solution_index : Number of times the other solution actually lead to a shorter cummulated path (path to previous point plus path to next point) than the initial solution
+        - solution_already_lies_on_shortest_path : Number of times when velocity was more than 35 m/s or path length was is more than double the air line length BUT the initial solution was already on the shortest path from the previous point to the next point (in this case, the solution is optimal which is why no other solution was checked).
+        - no_solution_lies_on_shortest_path : Number of times when velocity was more than 35 m/s or path length was is more than double the air line length BUT there was no other solution which lied on the shortest path from the previous point to the next point (in this case, no other solution could b checked).
+        - other_solution_is_worse : Number of times when another solution was checked, but since this new solution was worse than the initial solution it wasn't taken.
+        - other_solution_no_path_found : Number of times when another solution was checked, but since there was no valid path for this new solution it wasn't taken.
+
+        - checked_if_path_exists_for_second_best_solution_index : Number of times no path existed for initial solution. In these cases the secont best solution (if it existed) was checked.
+        - second_best_solution_yields_more_found_paths : Number of times no path existed for initial solution and the second best solution lead to more found paths. In these cases the initial solution was replaced by the secon best solution.
 
     '''
 
@@ -641,7 +617,7 @@ def calculateClosestPointAndShortestPath(filepath, filepath_shp, minNumberOfLine
     statistics['outlier'] = 0
     statistics['taxi_did_not_move'] = 0
     statistics['no_path_found'] = 0
-    statistics['cannot_compute_shortest_path_as_previous_point_is_0_0'] = 0
+    statistics['cannot_compute_shortest_path_as_previous_point_is_outlier'] = 0
     statistics['path_from_target_to_source'] = 0
     statistics['checked_other_solution_index'] = 0
     statistics['chose_other_solution_index'] = 0
@@ -649,6 +625,9 @@ def calculateClosestPointAndShortestPath(filepath, filepath_shp, minNumberOfLine
     statistics['no_solution_lies_on_shortest_path'] = 0
     statistics['other_solution_is_worse'] = 0
     statistics['other_solution_no_path_found'] = 0
+
+    statistics['checked_if_path_exists_for_second_best_solution_index'] = 0
+    statistics['second_best_solution_yields_more_found_paths'] = 0
 
     previous_target = (0, 0)
     previous_source = (0, 0)
@@ -712,6 +691,10 @@ def calculateClosestPointAndShortestPath(filepath, filepath_shp, minNumberOfLine
         location_result['linestring_adjustment_visualization'] = ''
 
         location_result['solution_id'] = ''
+        location_result['taxi_did_not_move'] = 0
+        location_result['second_best_solution_yields_more_found_paths'] = 0
+        location_result['NO_PATH_FOUND'] = 0
+        location_result['outlier'] = 0
 
         comment = ''
 
@@ -730,7 +713,7 @@ def calculateClosestPointAndShortestPath(filepath, filepath_shp, minNumberOfLine
 
         # the whole san francisco shp file (which was exported as a copy)
         # TODO: write better comment like:  min nr just needed to increse areasize
-        with fiona.open(filepath_shp) as input_lines:
+        with fiona.open(filepath_shp) as street_lines:
             # define size of area to filter map lines
             areasize = 0.0005
             max_areasize = 0.001
@@ -739,7 +722,7 @@ def calculateClosestPointAndShortestPath(filepath, filepath_shp, minNumberOfLine
             # define number of lines which have to be looked at after filter
             while ((number_of_lines < minNumberOfLines) and (areasize < max_areasize)):
 
-                input_shapes = list(input_lines.items(
+                input_shapes = list(street_lines.items(
                     bbox=((x-areasize), (y-areasize), (x+areasize), (y+areasize))))
 
                 number_of_lines = len(input_shapes)
@@ -758,13 +741,13 @@ def calculateClosestPointAndShortestPath(filepath, filepath_shp, minNumberOfLine
         # point is oulier only if no line was found
         if(number_of_lines == 0):
             print('This point is an outlier.')
-            comment += 'This point is an outlier.'
+            comment += 'This point is an outlier. '
 
             # makes sure that next point doesn't calculate shortest path
             previous_point = (0, 0)
 
-            # update statistics
-            statistics['outlier'] += 1
+            # set the outlier property of the solution to 1
+            location_result['outlier'] = 1
 
         # point is not an outlier
         else:
@@ -854,7 +837,7 @@ def calculateClosestPointAndShortestPath(filepath, filepath_shp, minNumberOfLine
                 comment += 'Cannot compute shortest path as previous point is (0,0). '
 
                 # update statistics
-                statistics['cannot_compute_shortest_path_as_previous_point_is_0_0'] += 1
+                statistics['cannot_compute_shortest_path_as_previous_point_is_outlier'] += 1
 
             elif((closest_intersection_x, closest_intersection_y) == previous_point):
                 # if the taxi did not move, path is not created
@@ -866,6 +849,7 @@ def calculateClosestPointAndShortestPath(filepath, filepath_shp, minNumberOfLine
                 location_result['air_line_length'] = 0
                 location_result['path_length/air_line_length'] = 1
                 location_result['velocity_m_s'] = 0
+                location_result['taxi_did_not_move'] = 1
 
                 # update statistics
                 statistics['taxi_did_not_move'] += 1
@@ -952,8 +936,11 @@ def calculateClosestPointAndShortestPath(filepath, filepath_shp, minNumberOfLine
                     else:
 
                         # no previous point set, do not calculate shortest path.
-                        comment += 'No path was found with A Star algorithm. '
-                        print('No path was found with A Star algorithm.')
+                        printComment = 'No path was found with A Star algorithm from {} to {}. '.format(
+                            (closest_intersection_x, closest_intersection_y), previous_point)
+                        print('')
+                        print(printComment)
+                        print('')
 
         location_result['path_from_target_to_source'] = path_from_target_to_source
         location_result['comment'] = comment
@@ -1006,22 +993,7 @@ def calculateClosestPointAndShortestPath(filepath, filepath_shp, minNumberOfLine
                 # check if the result of the previous location can be improved
                 # we check if either velocity>35m/s or if path_length/air_line_length > 2
 
-                print('')
-                print('')
-                print('')
-                print('')
-                print('')
-                print('')
-                print('')
-                print('')
-                print('')
-                print('')
-                print('')
-                print('')
-                print('')
-
-                # TODO: check why it crashes if previous_location_result['path']!='' is removed
-                # TODO: why was there no path found???
+                # no point is an outlier and all paths were found --> check if the solution can be improved
                 if(previous_target != (0, 0) and target != (0, 0) and previous_location_result['path'] != ''):
 
                     print('')
@@ -1042,8 +1014,11 @@ def calculateClosestPointAndShortestPath(filepath, filepath_shp, minNumberOfLine
                     print('')
 
                     # check if either the path from current source to target or from previous source to previous target might be needed to improved
-                    # if (current_location_result['velocity_m_s']='') means that the taxi was not moving at the previous point --> for this reason it should not be checked
-                    if(current_location_result['velocity_m_s'] != '' and ((previous_location_result['path'] == '') or (float(previous_location_result['velocity_m_s']) > 35.0) or ((previous_location_result['path_length/air_line_length']) > 2.0) or (float(current_location_result['velocity_m_s']) > 35.0) or ((current_location_result['path_length/air_line_length']) > 2.0))):
+                    # if (current_location_result['velocity_m_s']=='') means that the taxi was not moving at the previous point --> for this reason it should not be checked
+
+                    # OLD IF STATEMENT --->   if(current_location_result['velocity_m_s'] != '' and ((previous_location_result['path'] == '') or (float(previous_location_result['velocity_m_s']) > 35.0) or ((previous_location_result['path_length/air_line_length']) > 2.0) or (float(current_location_result['velocity_m_s']) > 35.0) or ((current_location_result['path_length/air_line_length']) > 2.0))):
+
+                    if(current_location_result['velocity_m_s'] != '' and ((float(previous_location_result['velocity_m_s']) > 35.0) or ((previous_location_result['path_length/air_line_length']) > 2.0) or (float(current_location_result['velocity_m_s']) > 35.0) or ((current_location_result['path_length/air_line_length']) > 2.0))):
 
                         # update statistics
                         statistics['checked_other_solution_index'] += 1
@@ -1060,8 +1035,9 @@ def calculateClosestPointAndShortestPath(filepath, filepath_shp, minNumberOfLine
                             'LETS calculate shortest path between current source and previous target')
                         print('')
 
-                        # check if there is another possible solution
-                        # first calculate shortest path between current source and previous target
+                        # the goal is to check if there is another possible solution and then compare this new solution with the current solution
+
+                        # first calculate shortest path between current source and previous target <-- this will be the baseline so to say; We are trying to improve this solution, namely we try to shorten this path.
                         path_to_previous_target, path_length_to_previous_target, pathIDs_to_previous_target = getShortestPathAStar(source, previous_target, list(
                             intersected_line.coords), list(previous_target_intersected_line.coords), intersected_line_oneway, previous_target_intersected_line_oneway, filepath_shp)
                         print('path_to_previous_target:',
@@ -1098,6 +1074,7 @@ def calculateClosestPointAndShortestPath(filepath, filepath_shp, minNumberOfLine
                             new_solution_index = 0
                             new_solution = {}
 
+                            # try to find another solution point which lies on the shortest path between the current source and the previous target
                             for k, v in previous_location_result['all_solutions_sorted']:
                                 if(str(k) in pathIDs_to_previous_target):
                                     new_solution_id = k
@@ -1110,13 +1087,13 @@ def calculateClosestPointAndShortestPath(filepath, filepath_shp, minNumberOfLine
 
                             if (new_solution_id == (-1)):
                                 print(
-                                    'There is no other solution which lies on the shortest path.')
+                                    'There is no other solution which lies on the shortest path between the current source and the previous target.')
 
                                 # update statistics
                                 statistics['no_solution_lies_on_shortest_path'] += 1
 
                             else:
-                                # check if this solution is actually better
+                                # there is another solution point which lies on the shortest path between the current source and the previous target --> check if this solution is actually better
                                 print('Check if this solution is actually better.')
                                 print('found new_solution_id:', new_solution_id)
                                 print('found new_solution:', new_solution)
@@ -1202,7 +1179,17 @@ def calculateClosestPointAndShortestPath(filepath, filepath_shp, minNumberOfLine
                                         new_comment = 'The source point of this path was reset as this leads to much shorter path lengths. Previous solution: {} / New solution: {}. '.format(
                                             previous_source, (new_solution_point_x, new_solution_point_y))
 
+                                        # save the initial gps trajectory coordinates
+                                        myLat = previous_location_result['y']
+                                        myLng = previous_location_result['x']
+
+                                        # update the previous location result
                                         previous_location_result = previous_location_result_new
+
+                                        # previous_location_result_new saved the updated x and y position. For this reason the initial gps trajectory coordinates have to be set again.
+                                        previous_location_result['y'] = myLat
+                                        previous_location_result['x'] = myLng
+
                                         previous_location_result['comment'] += new_comment
                                         previous_location_result['solution_id'] = new_solution_id
                                         previous_location_result['solution_index'] = new_solution_index
@@ -1214,7 +1201,7 @@ def calculateClosestPointAndShortestPath(filepath, filepath_shp, minNumberOfLine
                                         statistics['chose_other_solution_index'] += 1
 
                                     else:
-                                        new_comment = 'Checked the second solution (solution_id: {} / solution_index: {} / new cummulated path_length: {}) initial solution (solution_id: {} / solution_index: {} / initial cummulated path_length: {}) was chosen due to a shorter cummulated path_length.'.format(
+                                        new_comment = 'Checked the second solution (solution_id: {} / solution_index: {} / new cummulated path_length: {}) but initial solution (solution_id: {} / solution_index: {} / initial cummulated path_length: {}) was chosen due to a shorter cummulated path_length.'.format(
                                             new_solution_id, new_solution_index, new_commulated_path_lengt, previous_location_result['solution_id'], previous_location_result['solution_index'], previous_commulated_path_lengt)
                                         print(new_comment)
                                         previous_location_result['comment'] += new_comment
@@ -1225,22 +1212,135 @@ def calculateClosestPointAndShortestPath(filepath, filepath_shp, minNumberOfLine
                                 else:
                                     # no path was found with new solution
                                     new_comment = 'No path found for new solution. '
-                                    print(new_comment)
                                     previous_location_result['comment'] += new_comment
 
                                     # update statistics
                                     statistics['other_solution_no_path_found'] += 1
+
+                # no path was found, either from current source to target (current_location_result['path']) or from previous source to previous target (previous_location_result['path']), even though source and target are known --> check if a path can be found with another solution
+                elif(previous_target != (0, 0) and ((previous_location_result['path'] == '' and previous_location_result['taxi_did_not_move'] != 1 and previous_location_result['outlier'] != 1) or (current_location_result['path'] == '' and current_location_result['taxi_did_not_move'] != 1 and current_location_result['outlier'] != 1)) and len(previous_location_result['all_solutions_sorted']) > 1):
+
+                    # check how many paths could not be found --> this value is either 1 or 2 and will be our baseline so to say to check whether the new solution will yield more found paths
+                    not_found_paths = 0
+                    if (previous_location_result['path'] == '' and previous_location_result['taxi_did_not_move'] != 1 and previous_location_result['outlier'] != 1):
+                        print('not_found_paths: PREVIOUS')
+                        not_found_paths += 1
+                    if (current_location_result['path'] == '' and current_location_result['taxi_did_not_move'] != 1 and current_location_result['outlier'] != 1):
+                        print('not_found_paths: CURRENT')
+                        not_found_paths += 1
+
+                    # update statistics
+                    statistics['checked_if_path_exists_for_second_best_solution_index'] += 1
+
+                    # get the second best solution
+                    new_solution_index = 1
+                    new_solution_id = previous_location_result['all_solutions_sorted'][1][0]
+                    new_solution = previous_location_result['all_solutions_sorted'][1][1]
+                    print('')
+                    print('t0:', type(new_solution_id))
+                    print('t1:', type(new_solution))
+                    #sys.exit('we are here')
+
+                    new_solution_point_x = list(
+                        new_solution['closest_point_on_line'].coords)[0][0]
+                    new_solution_point_y = list(
+                        new_solution['closest_point_on_line'].coords)[0][1]
+
+                    # calculte current location result with new solution
+                    current_location_result_new, source_new, target_new, intersected_line_new, target_intersected_line_new, timestamp_new, intersected_line_oneway_new, target_intersected_line_oneway_new = getLocationResult(
+                        filepath_shp, x, y, passenger, timestamp, (new_solution_point_x, new_solution_point_y), new_solution['input_line'], previous_location_result['timestamp'], new_solution['oneway'], minNumberOfLines)
+
+                    # calculte previous location result with new solution
+                    previous_location_result_new, previous_source_new, previous_target_new, previous_intersected_line_new, previous_target_intersected_line_new, previous_timestamp_new, previous_intersected_line_oneway_new, previous_target_intersected_line_oneway_new = getLocationResult(
+                        filepath_shp, new_solution_point_x, new_solution_point_y, previous_location_result['passenger'], previous_location_result['timestamp'], previous_location_result['target'], previous_location_result['previous_intersected_line'], previous_location_result['previous_timestamp'], previous_location_result['previous_intersected_line_oneway'], minNumberOfLines)
+
+                    # check how many paths could not be found  WITH NEW SOLUTION
+                    not_found_paths_NEW_SOLUTION = 0
+                    if (previous_location_result_new['path'] == ''):
+                        print('PREVIOUS')
+                        not_found_paths_NEW_SOLUTION += 1
+                    if (current_location_result_new['path'] == ''):
+                        print('CURRENT')
+                        not_found_paths_NEW_SOLUTION += 1
+
+                    print('not_found_paths:', not_found_paths)
+                    print('not_found_paths_NEW_SOLUTION:',
+                          not_found_paths_NEW_SOLUTION)
+
+                    # sys.exit('hallo')
+
+                    # check if the new solution is actually better than the old one, namely if more paths could be found.
+                    if(not_found_paths_NEW_SOLUTION < not_found_paths):
+
+                        print_str = 'Set the second checked solution (with solution_id: {}) as the correct one since it yields more found paths than the initial solution (with solution_id: {}). '.format(
+                            new_solution_id, previous_location_result['solution_id'])
+                        print(print_str)
+                        new_comment = 'The source point of this path was reset as this yields more found paths. Previous solution: {} / New solution: {}. '.format(
+                            previous_source, (new_solution_point_x, new_solution_point_y))
+
+                        # save the initial gps trajectory coordinates
+                        myLat = previous_location_result['y']
+                        myLng = previous_location_result['x']
+
+                        # update the previous location result
+                        previous_location_result = previous_location_result_new
+
+                        # previous_location_result_new saved the updated x and y position. For this reason the initial gps trajectory coordinates have to be set again.
+                        previous_location_result['y'] = myLat
+                        previous_location_result['x'] = myLng
+
+                        previous_location_result['comment'] += new_comment
+                        previous_location_result['solution_id'] = new_solution_id
+                        previous_location_result['solution_index'] = new_solution_index
+
+                        current_location_result = current_location_result_new
+                        current_location_result['comment'] += 'The target point of this path was reset as this yields more found paths.'
+
+                        # update statistics
+                        statistics['second_best_solution_yields_more_found_paths'] += 1
+                        # update statistic in output txt file
+                        previous_location_result['second_best_solution_yields_more_found_paths'] = 1
+
+                    else:
+                        # new solution does not yield more found paths than initial solution
+                        print(
+                            'New solution does not yield more found paths than initial solution.')
+                        new_comment_second_best_solution = 'Checked the second best solution (solution_id: {} / solution_index: {}) but it did not lead to more found paths. Therefore, initial solution (solution_id: {} / solution_index: {}) was chosen. '.format(
+                            new_solution_id, new_solution_index, previous_location_result['solution_id'], previous_location_result['solution_index'])
+                        print(new_comment_second_best_solution)
+                        previous_location_result['comment'] += new_comment_second_best_solution
 
                 else:
                     print('Tried to check other solution but the target is not known. ')
 
                 # append the result of the previous location to the entire solution
                 calculatedSolution.append(previous_location_result)
+                print('')
+                print('XXXX')
+                print(str(previous_location_result))
+                print('')
 
-                # check if a path was found xxx
-                if (previous_location_result['path'] == ''):
+                if (previous_location_result['outlier'] == 1):
+
+                    # update statistics
+                    statistics['outlier'] += 1
+
+                # check if a path was found
+                if (previous_location_result['path'] == '' and previous_target != (0, 0) and previous_location_result['taxi_did_not_move'] != 1):
                     # update statistics
                     statistics['no_path_found'] += 1
+                    # add comment
+                    new_comment = 'No path found from {} to {}. '.format(
+                        (previous_location_result['closest_intersection_x'], previous_location_result['closest_intersection_y']), previous_location_result['target'])
+                    previous_location_result['comment'] += new_comment
+                    # update statistic in output txt file
+                    previous_location_result['NO_PATH_FOUND'] = 1
+
+                if(previous_location_result['timestamp'] == 1212919608):
+
+                    print(previous_target)
+                    print(target)
+                    # sys.exit('xxxxx')
 
             # set the result of the current location as the result of the previous location
             previous_location_result = current_location_result
@@ -1274,7 +1374,7 @@ def calculateClosestPointAndShortestPath(filepath, filepath_shp, minNumberOfLine
             print(counter)
             if (counter > 10):
                 print('ende')
-                #break
+                # break
 
             # Update Progress Bar
 
@@ -1290,14 +1390,6 @@ def calculateClosestPointAndShortestPath(filepath, filepath_shp, minNumberOfLine
                              prefix='Progress:', suffix=suffix, length=50)
 
             # blockPrint()
-
-        '''
-        NOT NEEDED ANYMORE, as we have artificial line now
-
-        # the result of a location is only added to the intire solution after it is confirmed as the best solution by the next location
-        # for this reason the result of the last location of the text_file has to be added to the entire solution (since there isn't a next solution that will do that)
-        calculatedSolution.append(previous_location_result)
-        '''
 
     return calculatedSolution, statistics
 
@@ -1359,24 +1451,30 @@ def plotAndSaveHistogram(input, minXLabel, maxXLabel, binSize, filename, title, 
     plt.xlabel(xlabel)
     plt.ylabel('Frequency')
     plt.title(title)
-    maxfreq = n.max()
-    # Set a clean upper y-axis limit.
-    plt.ylim(ymax=np.ceil(maxfreq / 10) * 10 if maxfreq % 10 else maxfreq + 10)
 
-    if isinstance(binSize, float):
-        xlabels = bins[0:].astype('|S3')
-    else:
-        xlabels = bins[0:].astype(str)
+    try:
+        maxfreq = n.max()
+        # Set a clean upper y-axis limit.
+        plt.ylim(ymax=np.ceil(maxfreq / 10) * 10 if maxfreq %
+                 10 else maxfreq + 10)
 
-    # remove the last x label
-    xlabels = xlabels[:-1]
-    # add a '+' to the label of the last bin to visualize that this bin contains all timeDifferences  which are equal or bigger than the xTick.
-    if not isinstance(binSize, float):
-        xlabels[-1] += '+'
+        if isinstance(binSize, float):
+            xlabels = bins[0:].astype('|S3')
+        else:
+            xlabels = bins[0:].astype(str)
 
-    myXTicks = np.array(myBins)
-    # set the x ticks for the figure
-    plt.xticks(myXTicks, xlabels)
+        # remove the last x label
+        xlabels = xlabels[:-1]
+        # add a '+' to the label of the last bin to visualize that this bin contains all timeDifferences  which are equal or bigger than the xTick.
+        if not isinstance(binSize, float):
+            xlabels[-1] += '+'
+
+        myXTicks = np.array(myBins)
+        # set the x ticks for the figure
+        plt.xticks(myXTicks, xlabels)
+
+    except ValueError:  # raised if `n` is empty.
+        pass
 
     # save the figure in the folder of the current taxi
     plt.savefig(filename)
@@ -1431,7 +1529,7 @@ def main():
         header = ['latitude(y);longitude(x);hasPassenger;time;closest_intersection_x;closest_intersection_y;relative_position;relative_position_normalized;intersected_line_oneway;intersected_line_as_linestring;linestring_adjustment_visualization;path_time']
 
         if(aStar == 1):
-            header += ';path_as_linestring;path_length;air_line_length;path_length/air_line_length;velocity_m_s;pathIDs;solution_id;solution_index;path_from_target_to_source;comment'
+            header += ';path_as_linestring;path_length;air_line_length;path_length/air_line_length;velocity_m_s;pathIDs;solution_id;solution_index;path_from_target_to_source;taxi_did_not_move;second_best_solution_yields_more_found_paths;NO_PATH_FOUND;outlier;comment'
 
         header += '\n'
 
@@ -1497,6 +1595,15 @@ def main():
                 new_file.write(';')
                 new_file.write(
                     str(location_result['path_from_target_to_source']))
+                new_file.write(';')
+                new_file.write(str(location_result['taxi_did_not_move']))
+                new_file.write(';')
+                new_file.write(
+                    str(location_result['second_best_solution_yields_more_found_paths']))
+                new_file.write(';')
+                new_file.write(str(location_result['NO_PATH_FOUND']))
+                new_file.write(';')
+                new_file.write(str(location_result['outlier']))
                 new_file.write(';')
                 new_file.write(str(location_result['comment']))
                 new_file.write('\n')
@@ -1590,18 +1697,25 @@ def main():
     filepath6 = '/Users/Joechi/Google Drive/gps2net/Data/test_data/other_taxi/new_abtyff_copy.txt'
     filepath7 = '/Users/Joechi/Google Drive/gps2net/Data/test_data/other_taxi/new_abwecnij_copy.txt'
 
+    filepath6BUG = '/Users/Joechi/Google Drive/gps2net/Data/test_data/other_taxi/new_abtyff_copy_BUG.txt'
+    filepath6BUG2 = '/Users/Joechi/Google Drive/gps2net/Data/test_data/other_taxi/new_abtyff_copy_BUG2.txt'
+
     #filepath_shp = '/Users/Joechi/Google Drive/HS19 – PathPy/2_Taxi data/Tests/Exports/AllPointsForOneTaxi/geo_SF_lines_exported_for_testing.shp'
 
     filepath_shp = '/Users/Joechi/Google Drive/gps2net/Data/taxi_san_francisco/San Francisco Basemap Street Centerlines/geo_export_e5dd0539-2344-4e87-b198-d50274be8e1d.shp'
 
     filepaths = []
-    filepaths.append(filepath6)
-    filepaths.append(filepath7)
-    filepaths.append(filepath1)
-    filepaths.append(filepath2)
-    filepaths.append(filepath3)
-    filepaths.append(filepath4)
-    filepaths.append(filepath5)
+
+    filepaths.append(filepath6BUG)
+    # filepaths.append(filepath6BUG2)
+
+    # filepaths.append(filepath6)
+    # filepaths.append(filepath7)
+    # filepaths.append(filepath1)
+    # filepaths.append(filepath2)
+    # filepaths.append(filepath3)
+    # filepaths.append(filepath4)
+    # filepaths.append(filepath5)
 
     # loop through all the filepaths
     for path in filepaths:
