@@ -137,9 +137,7 @@ def cut(line, distance, point):
 
     Notes
     -----
-    ...
     'line.interpolate(distance)' should be equal to the parameter 'point'. However, due to precision errors 'point' is used.
-    ...
 
     Returns
     -------
@@ -1706,16 +1704,16 @@ def main():
 
     filepaths = []
 
-    filepaths.append(filepath6BUG)
+    # filepaths.append(filepath6BUG)
     # filepaths.append(filepath6BUG2)
 
-    # filepaths.append(filepath6)
-    # filepaths.append(filepath7)
-    # filepaths.append(filepath1)
-    # filepaths.append(filepath2)
-    # filepaths.append(filepath3)
-    # filepaths.append(filepath4)
-    # filepaths.append(filepath5)
+    filepaths.append(filepath6)
+    filepaths.append(filepath7)
+    filepaths.append(filepath1)
+    filepaths.append(filepath2)
+    filepaths.append(filepath3)
+    filepaths.append(filepath4)
+    filepaths.append(filepath5)
 
     # loop through all the filepaths
     for path in filepaths:
