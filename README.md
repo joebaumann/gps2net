@@ -13,11 +13,14 @@
 
 ## Background
 A growing community of researchers in networks of scientific studies has recognised that through the combination of spatial-temporal-resolved sequential data (e.g., such as recorded GPS<sup id="a1">[1](#f1)</sup> trajectories) and the underlying topology (e.g., a road network) higher-order, non-dyadic graph representations (Rosvall *et al.*, 2014<sup id="a2">[2](#f2)</sup>; Scholtes, 2017<sup id="a3">[3](#f3)</sup>; Scholtes *et al.*, 2016<sup id="a4">[4](#f4)</sup>, 2014<sup id="a5">[5](#f5)</sup>). Different from standard (first-order) network models, such higher-order models do not merely assume that paths in networks are transitive, but instead, explicitly model the (causal) pathways that result from the timing and chronological ordering of spatial-temporal resolved observations.
+
 In order to perform such analyses, path data is required for the underlying network. Since GPS data only represents the position (latitudinal, longitudinal) at a certain point in time, they have to be converted into suitable trajectories. In addition, the accuracy of the recorded position varies, which makes it difficult to assign it to the edges in the network. This can occur especially in urban areas, where GPS signal is influenced by buildings and the density of edges is relatively high, which complicates the assignment process. Furthermore, it can happen that due to the high speeds or gaps in the position recording, no complete path can be observed, i.e., the position kumps from one edge to another. However, these edges are not topologically connected. In this respect, suitable algorithms are needed to converge GPS data into paths, taking into account the previously mentioned contraints.
 
 ## Data
 
-...
+In order to validate the algorithm, the data-set of mobility traces of taxi cabs in San Francisco, USA,<sup id="a6">[6](#f6)</sup> in combination with the open-source street map of San Francisco<sup id="a7">[7](#f7)</sup> was used.
+
+The following data was used:
 
 
 ## Solution
@@ -70,3 +73,7 @@ python gps2net.py -v
 <b id="f4">4</b> Scholtes, I.; Pfitzner, R.; Garas, A.; Tessone, C. J.; Schweitzer, F. (2014). Causality-driven slow-down and speed-up of diffusion in non-Markovian temporal networks. *Nature communications* **5**, 5024. [↩](#a4)
 
 <b id="f5">5</b> Scholtes, I.; Wider, N.; Garas, A. (2016). Higher-order aggregate networks in the analysis of temporal networks: path structures and centralities. *The European Physical Journal B* **89(3)**, 61. [↩](#a5)
+
+<b id="f6">6</b> Scholtes, I.; Wider, N.; Garas, A. (2016). Higher-order aggregate networks in the analysis of temporal networks: path structures and centralities. *The European Physical Journal B* **89(3)**, 61. [↩](#a6)
+
+<b id="f7">7</b> https://datasf.org/ [↩](#a7)
