@@ -1,12 +1,12 @@
 # gps2net
 ***Extraction of path data from GPS trajectories considering the underlying network topology.***
 
-:Date: January 2020
-:Author: Joachim Baumann
-:Contact: joachimbaumann1@gmail.com
-:Documentation: https://joehonig.github.io/gps2net/
+| Date            | January 2020                        |
+| Author          | Joachim Baumann                     |
+| Contact         | joachimbaumann1@gmail.com           |
+| Documentation   | https://joehonig.github.io/gps2net/ |
 
-
+| Seconds | 301 |
 
 ## Content
 ...
