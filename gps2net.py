@@ -13,6 +13,8 @@ from shapely.geometry import LineString, Point
 
 # global variable: empty Directed Graph
 DG = nx.DiGraph()
+current_txt_file = 0
+number_of_txt_files = 0
 
 
 def blockPrint():
@@ -213,10 +215,10 @@ def createGraphFromSHPInput(filepath_shp):
         nr_elements_in_SHP_file = sum(1 for street_segment in street_lines)
 
     # Initial call to print 0% progress ProgressBar
-    suffix = '| SHP file items: {}/{}'.format(
+    suffix = '| SHP file street segments: {}/{}'.format(
         counter+1, nr_elements_in_SHP_file)
     printProgressBar(0, nr_elements_in_SHP_file,
-                     prefix='Creating Graph:', suffix=suffix, length=50)
+                     prefix='The Graph is being created:', suffix=suffix, length=50)
 
     with fiona.open(filepath_shp) as street_lines:
 
@@ -254,18 +256,19 @@ def createGraphFromSHPInput(filepath_shp):
             # enablePrint()
 
             # Update Progress Bar
-            suffix = '| SHP file items: {}/{}'.format(
+            suffix = '| SHP file street segments: {}/{}'.format(
                 counter+1, nr_elements_in_SHP_file)
             printProgressBar(counter + 1, nr_elements_in_SHP_file,
-                             prefix='Creating Graph:', suffix=suffix, length=50)
+                             prefix='The Graph is being created:', suffix=suffix, length=50)
 
             # blockPrint()
 
             counter += 1
-
+    # blockPrint()
     # enablePrint()
 
-    print('graph nr of edges AFTER CREATION: ', GraphFromSHP.number_of_edges())
+    print('The graph was created and contains {} edges.'.format(
+        GraphFromSHP.number_of_edges()))
 
     # blockPrint()
 
@@ -450,7 +453,9 @@ def getShortestPathAStar(source, target, source_line, target_line, source_line_o
                 edge_to_remove_T_target[0], edge_to_remove_T_target[1], target[0], target[1]), edge_to_remove_from_graph_id, edge_to_remove_from_graph_oneway)
 
     else:
+        blockPrint()
         print('no need to add additional edges target')
+        enablePrint()
 
     # check if source lies exactly on the beginning/end of a line segment
     # if yes, source already exists as a node
@@ -1023,8 +1028,9 @@ def calculateMostLikelyPointAndPaths(filepath, filepath_shp, minNumberOfLines=2,
 
     # Initial call to print 0% progress ProgressBar
     suffix = '| current file: {}/{} lines'.format(counter+1, lines_in_textfile)
-    printProgressBar(0, lines_in_textfile, prefix='Progress:',
-                     suffix=suffix, length=50)
+    suffix += ' | total: {} of {} files'.format(
+        current_txt_file, number_of_txt_files)
+    #printProgressBar(0, lines_in_textfile, prefix='Progress:',suffix=suffix, length=50)
 
     previous_location_result = {}
 
@@ -1077,8 +1083,11 @@ def calculateMostLikelyPointAndPaths(filepath, filepath_shp, minNumberOfLines=2,
 
                         # check if the initial solution already lies on a street segment which is part of the hortest path between the points before and after
                         if(str(previous_location_result['solution_id']) in pathIDs_to_previous_target or previous_location_result['solution_id'] in pathIDs_to_previous_target):
+                            blockPrint()
                             print(
                                 'Solution is already on the shortest path between the points before and after --> therefore the solution can not be improved.')
+                            print('')
+                            enablePrint()
 
                             # update statistics
                             statistics['solution_already_lies_on_shortest_path'] += 1
@@ -1130,10 +1139,12 @@ def calculateMostLikelyPointAndPaths(filepath, filepath_shp, minNumberOfLines=2,
 
                                     # if the new cummulated path is shorter set it as the correct one
                                     if((previous_commulated_path_lengt > new_commulated_path_lengt)):
-
+                                        blockPrint()
                                         print_str = 'Set the second checked solution (with solution_id: {}) as the correct one since the new cummulated path was shorter than the initial solution (with solution_id: {}). '.format(
                                             new_solution_id, previous_location_result['solution_id'])
                                         print(print_str)
+                                        print('')
+                                        enablePrint()
                                         new_comment = 'The source point of this path was reset as this leads to much shorter path lengths. Previous solution: {} / New solution: {}. '.format(
                                             previous_source, (new_solution_point_x, new_solution_point_y))
 
@@ -1161,7 +1172,10 @@ def calculateMostLikelyPointAndPaths(filepath, filepath_shp, minNumberOfLines=2,
                                     else:
                                         new_comment = 'Checked the second solution (solution_id: {} / solution_index: {} / new cummulated path_length: {}) but initial solution (solution_id: {} / solution_index: {} / initial cummulated path_length: {}) was chosen due to a shorter cummulated path_length.'.format(
                                             new_solution_id, new_solution_index, new_commulated_path_lengt, previous_location_result['solution_id'], previous_location_result['solution_index'], previous_commulated_path_lengt)
+                                        blockPrint()
                                         print(new_comment)
+                                        print('')
+                                        enablePrint()
                                         previous_location_result['comment'] += new_comment
 
                                         # update statistics
@@ -1218,7 +1232,10 @@ def calculateMostLikelyPointAndPaths(filepath, filepath_shp, minNumberOfLines=2,
 
                         print_str = 'Set the second checked solution (with solution_id: {}) as the correct one since it yields more found paths than the initial solution (with solution_id: {}). '.format(
                             new_solution_id, previous_location_result['solution_id'])
+                        blockPrint()
                         print(print_str)
+                        print('')
+                        enablePrint()
                         new_comment = 'The source point of this path was reset as this yields more found paths. Previous solution: {} / New solution: {}. '.format(
                             previous_source, (new_solution_point_x, new_solution_point_y))
 
@@ -1247,15 +1264,21 @@ def calculateMostLikelyPointAndPaths(filepath, filepath_shp, minNumberOfLines=2,
 
                     else:
                         # new solution does not yield more found paths than initial solution
+                        blockPrint()
                         print(
                             'New solution does not yield more found paths than initial solution.')
                         new_comment_second_best_solution = 'Checked the second best solution (solution_id: {} / solution_index: {}) but it did not lead to more found paths. Therefore, initial solution (solution_id: {} / solution_index: {}) was chosen. '.format(
                             new_solution_id, new_solution_index, previous_location_result['solution_id'], previous_location_result['solution_index'])
                         print(new_comment_second_best_solution)
+                        print('')
+                        enablePrint()
                         previous_location_result['comment'] += new_comment_second_best_solution
 
                 else:
+                    blockPrint()
                     print('Tried to check other solution but the target is not known. ')
+                    print('')
+                    enablePrint()
 
                 # append the result of the previous location to the entire solution
                 calculatedSolution.append(previous_location_result)
@@ -1290,23 +1313,21 @@ def calculateMostLikelyPointAndPaths(filepath, filepath_shp, minNumberOfLines=2,
             # TODO: Delete the following lines as this is just for testing.
             # stop script after a few lines (for testing reasons)
             counter += 1
-            print(counter)
+            # print(counter)
             if (counter > 10):
-                print('ende')
-                # break
+                # print('ende')
+                break
 
             # Update Progress Bar
 
             # enablePrint()
-
-            suffix = '| current file: {}/{} lines'.format(
-                counter, lines_in_textfile)
-            x = 0
-            if (x):
-                suffix += ' | total: {} of {} files'.format(
+            if(lines != 'artificialline'):
+                suffix = '| current file: {}/{} lines'.format(
                     counter, lines_in_textfile)
-            printProgressBar(counter, lines_in_textfile,
-                             prefix='Progress:', suffix=suffix, length=50)
+                suffix += ' | total: {} of {} files'.format(
+                    current_txt_file, number_of_txt_files)
+                printProgressBar(counter, lines_in_textfile,
+                                 prefix='Progress:', suffix=suffix, length=50)
 
             # blockPrint()
 
@@ -1484,9 +1505,12 @@ def getFilename(path):
 
 def main():
 
+    global number_of_txt_files
+    global current_txt_file
+
     # blockPrint()
 
-    def caculationForOneTXTFile(filepath_shp, dirName, filepath, aStar=1):
+    def caculationForOneTXTFile(filepath_shp, new_filename_solution, new_filename_statistics, new_filename_velocities, new_filename_path_length_air_line_length, filepath, aStar=1):
 
         # set the header of the output txt file which will contain the calculated solution.
         header = ['latitude(y);longitude(x);hasPassenger;time;closest_intersection_x;closest_intersection_y;relative_position;relative_position_normalized;intersected_line_oneway;intersected_line_as_linestring;linestring_adjustment_visualization;path_time']
@@ -1495,13 +1519,6 @@ def main():
             header += ';path_as_linestring;path_length;air_line_length;path_length/air_line_length;velocity_m_s;pathIDs;solution_id;solution_index;path_from_target_to_source;taxi_did_not_move;second_best_solution_yields_more_found_paths;NO_PATH_FOUND;outlier;comment'
 
         header += '\n'
-
-        new_filename_solution = os.path.join(
-            dirName, 'calculatedSolution') + '.txt'
-        new_filename_statistics = os.path.join(dirName, 'statistics') + '.txt'
-        new_filename_velocities = os.path.join(dirName, 'velocitiesPLOT.png')
-        new_filename_path_length_air_line_length = os.path.join(
-            dirName, 'path_length_air_line_length_PLOT.png')
 
         myCalculatedSolution, mySolutionStatistics = calculateMostLikelyPointAndPaths(
             filepath, filepath_shp, minNumberOfLines=2, aStar=aStar)
@@ -1669,19 +1686,22 @@ def main():
 
     filepaths = []
 
-    # filepaths.append(filepath6BUG)
-    # filepaths.append(filepath6BUG2)
+    filepaths.append(filepath6BUG)
+    filepaths.append(filepath6BUG2)
 
-    filepaths.append(filepath6)
-    filepaths.append(filepath7)
-    filepaths.append(filepath1)
-    filepaths.append(filepath2)
-    filepaths.append(filepath3)
-    filepaths.append(filepath4)
-    filepaths.append(filepath5)
+    # filepaths.append(filepath6)
+    # filepaths.append(filepath7)
+    # filepaths.append(filepath1)
+    # filepaths.append(filepath2)
+    # filepaths.append(filepath3)
+    # filepaths.append(filepath4)
+    # filepaths.append(filepath5)
+
+    number_of_txt_files = len(filepaths)
 
     # loop through all the filepaths
     for path in filepaths:
+        current_txt_file += 1
 
         new_filename = getFilename(path)
 
@@ -1694,11 +1714,21 @@ def main():
         # Create target directory & all intermediate directories if don't exists
         try:
             os.makedirs(dirName)
+            print('')
             print('Directory ', dirName,  ' created.')
         except FileExistsError:
+            print('')
             print('Directory ', dirName,  ' already exists.')
 
-        caculationForOneTXTFile(filepath_shp, dirName, path, 1)
+        new_filename_solution = os.path.join(
+            dirName, 'calculatedSolution') + '.txt'
+        new_filename_statistics = os.path.join(dirName, 'statistics') + '.txt'
+        new_filename_velocities = os.path.join(dirName, 'velocitiesPLOT.png')
+        new_filename_path_length_air_line_length = os.path.join(
+            dirName, 'path_length_air_line_length_PLOT.png')
+
+        caculationForOneTXTFile(filepath_shp, new_filename_solution, new_filename_statistics,
+                                new_filename_velocities, new_filename_path_length_air_line_length, path, 1)
 
         # get all timestamp differences of a text file
         timeDifferences = getTimeDifferences(path, 3)
@@ -1709,6 +1739,13 @@ def main():
         # plot the timeDifferences in a histogram
         plotAndSaveHistogram(timeDifferences, 0, 300, 25, timedifferencesFileName,
                              'Histogram of time differences between gps points', 'time difference in seconds')
+
+        print('')
+        print('The following files where created:')
+        print('- ' + new_filename_solution)
+        print('- ' + new_filename_statistics)
+        print('- ' + new_filename_velocities)
+        print('- ' + new_filename_path_length_air_line_length)
 
 
 if __name__ == '__main__':
