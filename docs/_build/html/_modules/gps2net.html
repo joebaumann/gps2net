@@ -71,6 +71,8 @@
 
 <span class="c1"># global variable: empty Directed Graph</span>
 <span class="n">DG</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">()</span>
+<span class="n">current_txt_file</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">number_of_txt_files</span> <span class="o">=</span> <span class="mi">0</span>
 
 
 <div class="viewcode-block" id="blockPrint"><a class="viewcode-back" href="../index.html#gps2net.blockPrint">[docs]</a><span class="k">def</span> <span class="nf">blockPrint</span><span class="p">():</span>
@@ -271,10 +273,10 @@
         <span class="n">nr_elements_in_SHP_file</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="mi">1</span> <span class="k">for</span> <span class="n">street_segment</span> <span class="ow">in</span> <span class="n">street_lines</span><span class="p">)</span>
 
     <span class="c1"># Initial call to print 0% progress ProgressBar</span>
-    <span class="n">suffix</span> <span class="o">=</span> <span class="s1">&#39;| SHP file items: </span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+    <span class="n">suffix</span> <span class="o">=</span> <span class="s1">&#39;| SHP file street segments: </span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
         <span class="n">counter</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">nr_elements_in_SHP_file</span><span class="p">)</span>
     <span class="n">printProgressBar</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">nr_elements_in_SHP_file</span><span class="p">,</span>
-                     <span class="n">prefix</span><span class="o">=</span><span class="s1">&#39;Creating Graph:&#39;</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="n">suffix</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+                     <span class="n">prefix</span><span class="o">=</span><span class="s1">&#39;The Graph is being created:&#39;</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="n">suffix</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
 
     <span class="k">with</span> <span class="n">fiona</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">filepath_shp</span><span class="p">)</span> <span class="k">as</span> <span class="n">street_lines</span><span class="p">:</span>
 
@@ -312,18 +314,19 @@
             <span class="c1"># enablePrint()</span>
 
             <span class="c1"># Update Progress Bar</span>
-            <span class="n">suffix</span> <span class="o">=</span> <span class="s1">&#39;| SHP file items: </span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">suffix</span> <span class="o">=</span> <span class="s1">&#39;| SHP file street segments: </span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                 <span class="n">counter</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">nr_elements_in_SHP_file</span><span class="p">)</span>
             <span class="n">printProgressBar</span><span class="p">(</span><span class="n">counter</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">nr_elements_in_SHP_file</span><span class="p">,</span>
-                             <span class="n">prefix</span><span class="o">=</span><span class="s1">&#39;Creating Graph:&#39;</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="n">suffix</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+                             <span class="n">prefix</span><span class="o">=</span><span class="s1">&#39;The Graph is being created:&#39;</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="n">suffix</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
 
             <span class="c1"># blockPrint()</span>
 
             <span class="n">counter</span> <span class="o">+=</span> <span class="mi">1</span>
-
+    <span class="c1"># blockPrint()</span>
     <span class="c1"># enablePrint()</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;graph nr of edges AFTER CREATION: &#39;</span><span class="p">,</span> <span class="n">GraphFromSHP</span><span class="o">.</span><span class="n">number_of_edges</span><span class="p">())</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The graph was created and contains </span><span class="si">{}</span><span class="s1"> edges.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="n">GraphFromSHP</span><span class="o">.</span><span class="n">number_of_edges</span><span class="p">()))</span>
 
     <span class="c1"># blockPrint()</span>
 
@@ -508,7 +511,9 @@
                 <span class="n">edge_to_remove_T_target</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">edge_to_remove_T_target</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">target</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">target</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">edge_to_remove_from_graph_id</span><span class="p">,</span> <span class="n">edge_to_remove_from_graph_oneway</span><span class="p">)</span>
 
     <span class="k">else</span><span class="p">:</span>
+        <span class="n">blockPrint</span><span class="p">()</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;no need to add additional edges target&#39;</span><span class="p">)</span>
+        <span class="n">enablePrint</span><span class="p">()</span>
 
     <span class="c1"># check if source lies exactly on the beginning/end of a line segment</span>
     <span class="c1"># if yes, source already exists as a node</span>
@@ -1081,8 +1086,9 @@
 
     <span class="c1"># Initial call to print 0% progress ProgressBar</span>
     <span class="n">suffix</span> <span class="o">=</span> <span class="s1">&#39;| current file: </span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1"> lines&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">counter</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">lines_in_textfile</span><span class="p">)</span>
-    <span class="n">printProgressBar</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">lines_in_textfile</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s1">&#39;Progress:&#39;</span><span class="p">,</span>
-                     <span class="n">suffix</span><span class="o">=</span><span class="n">suffix</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+    <span class="n">suffix</span> <span class="o">+=</span> <span class="s1">&#39; | total: </span><span class="si">{}</span><span class="s1"> of </span><span class="si">{}</span><span class="s1"> files&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="n">current_txt_file</span><span class="p">,</span> <span class="n">number_of_txt_files</span><span class="p">)</span>
+    <span class="c1">#printProgressBar(0, lines_in_textfile, prefix=&#39;Progress:&#39;,suffix=suffix, length=50)</span>
 
     <span class="n">previous_location_result</span> <span class="o">=</span> <span class="p">{}</span>
 
@@ -1135,8 +1141,11 @@
 
                         <span class="c1"># check if the initial solution already lies on a street segment which is part of the hortest path between the points before and after</span>
                         <span class="k">if</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">previous_location_result</span><span class="p">[</span><span class="s1">&#39;solution_id&#39;</span><span class="p">])</span> <span class="ow">in</span> <span class="n">pathIDs_to_previous_target</span> <span class="ow">or</span> <span class="n">previous_location_result</span><span class="p">[</span><span class="s1">&#39;solution_id&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="n">pathIDs_to_previous_target</span><span class="p">):</span>
+                            <span class="n">blockPrint</span><span class="p">()</span>
                             <span class="nb">print</span><span class="p">(</span>
                                 <span class="s1">&#39;Solution is already on the shortest path between the points before and after --&gt; therefore the solution can not be improved.&#39;</span><span class="p">)</span>
+                            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+                            <span class="n">enablePrint</span><span class="p">()</span>
 
                             <span class="c1"># update statistics</span>
                             <span class="n">statistics</span><span class="p">[</span><span class="s1">&#39;solution_already_lies_on_shortest_path&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
@@ -1188,10 +1197,12 @@
 
                                     <span class="c1"># if the new cummulated path is shorter set it as the correct one</span>
                                     <span class="k">if</span><span class="p">((</span><span class="n">previous_commulated_path_lengt</span> <span class="o">&gt;</span> <span class="n">new_commulated_path_lengt</span><span class="p">)):</span>
-
+                                        <span class="n">blockPrint</span><span class="p">()</span>
                                         <span class="n">print_str</span> <span class="o">=</span> <span class="s1">&#39;Set the second checked solution (with solution_id: </span><span class="si">{}</span><span class="s1">) as the correct one since the new cummulated path was shorter than the initial solution (with solution_id: </span><span class="si">{}</span><span class="s1">). &#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                                             <span class="n">new_solution_id</span><span class="p">,</span> <span class="n">previous_location_result</span><span class="p">[</span><span class="s1">&#39;solution_id&#39;</span><span class="p">])</span>
                                         <span class="nb">print</span><span class="p">(</span><span class="n">print_str</span><span class="p">)</span>
+                                        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+                                        <span class="n">enablePrint</span><span class="p">()</span>
                                         <span class="n">new_comment</span> <span class="o">=</span> <span class="s1">&#39;The source point of this path was reset as this leads to much shorter path lengths. Previous solution: </span><span class="si">{}</span><span class="s1"> / New solution: </span><span class="si">{}</span><span class="s1">. &#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                                             <span class="n">previous_source</span><span class="p">,</span> <span class="p">(</span><span class="n">new_solution_point_x</span><span class="p">,</span> <span class="n">new_solution_point_y</span><span class="p">))</span>
 
@@ -1219,7 +1230,10 @@
                                     <span class="k">else</span><span class="p">:</span>
                                         <span class="n">new_comment</span> <span class="o">=</span> <span class="s1">&#39;Checked the second solution (solution_id: </span><span class="si">{}</span><span class="s1"> / solution_index: </span><span class="si">{}</span><span class="s1"> / new cummulated path_length: </span><span class="si">{}</span><span class="s1">) but initial solution (solution_id: </span><span class="si">{}</span><span class="s1"> / solution_index: </span><span class="si">{}</span><span class="s1"> / initial cummulated path_length: </span><span class="si">{}</span><span class="s1">) was chosen due to a shorter cummulated path_length.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                                             <span class="n">new_solution_id</span><span class="p">,</span> <span class="n">new_solution_index</span><span class="p">,</span> <span class="n">new_commulated_path_lengt</span><span class="p">,</span> <span class="n">previous_location_result</span><span class="p">[</span><span class="s1">&#39;solution_id&#39;</span><span class="p">],</span> <span class="n">previous_location_result</span><span class="p">[</span><span class="s1">&#39;solution_index&#39;</span><span class="p">],</span> <span class="n">previous_commulated_path_lengt</span><span class="p">)</span>
+                                        <span class="n">blockPrint</span><span class="p">()</span>
                                         <span class="nb">print</span><span class="p">(</span><span class="n">new_comment</span><span class="p">)</span>
+                                        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+                                        <span class="n">enablePrint</span><span class="p">()</span>
                                         <span class="n">previous_location_result</span><span class="p">[</span><span class="s1">&#39;comment&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">new_comment</span>
 
                                         <span class="c1"># update statistics</span>
@@ -1276,7 +1290,10 @@
 
                         <span class="n">print_str</span> <span class="o">=</span> <span class="s1">&#39;Set the second checked solution (with solution_id: </span><span class="si">{}</span><span class="s1">) as the correct one since it yields more found paths than the initial solution (with solution_id: </span><span class="si">{}</span><span class="s1">). &#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                             <span class="n">new_solution_id</span><span class="p">,</span> <span class="n">previous_location_result</span><span class="p">[</span><span class="s1">&#39;solution_id&#39;</span><span class="p">])</span>
+                        <span class="n">blockPrint</span><span class="p">()</span>
                         <span class="nb">print</span><span class="p">(</span><span class="n">print_str</span><span class="p">)</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+                        <span class="n">enablePrint</span><span class="p">()</span>
                         <span class="n">new_comment</span> <span class="o">=</span> <span class="s1">&#39;The source point of this path was reset as this yields more found paths. Previous solution: </span><span class="si">{}</span><span class="s1"> / New solution: </span><span class="si">{}</span><span class="s1">. &#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                             <span class="n">previous_source</span><span class="p">,</span> <span class="p">(</span><span class="n">new_solution_point_x</span><span class="p">,</span> <span class="n">new_solution_point_y</span><span class="p">))</span>
 
@@ -1305,15 +1322,21 @@
 
                     <span class="k">else</span><span class="p">:</span>
                         <span class="c1"># new solution does not yield more found paths than initial solution</span>
+                        <span class="n">blockPrint</span><span class="p">()</span>
                         <span class="nb">print</span><span class="p">(</span>
                             <span class="s1">&#39;New solution does not yield more found paths than initial solution.&#39;</span><span class="p">)</span>
                         <span class="n">new_comment_second_best_solution</span> <span class="o">=</span> <span class="s1">&#39;Checked the second best solution (solution_id: </span><span class="si">{}</span><span class="s1"> / solution_index: </span><span class="si">{}</span><span class="s1">) but it did not lead to more found paths. Therefore, initial solution (solution_id: </span><span class="si">{}</span><span class="s1"> / solution_index: </span><span class="si">{}</span><span class="s1">) was chosen. &#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                             <span class="n">new_solution_id</span><span class="p">,</span> <span class="n">new_solution_index</span><span class="p">,</span> <span class="n">previous_location_result</span><span class="p">[</span><span class="s1">&#39;solution_id&#39;</span><span class="p">],</span> <span class="n">previous_location_result</span><span class="p">[</span><span class="s1">&#39;solution_index&#39;</span><span class="p">])</span>
                         <span class="nb">print</span><span class="p">(</span><span class="n">new_comment_second_best_solution</span><span class="p">)</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+                        <span class="n">enablePrint</span><span class="p">()</span>
                         <span class="n">previous_location_result</span><span class="p">[</span><span class="s1">&#39;comment&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">new_comment_second_best_solution</span>
 
                 <span class="k">else</span><span class="p">:</span>
+                    <span class="n">blockPrint</span><span class="p">()</span>
                     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Tried to check other solution but the target is not known. &#39;</span><span class="p">)</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+                    <span class="n">enablePrint</span><span class="p">()</span>
 
                 <span class="c1"># append the result of the previous location to the entire solution</span>
                 <span class="n">calculatedSolution</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">previous_location_result</span><span class="p">)</span>
@@ -1348,23 +1371,21 @@
             <span class="c1"># TODO: Delete the following lines as this is just for testing.</span>
             <span class="c1"># stop script after a few lines (for testing reasons)</span>
             <span class="n">counter</span> <span class="o">+=</span> <span class="mi">1</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">counter</span><span class="p">)</span>
+            <span class="c1"># print(counter)</span>
             <span class="k">if</span> <span class="p">(</span><span class="n">counter</span> <span class="o">&gt;</span> <span class="mi">10</span><span class="p">):</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;ende&#39;</span><span class="p">)</span>
-                <span class="c1"># break</span>
+                <span class="c1"># print(&#39;ende&#39;)</span>
+                <span class="k">break</span>
 
             <span class="c1"># Update Progress Bar</span>
 
             <span class="c1"># enablePrint()</span>
-
-            <span class="n">suffix</span> <span class="o">=</span> <span class="s1">&#39;| current file: </span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1"> lines&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                <span class="n">counter</span><span class="p">,</span> <span class="n">lines_in_textfile</span><span class="p">)</span>
-            <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span>
-            <span class="k">if</span> <span class="p">(</span><span class="n">x</span><span class="p">):</span>
-                <span class="n">suffix</span> <span class="o">+=</span> <span class="s1">&#39; | total: </span><span class="si">{}</span><span class="s1"> of </span><span class="si">{}</span><span class="s1"> files&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">lines</span> <span class="o">!=</span> <span class="s1">&#39;artificialline&#39;</span><span class="p">):</span>
+                <span class="n">suffix</span> <span class="o">=</span> <span class="s1">&#39;| current file: </span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1"> lines&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                     <span class="n">counter</span><span class="p">,</span> <span class="n">lines_in_textfile</span><span class="p">)</span>
-            <span class="n">printProgressBar</span><span class="p">(</span><span class="n">counter</span><span class="p">,</span> <span class="n">lines_in_textfile</span><span class="p">,</span>
-                             <span class="n">prefix</span><span class="o">=</span><span class="s1">&#39;Progress:&#39;</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="n">suffix</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+                <span class="n">suffix</span> <span class="o">+=</span> <span class="s1">&#39; | total: </span><span class="si">{}</span><span class="s1"> of </span><span class="si">{}</span><span class="s1"> files&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">current_txt_file</span><span class="p">,</span> <span class="n">number_of_txt_files</span><span class="p">)</span>
+                <span class="n">printProgressBar</span><span class="p">(</span><span class="n">counter</span><span class="p">,</span> <span class="n">lines_in_textfile</span><span class="p">,</span>
+                                 <span class="n">prefix</span><span class="o">=</span><span class="s1">&#39;Progress:&#39;</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="n">suffix</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
 
             <span class="c1"># blockPrint()</span>
 
@@ -1542,9 +1563,12 @@
 
 <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
 
+    <span class="k">global</span> <span class="n">number_of_txt_files</span>
+    <span class="k">global</span> <span class="n">current_txt_file</span>
+
     <span class="c1"># blockPrint()</span>
 
-    <span class="k">def</span> <span class="nf">caculationForOneTXTFile</span><span class="p">(</span><span class="n">filepath_shp</span><span class="p">,</span> <span class="n">dirName</span><span class="p">,</span> <span class="n">filepath</span><span class="p">,</span> <span class="n">aStar</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">caculationForOneTXTFile</span><span class="p">(</span><span class="n">filepath_shp</span><span class="p">,</span> <span class="n">new_filename_solution</span><span class="p">,</span> <span class="n">new_filename_statistics</span><span class="p">,</span> <span class="n">new_filename_velocities</span><span class="p">,</span> <span class="n">new_filename_path_length_air_line_length</span><span class="p">,</span> <span class="n">filepath</span><span class="p">,</span> <span class="n">aStar</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
 
         <span class="c1"># set the header of the output txt file which will contain the calculated solution.</span>
         <span class="n">header</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;latitude(y);longitude(x);hasPassenger;time;closest_intersection_x;closest_intersection_y;relative_position;relative_position_normalized;intersected_line_oneway;intersected_line_as_linestring;linestring_adjustment_visualization;path_time&#39;</span><span class="p">]</span>
@@ -1553,13 +1577,6 @@
             <span class="n">header</span> <span class="o">+=</span> <span class="s1">&#39;;path_as_linestring;path_length;air_line_length;path_length/air_line_length;velocity_m_s;pathIDs;solution_id;solution_index;path_from_target_to_source;taxi_did_not_move;second_best_solution_yields_more_found_paths;NO_PATH_FOUND;outlier;comment&#39;</span>
 
         <span class="n">header</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
-
-        <span class="n">new_filename_solution</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-            <span class="n">dirName</span><span class="p">,</span> <span class="s1">&#39;calculatedSolution&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;.txt&#39;</span>
-        <span class="n">new_filename_statistics</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dirName</span><span class="p">,</span> <span class="s1">&#39;statistics&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;.txt&#39;</span>
-        <span class="n">new_filename_velocities</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dirName</span><span class="p">,</span> <span class="s1">&#39;velocitiesPLOT.png&#39;</span><span class="p">)</span>
-        <span class="n">new_filename_path_length_air_line_length</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-            <span class="n">dirName</span><span class="p">,</span> <span class="s1">&#39;path_length_air_line_length_PLOT.png&#39;</span><span class="p">)</span>
 
         <span class="n">myCalculatedSolution</span><span class="p">,</span> <span class="n">mySolutionStatistics</span> <span class="o">=</span> <span class="n">calculateMostLikelyPointAndPaths</span><span class="p">(</span>
             <span class="n">filepath</span><span class="p">,</span> <span class="n">filepath_shp</span><span class="p">,</span> <span class="n">minNumberOfLines</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">aStar</span><span class="o">=</span><span class="n">aStar</span><span class="p">)</span>
@@ -1727,19 +1744,22 @@
 
     <span class="n">filepaths</span> <span class="o">=</span> <span class="p">[]</span>
 
-    <span class="c1"># filepaths.append(filepath6BUG)</span>
-    <span class="c1"># filepaths.append(filepath6BUG2)</span>
+    <span class="n">filepaths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">filepath6BUG</span><span class="p">)</span>
+    <span class="n">filepaths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">filepath6BUG2</span><span class="p">)</span>
 
-    <span class="n">filepaths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">filepath6</span><span class="p">)</span>
-    <span class="n">filepaths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">filepath7</span><span class="p">)</span>
-    <span class="n">filepaths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">filepath1</span><span class="p">)</span>
-    <span class="n">filepaths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">filepath2</span><span class="p">)</span>
-    <span class="n">filepaths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">filepath3</span><span class="p">)</span>
-    <span class="n">filepaths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">filepath4</span><span class="p">)</span>
-    <span class="n">filepaths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">filepath5</span><span class="p">)</span>
+    <span class="c1"># filepaths.append(filepath6)</span>
+    <span class="c1"># filepaths.append(filepath7)</span>
+    <span class="c1"># filepaths.append(filepath1)</span>
+    <span class="c1"># filepaths.append(filepath2)</span>
+    <span class="c1"># filepaths.append(filepath3)</span>
+    <span class="c1"># filepaths.append(filepath4)</span>
+    <span class="c1"># filepaths.append(filepath5)</span>
+
+    <span class="n">number_of_txt_files</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">filepaths</span><span class="p">)</span>
 
     <span class="c1"># loop through all the filepaths</span>
     <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">filepaths</span><span class="p">:</span>
+        <span class="n">current_txt_file</span> <span class="o">+=</span> <span class="mi">1</span>
 
         <span class="n">new_filename</span> <span class="o">=</span> <span class="n">getFilename</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
 
@@ -1752,11 +1772,21 @@
         <span class="c1"># Create target directory &amp; all intermediate directories if don&#39;t exists</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">dirName</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Directory &#39;</span><span class="p">,</span> <span class="n">dirName</span><span class="p">,</span>  <span class="s1">&#39; created.&#39;</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">FileExistsError</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Directory &#39;</span><span class="p">,</span> <span class="n">dirName</span><span class="p">,</span>  <span class="s1">&#39; already exists.&#39;</span><span class="p">)</span>
 
-        <span class="n">caculationForOneTXTFile</span><span class="p">(</span><span class="n">filepath_shp</span><span class="p">,</span> <span class="n">dirName</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">new_filename_solution</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="n">dirName</span><span class="p">,</span> <span class="s1">&#39;calculatedSolution&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;.txt&#39;</span>
+        <span class="n">new_filename_statistics</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dirName</span><span class="p">,</span> <span class="s1">&#39;statistics&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;.txt&#39;</span>
+        <span class="n">new_filename_velocities</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dirName</span><span class="p">,</span> <span class="s1">&#39;velocitiesPLOT.png&#39;</span><span class="p">)</span>
+        <span class="n">new_filename_path_length_air_line_length</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="n">dirName</span><span class="p">,</span> <span class="s1">&#39;path_length_air_line_length_PLOT.png&#39;</span><span class="p">)</span>
+
+        <span class="n">caculationForOneTXTFile</span><span class="p">(</span><span class="n">filepath_shp</span><span class="p">,</span> <span class="n">new_filename_solution</span><span class="p">,</span> <span class="n">new_filename_statistics</span><span class="p">,</span>
+                                <span class="n">new_filename_velocities</span><span class="p">,</span> <span class="n">new_filename_path_length_air_line_length</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 
         <span class="c1"># get all timestamp differences of a text file</span>
         <span class="n">timeDifferences</span> <span class="o">=</span> <span class="n">getTimeDifferences</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
@@ -1767,6 +1797,13 @@
         <span class="c1"># plot the timeDifferences in a histogram</span>
         <span class="n">plotAndSaveHistogram</span><span class="p">(</span><span class="n">timeDifferences</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="n">timedifferencesFileName</span><span class="p">,</span>
                              <span class="s1">&#39;Histogram of time differences between gps points&#39;</span><span class="p">,</span> <span class="s1">&#39;time difference in seconds&#39;</span><span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The following files where created:&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;- &#39;</span> <span class="o">+</span> <span class="n">new_filename_solution</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;- &#39;</span> <span class="o">+</span> <span class="n">new_filename_statistics</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;- &#39;</span> <span class="o">+</span> <span class="n">new_filename_velocities</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;- &#39;</span> <span class="o">+</span> <span class="n">new_filename_path_length_air_line_length</span><span class="p">)</span>
 
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
