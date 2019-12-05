@@ -75,20 +75,20 @@
 <span class="n">number_of_txt_files</span> <span class="o">=</span> <span class="mi">0</span>
 
 
-<div class="viewcode-block" id="blockPrint"><a class="viewcode-back" href="../index.html#gps2net.blockPrint">[docs]</a><span class="k">def</span> <span class="nf">blockPrint</span><span class="p">():</span>
+<div class="viewcode-block" id="blockPrint"><a class="viewcode-back" href="../documentation.html#gps2net.blockPrint">[docs]</a><span class="k">def</span> <span class="nf">blockPrint</span><span class="p">():</span>
     <span class="sd">&#39;&#39;&#39;This method is used to disable print() messages.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">devnull</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="enablePrint"><a class="viewcode-back" href="../index.html#gps2net.enablePrint">[docs]</a><span class="k">def</span> <span class="nf">enablePrint</span><span class="p">():</span>
+<div class="viewcode-block" id="enablePrint"><a class="viewcode-back" href="../documentation.html#gps2net.enablePrint">[docs]</a><span class="k">def</span> <span class="nf">enablePrint</span><span class="p">():</span>
     <span class="sd">&#39;&#39;&#39;This method restores print() messages. </span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">__stdout__</span></div>
 
 
 <span class="c1"># Print iterations progress</span>
-<div class="viewcode-block" id="printProgressBar"><a class="viewcode-back" href="../index.html#gps2net.printProgressBar">[docs]</a><span class="k">def</span> <span class="nf">printProgressBar</span><span class="p">(</span><span class="n">iteration</span><span class="p">,</span> <span class="n">total</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">decimals</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="s1">&#39;█&#39;</span><span class="p">,</span> <span class="n">printEnd</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\r</span><span class="s1">&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="printProgressBar"><a class="viewcode-back" href="../documentation.html#gps2net.printProgressBar">[docs]</a><span class="k">def</span> <span class="nf">printProgressBar</span><span class="p">(</span><span class="n">iteration</span><span class="p">,</span> <span class="n">total</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">decimals</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="s1">&#39;█&#39;</span><span class="p">,</span> <span class="n">printEnd</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\r</span><span class="s1">&#39;</span><span class="p">):</span>
     <span class="sa">r</span><span class="sd">&#39;&#39;&#39;Call in a loop to create terminal progress bar.</span>
 
 <span class="sd">    Parameters</span>
@@ -129,7 +129,7 @@
 <span class="c1"># %%</span>
 
 
-<div class="viewcode-block" id="distFrom"><a class="viewcode-back" href="../index.html#gps2net.distFrom">[docs]</a><span class="k">def</span> <span class="nf">distFrom</span><span class="p">(</span><span class="n">lng1</span><span class="p">,</span> <span class="n">lat1</span><span class="p">,</span> <span class="n">lng2</span><span class="p">,</span> <span class="n">lat2</span><span class="p">):</span>
+<div class="viewcode-block" id="distFrom"><a class="viewcode-back" href="../documentation.html#gps2net.distFrom">[docs]</a><span class="k">def</span> <span class="nf">distFrom</span><span class="p">(</span><span class="n">lng1</span><span class="p">,</span> <span class="n">lat1</span><span class="p">,</span> <span class="n">lng2</span><span class="p">,</span> <span class="n">lat2</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Returns the distance between two points in meters.</span>
 
 <span class="sd">    Parameters</span>
@@ -188,7 +188,7 @@
 <span class="c1"># %%</span>
 
 
-<div class="viewcode-block" id="cut"><a class="viewcode-back" href="../index.html#gps2net.cut">[docs]</a><span class="k">def</span> <span class="nf">cut</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">distance</span><span class="p">,</span> <span class="n">point</span><span class="p">):</span>
+<div class="viewcode-block" id="cut"><a class="viewcode-back" href="../documentation.html#gps2net.cut">[docs]</a><span class="k">def</span> <span class="nf">cut</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">distance</span><span class="p">,</span> <span class="n">point</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Cuts a line in two at a distance from its starting point.</span>
 
 <span class="sd">    Parameters</span>
@@ -236,7 +236,7 @@
                 <span class="n">LineString</span><span class="p">([(</span><span class="n">point</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">point</span><span class="o">.</span><span class="n">y</span><span class="p">)]</span> <span class="o">+</span> <span class="n">coords</span><span class="p">[</span><span class="n">i</span><span class="p">:])]</span></div>
 
 
-<div class="viewcode-block" id="createGraphFromSHPInput"><a class="viewcode-back" href="../index.html#gps2net.createGraphFromSHPInput">[docs]</a><span class="k">def</span> <span class="nf">createGraphFromSHPInput</span><span class="p">(</span><span class="n">filepath_shp</span><span class="p">):</span>
+<div class="viewcode-block" id="createGraphFromSHPInput"><a class="viewcode-back" href="../documentation.html#gps2net.createGraphFromSHPInput">[docs]</a><span class="k">def</span> <span class="nf">createGraphFromSHPInput</span><span class="p">(</span><span class="n">filepath_shp</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Creates a directed graph from a shp file.</span>
 
 <span class="sd">    Parameters</span>
@@ -333,7 +333,7 @@
     <span class="k">return</span> <span class="n">GraphFromSHP</span></div>
 
 
-<div class="viewcode-block" id="getShortestPathAStar"><a class="viewcode-back" href="../index.html#gps2net.getShortestPathAStar">[docs]</a><span class="k">def</span> <span class="nf">getShortestPathAStar</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">source_line</span><span class="p">,</span> <span class="n">target_line</span><span class="p">,</span> <span class="n">source_line_oneway</span><span class="p">,</span> <span class="n">target_line_oneway</span><span class="p">,</span> <span class="n">filepath_shp</span><span class="p">,</span> <span class="n">ignore_oneway</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="getShortestPathAStar"><a class="viewcode-back" href="../documentation.html#gps2net.getShortestPathAStar">[docs]</a><span class="k">def</span> <span class="nf">getShortestPathAStar</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">source_line</span><span class="p">,</span> <span class="n">target_line</span><span class="p">,</span> <span class="n">source_line_oneway</span><span class="p">,</span> <span class="n">target_line_oneway</span><span class="p">,</span> <span class="n">filepath_shp</span><span class="p">,</span> <span class="n">ignore_oneway</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;The shortest – most likely – path between two GPS positions (on a street segment) based on the streets of the underlying network.</span>
 
 
@@ -638,7 +638,7 @@
     <span class="k">return</span> <span class="n">path</span><span class="p">,</span> <span class="n">path_length</span><span class="p">,</span> <span class="n">path_IDs</span></div>
 
 
-<div class="viewcode-block" id="calculateMostLikelyPointAndPaths"><a class="viewcode-back" href="../index.html#gps2net.calculateMostLikelyPointAndPaths">[docs]</a><span class="k">def</span> <span class="nf">calculateMostLikelyPointAndPaths</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="n">filepath_shp</span><span class="p">,</span> <span class="n">minNumberOfLines</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">aStar</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<div class="viewcode-block" id="calculateMostLikelyPointAndPaths"><a class="viewcode-back" href="../documentation.html#gps2net.calculateMostLikelyPointAndPaths">[docs]</a><span class="k">def</span> <span class="nf">calculateMostLikelyPointAndPaths</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="n">filepath_shp</span><span class="p">,</span> <span class="n">minNumberOfLines</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">aStar</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Maps GPS positions to the most likely points (which lie on the underlying street network) and obtains the most likely paths between those points based on the underlying street network.</span>
 
 <span class="sd">    Parameters</span>
@@ -1392,7 +1392,7 @@
     <span class="k">return</span> <span class="n">calculatedSolution</span><span class="p">,</span> <span class="n">statistics</span></div>
 
 
-<div class="viewcode-block" id="getTimeDifferences"><a class="viewcode-back" href="../index.html#gps2net.getTimeDifferences">[docs]</a><span class="k">def</span> <span class="nf">getTimeDifferences</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="n">timestampPosition</span><span class="p">):</span>
+<div class="viewcode-block" id="getTimeDifferences"><a class="viewcode-back" href="../documentation.html#gps2net.getTimeDifferences">[docs]</a><span class="k">def</span> <span class="nf">getTimeDifferences</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="n">timestampPosition</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Get the time differences of taxi mobility traces in a txt file.</span>
 
 <span class="sd">    Parameters</span>
@@ -1442,7 +1442,7 @@
     <span class="k">return</span> <span class="n">timeDifferences</span></div>
 
 
-<div class="viewcode-block" id="plotAndSaveHistogram"><a class="viewcode-back" href="../index.html#gps2net.plotAndSaveHistogram">[docs]</a><span class="k">def</span> <span class="nf">plotAndSaveHistogram</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">minXLabel</span><span class="p">,</span> <span class="n">maxXLabel</span><span class="p">,</span> <span class="n">binSize</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">xlabel</span><span class="p">):</span>
+<div class="viewcode-block" id="plotAndSaveHistogram"><a class="viewcode-back" href="../documentation.html#gps2net.plotAndSaveHistogram">[docs]</a><span class="k">def</span> <span class="nf">plotAndSaveHistogram</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">minXLabel</span><span class="p">,</span> <span class="n">maxXLabel</span><span class="p">,</span> <span class="n">binSize</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">xlabel</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Plots a histogram with a specified max x-value. Values bigger that the max x-value are clipped to the interval edge.</span>
 
 <span class="sd">    Parameters</span>
@@ -1528,7 +1528,7 @@
     <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 
 
-<div class="viewcode-block" id="getFilename"><a class="viewcode-back" href="../index.html#gps2net.getFilename">[docs]</a><span class="k">def</span> <span class="nf">getFilename</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+<div class="viewcode-block" id="getFilename"><a class="viewcode-back" href="../documentation.html#gps2net.getFilename">[docs]</a><span class="k">def</span> <span class="nf">getFilename</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Returns the name of a file from a specific path (excluding directories and extension).</span>
 
 <span class="sd">    Parameters</span>

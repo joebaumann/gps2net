@@ -72,7 +72,7 @@
 
 
 \title{gps2net}
-\date{Dec 03, 2019}
+\date{Dec 05, 2019}
 \release{1.1.2020}
 \author{Joachim Baumann}
 \newcommand{\sphinxlogo}{\vbox{}}
@@ -88,8 +88,349 @@
 \phantomsection\label{\detokenize{index::doc}}
 
 
-\#.. automodule:: gps2net
-\#    :members:
+
+\chapter{Indices and tables}
+\label{\detokenize{index:indices-and-tables}}\begin{itemize}
+\item {} 
+\DUrole{xref,std,std-ref}{genindex}
+
+\item {} 
+\DUrole{xref,std,std-ref}{search}
+
+\end{itemize}
+
+
+\chapter{Functions}
+\label{\detokenize{index:module-gps2net}}\label{\detokenize{index:functions}}\index{gps2net (module)@\spxentry{gps2net}\spxextra{module}}\index{blockPrint() (in module gps2net)@\spxentry{blockPrint()}\spxextra{in module gps2net}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{index:gps2net.blockPrint}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{gps2net.}}\sphinxbfcode{\sphinxupquote{blockPrint}}}{}{}
+This method is used to disable print() messages.
+
+\end{fulllineitems}
+
+\index{calculateMostLikelyPointAndPaths() (in module gps2net)@\spxentry{calculateMostLikelyPointAndPaths()}\spxextra{in module gps2net}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{index:gps2net.calculateMostLikelyPointAndPaths}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{gps2net.}}\sphinxbfcode{\sphinxupquote{calculateMostLikelyPointAndPaths}}}{\emph{filepath}, \emph{filepath\_shp}, \emph{minNumberOfLines=2}, \emph{aStar=1}}{}
+Maps GPS positions to the most likely points (which lie on the underlying street network) and obtains the most likely paths between those points based on the underlying street network.
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode\begin{description}
+\item[{\sphinxstylestrong{filepath}}] \leavevmode{[}str{]}
+The path where the txt file (which contains the taxi mobility trace) is stored.
+
+\item[{\sphinxstylestrong{filepath\_shp}}] \leavevmode{[}str{]}
+The path where the shp file (which contains the street data) is stored.
+
+\item[{\sphinxstylestrong{minNumberOfLines}}] \leavevmode{[}int, optional{]}
+By default 2.
+
+\item[{\sphinxstylestrong{aStar}}] \leavevmode{[}int, optional{]}
+By default 1. If 1, the closest point on underlying street network and the most likely path is calculated. If 0, only the closest point is calculated.
+
+\end{description}
+
+\item[{Returns}] \leavevmode\begin{description}
+\item[{\sphinxstylestrong{calculatedSolution}}] \leavevmode{[}list of dictionaries{]}
+Every line of the txt file (which was the input containing the GPS positions) yields a dictionary.This dictionary is appended to the calculatedSolution list. In the end every dictionary will be written to a new txt file as a separate line. This will yield a txt file (similar to the input file but) with additional information. The following values are taken from the input file which contains the GPS trajectories:
+\begin{itemize}
+\item {} \begin{description}
+\item[{y}] \leavevmode{[}float{]}
+Latitude of the GPS position in decimal degrees.
+
+\end{description}
+
+\item {} \begin{description}
+\item[{x}] \leavevmode{[}float{]}
+Longitude of the GPS position in decimal degrees.
+
+\end{description}
+
+\item {} \begin{description}
+\item[{passenger}] \leavevmode{[}\{0, 1\}{]}
+Occupancy shows if a cab has a fare (1 = occupied, 0 = free).
+
+\end{description}
+
+\item {} \begin{description}
+\item[{timestamp}] \leavevmode{[}int{]}
+Time is in UNIX epoch format.
+
+\end{description}
+
+\end{itemize}
+
+In addition to those four values, every dictionary contains the following parameters which where computed by the algorithm (key : type):
+\begin{itemize}
+\item {} \begin{description}
+\item[{closest\_intersection\_x}] \leavevmode{[}float{]}
+Longitude of the mapped point.
+
+\end{description}
+
+\item {} \begin{description}
+\item[{closest\_intersection\_y}] \leavevmode{[}float{]}
+Latitude of the mapped point.
+
+\end{description}
+
+\item {} \begin{description}
+\item[{relative\_position}] \leavevmode{[}float{]}
+Distance along the street (where the initial point was mapped to).
+
+\end{description}
+
+\item {} \begin{description}
+\item[{relative\_position\_normalized}] \leavevmode{[}float between 0 and 1{]}
+Normalized distance along the street (where the initial point was mapped to).
+
+\end{description}
+
+\item {} \begin{description}
+\item[{intersected\_line\_oneway}] \leavevmode{[}\{‘B’, ‘F’, ‘T’\}{]}
+The ‘oneway’-property of the street (LineString) which the GPS point was mapped to. The ‘oneway’-property indicates if a street is bi-directional (B), or one way heading from the from-node to the to-node (F), or one way heading from the to-node to the from-node (T).
+
+\end{description}
+
+\item {} \begin{description}
+\item[{intersected\_line}] \leavevmode{[}list of coordinates{]}
+The source\_line is a list of GPS coordinates. These coordinates represent the street on which the source point lies.
+
+\end{description}
+
+\item {} \begin{description}
+\item[{linestring\_adjustment\_visualization}] \leavevmode{[}list with two elements (GPS\_position, mapped\_point){]}
+The first element is the GPS position from the input file (x, y). The second element is the point on a street where the initial GPS position was mapped to (closest\_intersection\_x, closest\_intersection\_y). This list can be used to visualize the mapping of points.
+
+\end{description}
+
+\item {} \begin{description}
+\item[{path\_time}] \leavevmode{[}int{]}
+The time from the current to the next GPS position in seconds.
+
+\end{description}
+
+\item {} \begin{description}
+\item[{path}] \leavevmode{[}list of coordinates{]}
+The shortest \textendash{} most likely \textendash{} path between two data point based on the streets of the underlying network. \textendash{}\textgreater{} See getShortestPathAStar()
+
+\end{description}
+
+\item {} \begin{description}
+\item[{path\_length}] \leavevmode{[}float{]}
+The length of the path in meters. This is an approximation \textendash{} see distFrom(). \textendash{}\textgreater{} See getShortestPathAStar()
+
+\end{description}
+
+\item {} \begin{description}
+\item[{air\_line\_length}] \leavevmode{[}float{]}
+The air line length of the current position to the next position (from start to end of ‘path’) in meters. This is an approximation \textendash{} see distFrom().
+
+\end{description}
+
+\item {} \begin{description}
+\item[{path\_length/air\_line\_length}] \leavevmode{[}float{]}
+‘path\_length’ devided by ‘air\_line\_length’
+
+\end{description}
+
+\item {} \begin{description}
+\item[{velocity\_m\_s}] \leavevmode{[}float{]}
+The average velocity along the path in m/s (path\_length devided by path\_time).
+
+\end{description}
+
+\item {} \begin{description}
+\item[{pathIDs}] \leavevmode{[}list{]}
+The path IDs of all street segments which are traversed on the path. \textendash{}\textgreater{} See getShortestPathAStar()
+
+\end{description}
+
+\item {} \begin{description}
+\item[{solution\_id}] \leavevmode{[}int{]}
+The id of street where the mapped point lies on.
+
+\end{description}
+
+\item {} \begin{description}
+\item[{solution\_index}] \leavevmode{[}int{]}
+The index of the chosen solution. All possible solutions are in a list which is sorted by the distance of the solution to the GPS position. 0 means that the point was mapped to the closest intersection with a street. If this solution does not seem to be probable, other (further away) solution where checked and if one of these solutions yielded a better outcome (e.g. shorter paths) than the index of this solution is taken. Consequently, solution\_index=3 means that the third-closest solution was chosen.
+
+\end{description}
+
+\item {} \begin{description}
+\item[{path\_from\_target\_to\_source}] \leavevmode{[}\{0, 1\}{]}
+1 means that the on the ‘oneway’-property was ignored. In this case the path might actually be the path from the target to the source. This is done when the algorithm detects a GPS glipse (the vehicle seems to drive a tiny bit backwards on a oneway street which is not possible) which resulted in a wrong path.
+
+\end{description}
+
+\item {} \begin{description}
+\item[{taxi\_did\_not\_move}] \leavevmode{[}\{0, 1\}{]}
+0 means that the taxi did move. 1 means that the taxi did not move.
+
+\end{description}
+
+\item {} \begin{description}
+\item[{second\_best\_solution\_yields\_more\_found\_paths}] \leavevmode{[}\{0, 1\}{]}
+1 means that no path existed for initial solution and the second best solution lead to more found paths. In these cases the initial solution was replaced by the second best solution.
+
+\end{description}
+
+\item {} \begin{description}
+\item[{NO\_PATH\_FOUND}] \leavevmode{[}\{0, 1\}{]}
+1 means that no path could be found even though the taxi moved and both source and target point are both no outliers.
+
+\end{description}
+
+\item {} \begin{description}
+\item[{outlier}] \leavevmode{[}\{0, 1\}{]}
+1 means that the GPS position is marked as an outlier. This is done when no street could be found in a specified area.
+
+\end{description}
+
+\item {} \begin{description}
+\item[{comment}] \leavevmode{[}str{]}
+Comment which summarizes most important assumptions/results/concerns for a specific GPS position.
+
+\end{description}
+
+\end{itemize}
+
+\item[{\sphinxstylestrong{statistics}}] \leavevmode{[}list{]}
+Statistics for the txt file (containing GPS positions) for which the solution is calculated.
+The statistics contain the following numbers (all of type int):
+\begin{itemize}
+\item {} \begin{description}
+\item[{outlier}] \leavevmode{[}int{]}
+Number of data points which where flagged as outliers.
+
+\end{description}
+
+\item {} \begin{description}
+\item[{taxi\_did\_not\_move}] \leavevmode{[}int{]}
+Number of times when a data point’s GPS position was identical to the GPS position of the previous data point.
+
+\end{description}
+
+\item {} \begin{description}
+\item[{no\_path\_found}] \leavevmode{[}int{]}
+Number of times no path was found even though the taxi moved and both source and target point are both no outliers.
+
+\end{description}
+
+\item {} \begin{description}
+\item[{cannot\_compute\_shortest\_path\_as\_previous\_point\_is\_outlier}] \leavevmode{[}int{]}
+Number of times the path could not be computed since the previous point was an outlier.
+
+\end{description}
+
+\item {} \begin{description}
+\item[{path\_from\_target\_to\_source}] \leavevmode{[}int{]}
+Number of times the ‘oneway’-property was ignored. In this case the path might actually be the path from the target to the source. This is done when the algorithm detects a GPS glipse (the vehicle seems to drive a tiny bit backwards on a oneway street which is not possible) which resulted in a wrong path.
+
+\end{description}
+
+\item {} \begin{description}
+\item[{checked\_other\_solution\_index}] \leavevmode{[}int{]}
+Number of times another solution was checked because a path either lead to a velocity of more than 35 m/s or a path length which is more than double the air line length.
+
+\end{description}
+
+\item {} \begin{description}
+\item[{chose\_other\_solution\_index}] \leavevmode{[}int{]}
+Number of times the other solution actually lead to a shorter cummulated path (path to previous point plus path to next point) than the initial solution
+
+\end{description}
+
+\item {} \begin{description}
+\item[{solution\_already\_lies\_on\_shortest\_path}] \leavevmode{[}int{]}
+Number of times when velocity was more than 35 m/s or path length was is more than double the air line length BUT the initial solution was already on the shortest path from the previous point to the next point (in this case, the solution is optimal which is why no other solution was checked).
+
+\end{description}
+
+\item {} \begin{description}
+\item[{no\_solution\_lies\_on\_shortest\_path}] \leavevmode{[}int{]}
+Number of times when velocity was more than 35 m/s or path length was is more than double the air line length BUT there was no other solution which lied on the shortest path from the previous point to the next point (in this case, no other solution could b checked).
+
+\end{description}
+
+\item {} \begin{description}
+\item[{other\_solution\_is\_worse}] \leavevmode{[}int{]}
+Number of times when another solution was checked, but since this new solution was worse than the initial solution it wasn’t taken.
+
+\end{description}
+
+\item {} \begin{description}
+\item[{other\_solution\_no\_path\_found}] \leavevmode{[}int{]}
+Number of times when another solution was checked, but since there was no valid path for this new solution it wasn’t taken.
+
+\end{description}
+
+\item {} \begin{description}
+\item[{checked\_if\_path\_exists\_for\_second\_best\_solution\_index}] \leavevmode{[}int{]}
+Number of times no path existed for initial solution. In these cases the secont best solution (if it existed) was checked.
+
+\end{description}
+
+\item {} \begin{description}
+\item[{second\_best\_solution\_yields\_more\_found\_paths}] \leavevmode{[}int{]}
+Number of times no path existed for initial solution and the second best solution lead to more found paths. In these cases the initial solution was replaced by the second best solution.
+
+\end{description}
+
+\end{itemize}
+
+\end{description}
+
+\end{description}\end{quote}
+\subsubsection*{Notes}
+
+Every txt input file contains the mobility trace of a taxi. The format of each mobility trace file is the following - each line contains {[}latitude, longitude, occupancy, time{]}, e.g.: {[}37.75134 -122.39488 0 1213084687{]}, where latitude and longitude are in decimal degrees, occupancy shows if a cab has a fare (1 = occupied, 0 = free) and time is in UNIX epoch format.
+The output ‘linestring\_adjustment\_visualization’ can be used to visualize the mapping of points, e.g. by adding it as a layer in GQIS (Layer \textgreater{} Add Layer \textgreater{} Add delimited text layer \textendash{}\textgreater{} Choose WKT as geometry definition and ‘linestring\_adjustment\_visualization’ as geometry field).
+
+\end{fulllineitems}
+
+\index{createGraphFromSHPInput() (in module gps2net)@\spxentry{createGraphFromSHPInput()}\spxextra{in module gps2net}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{index:gps2net.createGraphFromSHPInput}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{gps2net.}}\sphinxbfcode{\sphinxupquote{createGraphFromSHPInput}}}{\emph{filepath\_shp}}{}
+Creates a directed graph from a shp file.
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode\begin{description}
+\item[{\sphinxstylestrong{filepath\_shp}}] \leavevmode{[}str{]}
+The path where the shp file (which contains the street data) is stored.
+
+\end{description}
+
+\item[{Returns}] \leavevmode\begin{description}
+\item[{Directed Graph}] \leavevmode
+The Directed Graph which contains all linesegments of the shapefiles as edges is returned.
+
+\end{description}
+
+\end{description}\end{quote}
+\subsubsection*{Notes}
+
+This graph is only initialized once in the beginning of the script. The DiGraph contains all linesegment of the shp file (i.e. streetsegments) as directed edges. The start and end node of each edge are tuples containing the coordinates of the position. The weight of an edge is the air\_line\_distance from the start to the end of the linesegment. Each edge containes the following attributes:
+\begin{itemize}
+\item {} \begin{description}
+\item[{id}] \leavevmode{[}int{]}
+The id of the street (LineString) which the linesegment belongs to according to the shapefile.
+
+\end{description}
+
+\item {} \begin{description}
+\item[{oneway}] \leavevmode{[}\{‘B’, ‘F’, ‘T’\}{]}
+The ‘oneway’-property of the street (LineString) which the linesegment belongs to according to the shapefile. The ‘oneway’-property indicates if a street is bi-directional (B), or one way heading from the from-node to the to-node (F), or one way heading from the to-node to the from-node (T).
+
+\end{description}
+
+\end{itemize}
+
+Depending on the ‘oneway’-property of the street either one or two edges are added to the graph. For ‘B’, two directed edges (from-node \textendash{}\textgreater{} to-node AND to-node \textendash{}\textgreater{} from-node) are added. For ‘F’ or ‘T’, only one directed edge is added to the graph.
+
+\end{fulllineitems}
+
 \index{cut() (in module gps2net)@\spxentry{cut()}\spxextra{in module gps2net}}
 
 \begin{fulllineitems}
@@ -109,39 +450,277 @@ Cuts a line in two at a distance from its starting point.
 \end{description}
 
 \item[{Returns}] \leavevmode\begin{description}
-\item[{{[}type{]}}] \leavevmode
-{[}description{]}
+\item[{list with LineStrings}] \leavevmode
+Two LineStrings are returned. ‘point’ is the end point of the first LineString and the start point of the second LineString.
 
 \end{description}
 
 \end{description}\end{quote}
 \subsubsection*{Notes}
 
-…
-cp = line.interpolate(distance)
-…
+‘line.interpolate(distance)’ should be equal to the parameter ‘point’. However, due to precision errors ‘point’ is used.
+
+\end{fulllineitems}
+
+\index{distFrom() (in module gps2net)@\spxentry{distFrom()}\spxextra{in module gps2net}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{index:gps2net.distFrom}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{gps2net.}}\sphinxbfcode{\sphinxupquote{distFrom}}}{\emph{lng1}, \emph{lat1}, \emph{lng2}, \emph{lat2}}{}
+Returns the distance between two points in meters.
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode\begin{description}
+\item[{\sphinxstylestrong{lng1}}] \leavevmode{[}float{]}
+This float is the longitude of the source.
+
+\item[{\sphinxstylestrong{lat1}}] \leavevmode{[}float{]}
+This float is the latitude of the source.
+
+\item[{\sphinxstylestrong{lng2}}] \leavevmode{[}float{]}
+This float is the longitude of the target.
+
+\item[{\sphinxstylestrong{lat2}}] \leavevmode{[}float{]}
+This float is the latitude of the target.
+
+\end{description}
+
+\item[{Returns}] \leavevmode\begin{description}
+\item[{\sphinxstylestrong{dist}}] \leavevmode{[}int{]}
+The distance between two points in meters.
+
+\end{description}
+
+\end{description}\end{quote}
+\subsubsection*{Notes}
+
+This function calculates the distance between two gps points.
+The result is not 100\% correct as the function does not consider the elipsis-like shape of the earth. Instead it just uses an earth radius of 6371000 meters for the calculation.
+
+A more accurate calculation of the distance can be done in QGIS. For more details, please visit: \sphinxurl{http://www.qgistutorials.com/en/docs/calculating\_line\_lengths.html}
+However, this function was used to be able to run the code independently of QGIS.
+\subsubsection*{Examples}
+
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{x}\PYG{o}{=}\PYG{l+m+mi}{12}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{x}
+\PYG{g+go}{12}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{p}{(}\PYG{l+m+mi}{5}\PYG{o}{\PYGZlt{}}\PYG{l+m+mi}{10}\PYG{p}{)}
+\PYG{g+go}{True}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{myDist} \PYG{o}{=} \PYG{n}{distFrom}\PYG{p}{(}\PYG{o}{\PYGZhy{}}\PYG{l+m+mf}{122.115}\PYG{p}{,} \PYG{l+m+mf}{37.115}\PYG{p}{,} \PYG{o}{\PYGZhy{}}\PYG{l+m+mf}{122.111}\PYG{p}{,} \PYG{l+m+mf}{37.111}\PYG{p}{)}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{myDist}
+\PYG{g+go}{568.8872918546489}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{distFrom}\PYG{p}{(}\PYG{o}{\PYGZhy{}}\PYG{l+m+mf}{122.115}\PYG{p}{,} \PYG{l+m+mf}{37.115}\PYG{p}{,} \PYG{o}{\PYGZhy{}}\PYG{l+m+mf}{122.111}\PYG{p}{,} \PYG{l+m+mf}{37.111}\PYG{p}{)} 
+\PYG{g+go}{5}
+\end{sphinxVerbatim}
+
+\end{fulllineitems}
+
+\index{enablePrint() (in module gps2net)@\spxentry{enablePrint()}\spxextra{in module gps2net}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{index:gps2net.enablePrint}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{gps2net.}}\sphinxbfcode{\sphinxupquote{enablePrint}}}{}{}
+This method restores print() messages.
+
+\end{fulllineitems}
+
+\index{getFilename() (in module gps2net)@\spxentry{getFilename()}\spxextra{in module gps2net}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{index:gps2net.getFilename}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{gps2net.}}\sphinxbfcode{\sphinxupquote{getFilename}}}{\emph{path}}{}
+Returns the name of a file from a specific path (excluding directories and extension).
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode\begin{description}
+\item[{\sphinxstylestrong{path}}] \leavevmode{[}str{]}
+The path of a specific data file.
+
+\end{description}
+
+\item[{Returns}] \leavevmode\begin{description}
+\item[{str}] \leavevmode
+The name of the file. Namely, the last part of the path (excluding the extgension).
+
+\end{description}
+
+\end{description}\end{quote}
+\subsubsection*{Examples}
+
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{myPath} \PYG{o}{=} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{dir1/dir2/MyFilename.txt}\PYG{l+s+s1}{\PYGZsq{}}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{filename} \PYG{o}{=} \PYG{n}{getFilename}\PYG{p}{(}\PYG{n}{myPath}\PYG{p}{)}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{filename}
+\PYG{g+go}{\PYGZsq{}MyFilename\PYGZsq{}}
+\end{sphinxVerbatim}
 
 \end{fulllineitems}
 
 \index{getShortestPathAStar() (in module gps2net)@\spxentry{getShortestPathAStar()}\spxextra{in module gps2net}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{index:gps2net.getShortestPathAStar}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{gps2net.}}\sphinxbfcode{\sphinxupquote{getShortestPathAStar}}}{\emph{source}, \emph{target}, \emph{source\_line}, \emph{target\_line}, \emph{source\_line\_oneway}, \emph{target\_line\_oneway}, \emph{filepath\_shp}, \emph{ignore\_oneway=False}}{}~
+\phantomsection\label{\detokenize{index:gps2net.getShortestPathAStar}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{gps2net.}}\sphinxbfcode{\sphinxupquote{getShortestPathAStar}}}{\emph{source}, \emph{target}, \emph{source\_line}, \emph{target\_line}, \emph{source\_line\_oneway}, \emph{target\_line\_oneway}, \emph{filepath\_shp}, \emph{ignore\_oneway=False}}{}
+The shortest \textendash{} most likely \textendash{} path between two GPS positions (on a street segment) based on the streets of the underlying network.
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode\begin{description}
+\item[{\sphinxstylestrong{source}}] \leavevmode{[}tuple of float{]}
+GPS position (float, float). The start node of the path.
+
+\item[{\sphinxstylestrong{target}}] \leavevmode{[}tuple of float{]}
+GPS position (float, float). The end node of the path.
+
+\item[{\sphinxstylestrong{source\_line}}] \leavevmode{[}list of coordinates{]}
+The source\_line is a list of GPS coordinates. These coordinates represent the street on which the source point lies.
+
+\item[{\sphinxstylestrong{target\_line}}] \leavevmode{[}list of coordinates{]}
+The target\_line is a list of GPS coordinates. These coordinates represent the street on which the target point lies.
+
+\item[{\sphinxstylestrong{source\_line\_oneway}}] \leavevmode{[}\{‘B’, ‘F’, ‘T’\}{]}
+The ‘oneway’-property of the source\_line.
+The ‘oneway’-property indicates if a street is bi-directional (B), or one way heading from the from-node to the to-node (F), or one way heading from the to-node to the from-node (T).
+
+\item[{\sphinxstylestrong{target\_line\_oneway}}] \leavevmode{[}\{‘B’, ‘F’, ‘T’\}{]}
+The ‘oneway’-property of the target\_line.
+The ‘oneway’-property indicates if a street is bi-directional (B), or one way heading from the from-node to the to-node (F), or one way heading from the to-node to the from-node (T).
+
+\item[{\sphinxstylestrong{filepath\_shp}}] \leavevmode{[}str{]}
+The path where the shp file (which contains the street data) is stored.
+
+\item[{\sphinxstylestrong{ignore\_oneway}}] \leavevmode{[}bool, optional{]}
+By default False. If True the oneway-property will be ignored when adding edges to the graph. This is set to True when the algorithm detects a GPS glipse (the vehicle seems to drive a tiny bit backwards on a oneway street which is not possible) which resulted in a wrong path. In this case the path might actually be the path from the target to the source.
+
+\end{description}
+
+\item[{Returns}] \leavevmode\begin{description}
+\item[{\sphinxstylestrong{path}}] \leavevmode{[}list of coordinates{]}
+The shortest \textendash{} most likely \textendash{} path between two data point based on the streets of the underlying network.
+
+\item[{\sphinxstylestrong{path\_length}}] \leavevmode{[}float{]}
+The length of the path in meters. This is an approximation \textendash{} see distFrom().
+
+\item[{\sphinxstylestrong{path\_IDs}}] \leavevmode{[}list{]}
+The path IDs of all street segments which are traversed on the path.
+
+\end{description}
+
+\end{description}\end{quote}
+
+\end{fulllineitems}
+
+\index{getTimeDifferences() (in module gps2net)@\spxentry{getTimeDifferences()}\spxextra{in module gps2net}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{index:gps2net.getTimeDifferences}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{gps2net.}}\sphinxbfcode{\sphinxupquote{getTimeDifferences}}}{\emph{filepath}, \emph{timestampPosition}}{}
+Get the time differences of taxi mobility traces in a txt file.
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode\begin{description}
+\item[{\sphinxstylestrong{filepath}}] \leavevmode{[}str{]}
+The path where the txt file (which contains the taxi mobility trace) is stored.
+
+\item[{\sphinxstylestrong{timestampPosition}}] \leavevmode{[}int{]}
+The position on which the timestamp is (assuming that each line contains one measured GPS position and that values in each line are seperated by a space).
+
+\end{description}
+
+\item[{Returns}] \leavevmode\begin{description}
+\item[{list}] \leavevmode
+Time differences in seconds.
+
+\end{description}
+
+\end{description}\end{quote}
+\subsubsection*{Notes}
+
+This method assumes that each line contains one measured GPS position and that values in each line are seperated by a space. Further, it assumes that time is in UNIX epoch format.
+.. rubric:: Examples
+
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{myPath} \PYG{o}{=} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{/Users/Joechi/Google Drive/gps2net/Data/test\PYGZus{}data/other\PYGZus{}taxi/new\PYGZus{}abtyff\PYGZus{}copy\PYGZus{}BUG.txt}\PYG{l+s+s1}{\PYGZsq{}}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{myTimeDifferences} \PYG{o}{=} \PYG{n}{getTimeDifferences}\PYG{p}{(}\PYG{n}{myPath}\PYG{p}{,} \PYG{l+m+mi}{3}\PYG{p}{)}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{myTimeDifferences}
+\PYG{g+go}{[63, 41]}
+\end{sphinxVerbatim}
+
+\end{fulllineitems}
+
+\index{plotAndSaveHistogram() (in module gps2net)@\spxentry{plotAndSaveHistogram()}\spxextra{in module gps2net}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{index:gps2net.plotAndSaveHistogram}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{gps2net.}}\sphinxbfcode{\sphinxupquote{plotAndSaveHistogram}}}{\emph{input}, \emph{minXLabel}, \emph{maxXLabel}, \emph{binSize}, \emph{filename}, \emph{title}, \emph{xlabel}}{}
+Plots a histogram with a specified max x-value. Values bigger that the max x-value are clipped to the interval edge.
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode\begin{description}
+\item[{\sphinxstylestrong{input}}] \leavevmode{[}list of int or float{]}
+Values which should be plottet in a histogram.
+
+\item[{\sphinxstylestrong{minXLabel}}] \leavevmode{[}int or float{]}
+The min x-value of the plot.
+
+\item[{\sphinxstylestrong{maxXLabel}}] \leavevmode{[}{[}type{]}{]}
+The max x-value of the plot.
+
+\item[{\sphinxstylestrong{binSize}}] \leavevmode{[}int{]}
+The size of the plotted bins.
+
+\item[{\sphinxstylestrong{filename}}] \leavevmode{[}str{]}
+Path and filename of the plot \textendash{}\textgreater{} this specifies where and under which name the plot should be saved.
+
+\item[{\sphinxstylestrong{title}}] \leavevmode{[}str{]}
+Title of the plot.
+
+\item[{\sphinxstylestrong{xlabel}}] \leavevmode{[}str{]}
+X axis label of the plot.
+
+\end{description}
+
+\end{description}\end{quote}
+\subsubsection*{Notes}
+
+The plot is saved in PNG format.
+
+\end{fulllineitems}
+
+\index{printProgressBar() (in module gps2net)@\spxentry{printProgressBar()}\spxextra{in module gps2net}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{index:gps2net.printProgressBar}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{gps2net.}}\sphinxbfcode{\sphinxupquote{printProgressBar}}}{\emph{iteration}, \emph{total}, \emph{prefix=''}, \emph{suffix=''}, \emph{decimals=1}, \emph{length=100}, \emph{fill='█'}, \emph{printEnd='r'}}{}
+Call in a loop to create terminal progress bar.
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode\begin{description}
+\item[{\sphinxstylestrong{iteration}}] \leavevmode{[}int{]}
+current iteration
+
+\item[{\sphinxstylestrong{total}}] \leavevmode{[}Int{]}
+total iterations
+
+\item[{\sphinxstylestrong{prefix}}] \leavevmode{[}str, optional{]}
+prefix str, by default ‘’
+
+\item[{\sphinxstylestrong{suffix}}] \leavevmode{[}str, optional{]}
+suffix str, by default ‘’
+
+\item[{\sphinxstylestrong{decimals}}] \leavevmode{[}int, optional{]}
+positive number of decimals in percent complete, by default 1
+
+\item[{\sphinxstylestrong{length}}] \leavevmode{[}int, optional{]}
+character length of bar, by default 100
+
+\item[{\sphinxstylestrong{fill}}] \leavevmode{[}str, optional{]}
+bar fill character, by default ‘█’
+
+\item[{\sphinxstylestrong{printEnd}}] \leavevmode{[}str, optional{]}
+end character (e.g. ‘\textbackslash{}r’, ‘\textbackslash{}r\textbackslash{}n’), by default ‘\textbackslash{}r’
+
+\end{description}
+
+\end{description}\end{quote}
+
 \end{fulllineitems}
 
 
 
-\chapter{Indices and tables}
-\label{\detokenize{index:indices-and-tables}}\begin{itemize}
-\item {} 
-\DUrole{xref,std,std-ref}{genindex}
-
-\item {} 
-\DUrole{xref,std,std-ref}{search}
-
-\end{itemize}
-
-
+\renewcommand{\indexname}{Python Module Index}
+\begin{sphinxtheindex}
+\let\bigletter\sphinxstyleindexlettergroup
+\bigletter{g}
+\item\relax\sphinxstyleindexentry{gps2net}\sphinxstyleindexpageref{index:\detokenize{module-gps2net}}
+\end{sphinxtheindex}
 
 \renewcommand{\indexname}{Index}
 \printindex

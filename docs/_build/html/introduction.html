@@ -1,0 +1,140 @@
+
+
+<!doctype html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>1. Introduction &#8212; gps2net 1.1.2020 documentation</title>
+    <link rel="stylesheet" href="_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <script type="text/javascript" src="_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="2. Data" href="data.html" />
+    <link rel="prev" title="Acknowledgment" href="acknowledgment.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="data.html" title="2. Data"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="acknowledgment.html" title="Acknowledgment"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">gps2net 1.1.2020 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">1. Introduction</a><ul>
+<li><a class="reference internal" href="#background">1.1. Background</a></li>
+<li><a class="reference internal" href="#goal">1.2. Goal</a></li>
+<li><a class="reference internal" href="#solution">1.3. Solution</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="acknowledgment.html"
+                        title="previous chapter">Acknowledgment</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="data.html"
+                        title="next chapter">2. Data</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/introduction.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="introduction">
+<h1>1. Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="background">
+<h2>1.1. Background<a class="headerlink" href="#background" title="Permalink to this headline">¶</a></h2>
+<p>Today, we live in an information society in which the creation, distribution, use, integration and manipulation of information is an important economic, political and cultural activity. New technologies have resulted in an information explosion and are profoundly changing all aspects of our lives. For example, satellite navigation systems such as GPS, GLONASS, Galileo, BeiDou revolutionized our perception of space. Global Positioning System (GPS) <a class="footnote-reference brackets" href="#id7" id="id1">1</a> permits the user to locate the position of any place anywhere in the world to the accuracy of fewer than 10 meters. Nowadays, GPS is an essential utility for a vast number of commercial, strategic and scientific applications ranging from air, satellite system (GIS), its applications increase manifold. It is utilised for the management of truck, taxi, ambulance, and other patrol fleets, in remote sensing and environment monioring, in disaster relief, in earth and atmospheric sciences and in several new applications which are emerging rapidly (<a class="reference internal" href="references.html#geospatialworld2010" id="id2"><span>[GeospatialWorld2010]</span></a>).</p>
+</div>
+<div class="section" id="goal">
+<h2>1.2. Goal<a class="headerlink" href="#goal" title="Permalink to this headline">¶</a></h2>
+<p>A growing community of researchers in networks of scientific studies has recognised that through the combination of spatial-temporal-resolved sequential data (e.g., such as recorded GPS trajectories) and the underlying topology (e.g., a road network) higher-order, non-dyadic graph representations (<a class="reference internal" href="references.html#rosvall2014" id="id3"><span>[Rosvall2014]</span></a>; <a class="reference internal" href="references.html#scholtes2014" id="id4"><span>[Scholtes2014]</span></a>; <a class="reference internal" href="references.html#scholtes2016" id="id5"><span>[Scholtes2016]</span></a>, <a class="reference internal" href="references.html#scholtes2017" id="id6"><span>[Scholtes2017]</span></a>). Different from standard (first-order) network models, such higher-order models do not merely assume that paths in networks are transitive, but instead, explicitly model the (causal) pathways that result from the timing and chronological ordering of spatial-temporal resolved observations.</p>
+<p>In order to perform such analyses, path data is required for the underlying network. Since GPS data only represents the position (latitudinal, longitudinal) at a certain point in time, they have to be converted into suitable trajectories. In addition, the accuracy of the recorded position varies, which makes it difficult to assign it to the edges in the network. This can occur especially in urban areas, where GPS signal is influenced by buildings and the density of edges is relatively high, which complicates the assignment process. Furthermore, it can happen that due to the high speeds or gaps in the position recording, no complete path can be observed, i.e., the position kumps from one edge to another. However, these edges are not topologically connected. In this respect, suitable algorithms are needed to converge GPS data into paths, taking into account the previously mentioned contraints.</p>
+</div>
+<div class="section" id="solution">
+<h2>1.3. Solution<a class="headerlink" href="#solution" title="Permalink to this headline">¶</a></h2>
+<p><strong>gps2net</strong> is a python module which addresses the problem outlined above. It contains a suitable algorithm to extract path data from GPS trajectories considering the underlying network topology.</p>
+<p class="rubric">Footnotes</p>
+<dl class="footnote brackets">
+<dt class="label" id="id7"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
+<dd><p>In the remainder of this text, the colloquial term GPS is used to describe the global navigation satellite system.</p>
+</dd>
+</dl>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="data.html" title="2. Data"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="acknowledgment.html" title="Acknowledgment"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">gps2net 1.1.2020 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Joachim Baumann.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.
+    </div>
+  </body>
+</html>
