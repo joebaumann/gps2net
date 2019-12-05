@@ -22,6 +22,20 @@ In order to validate the algorithm, the data-set of mobility traces of taxi cabs
 
 The following data was used:
 
+**GPS data:**
+
+Dataset of mobility traces of taxi cabs in San Francisco, USA.
+
+- File: cabspottingdata.tar.gz
+- URL: https://crawdad.org/epfl/mobility/20090224/
+
+*Note: Registration and log in is nessesary in order to get the data*
+
+**GIS Road Map data:**
+
+- File: San Francisco Basemap Street Centerlines.zip
+- URL: https://data.sfgov.org/Geographic-Locations-and-Boundaries/San-Francisco-Basemap-Street-Centerlines/7hfy-8sz8/data
+
 
 ## Solution
 
@@ -74,6 +88,6 @@ python gps2net.py -v
 
 <b id="f5">5</b> Scholtes, I.; Wider, N.; Garas, A. (2016). Higher-order aggregate networks in the analysis of temporal networks: path structures and centralities. *The European Physical Journal B* **89(3)**, 61. [↩](#a5)
 
-<b id="f6">6</b> Scholtes, I.; Wider, N.; Garas, A. (2016). Higher-order aggregate networks in the analysis of temporal networks: path structures and centralities. *The European Physical Journal B* **89(3)**, 61. [↩](#a6)
+<b id="f6">6</b> Michal Piorkowski, Natasa Sarafijanovic‑Djukic, Matthias Grossglauser, CRAWDAD dataset epfl/mobility (v. 2009‑02‑24), downloaded from https://crawdad.org/epfl/mobility/20090224, https://doi.org/10.15783/C7J010, Feb 2009. [↩](#a6)
 
 <b id="f7">7</b> https://datasf.org/ [↩](#a7)
