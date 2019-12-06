@@ -14,7 +14,7 @@
 ## Background
 A growing community of researchers in networks of scientific studies has recognised that through the combination of spatial-temporal-resolved sequential data (e.g., such as recorded GPS<sup id="a1">[1](#f1)</sup> trajectories) and the underlying topology (e.g., a road network) higher-order, non-dyadic graph representations (Rosvall *et al.*, 2014<sup id="a2">[2](#f2)</sup>; Scholtes, 2017<sup id="a3">[3](#f3)</sup>; Scholtes *et al.*, 2016<sup id="a4">[4](#f4)</sup>, 2014<sup id="a5">[5](#f5)</sup>). Different from standard (first-order) network models, such higher-order models do not merely assume that paths in networks are transitive, but instead, explicitly model the (causal) pathways that result from the timing and chronological ordering of spatial-temporal resolved observations.
 
-In order to perform such analyses, path data is required for the underlying network. Since GPS data only represents the position (latitudinal, longitudinal) at a certain point in time, they have to be converted into suitable trajectories. In addition, the accuracy of the recorded position varies, which makes it difficult to assign it to the edges in the network. This can occur especially in urban areas, where GPS signal is influenced by buildings and the density of edges is relatively high, which complicates the assignment process. Furthermore, it can happen that due to the high speeds or gaps in the position recording, no complete path can be observed, i.e., the position kumps from one edge to another. However, these edges are not topologically connected. In this respect, suitable algorithms are needed to converge GPS data into paths, taking into account the previously mentioned contraints.
+In order to perform such analyses, path data is required for the underlying network. Since GPS data only represents the position (latitudinal, longitudinal) at a certain point in time, they have to be converted into suitable trajectories. In addition, the accuracy of the recorded position varies, which makes it difficult to assign it to the edges in the network. This can occur especially in urban areas, where GPS signal is influenced by buildings and the density of edges is relatively high, which complicates the assignment process. Furthermore, it can happen that due to the high speeds or gaps in the position recording, no complete path can be observed, i.e., the position jumps from one edge to another. However, these edges are not topologically connected. In this respect, suitable algorithms are needed to converge GPS data into paths, taking into account the previously mentioned constraints.
 
 ## Data
 
@@ -29,7 +29,7 @@ Dataset of mobility traces of taxi cabs in San Francisco, USA.
 - File: cabspottingdata.tar.gz
 - URL: https://crawdad.org/epfl/mobility/20090224/
 
-*Note: Registration and log in is nessesary in order to get the data*
+*Note: Registration and log in is necesary in order to get the data*
 
 **GIS Road Map data:**
 
@@ -41,7 +41,7 @@ Dataset of mobility traces of taxi cabs in San Francisco, USA.
 
 >**gps2net** is a python module which addresses the problem outlined above. It contains a suitable algorithm to extract path data from GPS trajectories considering the underlying network topology.
 
-###### Prerequisits
+###### Prerequisites
 
 In order to run the script, the filepaths of the txt files containing GPS data have to be specified in the main() function. In addition to that, the path of the shp-file (which provides the underlying network structure) has to be set.
 
