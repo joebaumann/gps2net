@@ -283,7 +283,7 @@ def air_line_distance(source, target):
     Examples
     --------
 
-    >>> myAirLineDist = distFrom((-122.115, 37.115), (-122.111, 37.111))
+    >>> myAirLineDist = air_line_distance((-122.115, 37.115), (-122.111, 37.111))
     >>> myAirLineDist
     568.8872918546489
 
@@ -1392,10 +1392,10 @@ def getTimeDifferences(filepath, timestampPosition):
     This method assumes that each line contains one measured GPS position and that values in each line are seperated by a space. Further, it assumes that time is in UNIX epoch format.
     Examples
     --------
-    >>> myPath = '/Users/Joechi/Google Drive/gps2net/Data/test_data/other_taxi/new_abtyff_copy_BUG.txt'
+    >>> myPath = '/Users/Joechi/Google Drive/gps2net/Data/testData/testTaxi.txt'
     >>> myTimeDifferences = getTimeDifferences(myPath, 3)
     >>> myTimeDifferences
-    [63, 41]
+    [28, 119]
 
     Returns
     -------
@@ -1775,8 +1775,9 @@ def main():
 
 if __name__ == '__main__':
     import doctest
-    # running 'doctest.testmod()' test the examples in docstrings. Alternatively, the examples in docstrings can be tested by navigating to the 'docs' directory and running the following command in the terminal: python gps2net.py -v
-    doctest.testmod()
+    # running 'doctest.testmod()' test the examples in docstrings. Alternatively, the examples in docstrings can be tested by navigating to the 'docs' directory and running the following command in the terminal (this will also show the test results for passed tests): python gps2net.py -v
+    testResults = doctest.testmod()
+    print(testResults)
 
     # run the main method
-    main()
+    # main()

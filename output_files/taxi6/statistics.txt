@@ -1,6 +1,6 @@
 path of shp file: /Users/Joechi/Google Drive/gps2net/Data/taxi_san_francisco/San Francisco Basemap Street Centerlines/geo_export_e5dd0539-2344-4e87-b198-d50274be8e1d.shp
-path of old file: /Users/Joechi/Google Drive/gps2net/Data/test_data/other_taxi/new_abtyff_copy.txt
-path of new file: output_files/new_abtyff_copy/calculatedSolution.txt
+path of old file: /Users/Joechi/Google Drive/gps2net/Data/taxi_san_francisco/cabspottingdata/taxi6.txt
+path of new file: output_files/taxi6/calculatedSolution.txt
 number of lines in txt file: 20794
 
 outlier: 1649
