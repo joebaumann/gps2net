@@ -1420,10 +1420,11 @@
             <span class="n">counter</span> <span class="o">+=</span> <span class="mi">1</span>
             <span class="c1"># print(counter)</span>
             <span class="k">if</span> <span class="p">(</span><span class="n">counter</span> <span class="o">&gt;</span> <span class="mi">10</span><span class="p">):</span>
-                <span class="c1"># print(&#39;ende&#39;)</span>
-                <span class="k">break</span>
+                <span class="c1"># print(&#39;stopped after 10 lines&#39;)</span>
+                <span class="c1"># break</span>
 
-            <span class="c1"># Update Progress Bar</span>
+                <span class="c1"># Update Progress Bar</span>
+                <span class="k">pass</span>
             <span class="k">if</span><span class="p">(</span><span class="n">lines</span> <span class="o">!=</span> <span class="s1">&#39;artificialline&#39;</span><span class="p">):</span>
                 <span class="n">suffix</span> <span class="o">=</span> <span class="s1">&#39;| current file: </span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1"> lines&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                     <span class="n">counter</span><span class="p">,</span> <span class="n">lines_in_textfile</span><span class="p">)</span>
@@ -1838,7 +1839,7 @@
     <span class="nb">print</span><span class="p">(</span><span class="n">testResults</span><span class="p">)</span>
 
     <span class="c1"># run the main method</span>
-    <span class="c1"># main()</span>
+    <span class="n">main</span><span class="p">()</span>
 </pre></div>
 
           </div>
