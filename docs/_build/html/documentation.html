@@ -166,7 +166,7 @@ For every line of the input file (which contains the GPS positions) a dictionary
 It calculates the air line distance between two gps points.
 The result is not 100% correct as the function does not consider the elipsis-like shape of the earth. Instead it just uses an earth radius of 6371000 meters for the calculation.</p>
 <p class="rubric">Examples</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">myAirLineDist</span> <span class="o">=</span> <span class="n">distFrom</span><span class="p">((</span><span class="o">-</span><span class="mf">122.115</span><span class="p">,</span> <span class="mf">37.115</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mf">122.111</span><span class="p">,</span> <span class="mf">37.111</span><span class="p">))</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">myAirLineDist</span> <span class="o">=</span> <span class="n">air_line_distance</span><span class="p">((</span><span class="o">-</span><span class="mf">122.115</span><span class="p">,</span> <span class="mf">37.115</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mf">122.111</span><span class="p">,</span> <span class="mf">37.111</span><span class="p">))</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">myAirLineDist</span>
 <span class="go">568.8872918546489</span>
 </pre></div>
@@ -177,6 +177,32 @@ The result is not 100% correct as the function does not consider the elipsis-lik
 <dt id="gps2net.blockPrint">
 <code class="sig-prename descclassname">gps2net.</code><code class="sig-name descname">blockPrint</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/gps2net.html#blockPrint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gps2net.blockPrint" title="Permalink to this definition">¶</a></dt>
 <dd><p>This method is used to disable print() messages.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="gps2net.caculationForOneTXTFile">
+<code class="sig-prename descclassname">gps2net.</code><code class="sig-name descname">caculationForOneTXTFile</code><span class="sig-paren">(</span><em class="sig-param">filepath_shp</em>, <em class="sig-param">new_filename_solution</em>, <em class="sig-param">new_filename_statistics</em>, <em class="sig-param">new_filename_velocities</em>, <em class="sig-param">new_filename_path_length_air_line_length</em>, <em class="sig-param">filepath</em>, <em class="sig-param">aStar=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gps2net.html#caculationForOneTXTFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gps2net.caculationForOneTXTFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the solution for one entire txt file and saves the solution.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>filepath_shp</strong><span class="classifier">str</span></dt><dd><p>The path where the shp file (which contains the street data) is stored.</p>
+</dd>
+<dt><strong>new_filename_solution</strong><span class="classifier">str</span></dt><dd><p>The filename of the new solution.</p>
+</dd>
+<dt><strong>new_filename_statistics</strong><span class="classifier">str</span></dt><dd><p>The filename of the new solution.</p>
+</dd>
+<dt><strong>new_filename_velocities</strong><span class="classifier">str</span></dt><dd><p>The filename of the velocities histogram.</p>
+</dd>
+<dt><strong>new_filename_path_length_air_line_length</strong><span class="classifier">str</span></dt><dd><p>The filename of the path_length_air_line_length histogram.</p>
+</dd>
+<dt><strong>filepath</strong><span class="classifier">str</span></dt><dd><p>The path where the txt file (which contains the taxi mobility trace) is stored.</p>
+</dd>
+<dt><strong>aStar</strong><span class="classifier">int, optional</span></dt><dd><p>By default 1. If 1, the closest point on underlying street network and the most likely path is calculated. If 0, only the closest point is calculated.</p>
+</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="function">
@@ -264,17 +290,19 @@ The result is not 100% correct as the function does not consider the elipsis-lik
 </dl>
 </li>
 <li><dl class="simple">
-<dt>path<span class="classifier">list of coordinates</span></dt><dd><p>The shortest – most likely – path between two data point based on the streets of the underlying network. –&gt; See getShortestPathAStar()</p>
+<dt>path<span class="classifier">list of coordinates</span></dt><dd><p>The shortest – most likely – path between two data point based on the streets of the underlying network.
+–&gt; For more details on how the path is calculated, see <a class="reference internal" href="#gps2net.getShortestPathAStar" title="gps2net.getShortestPathAStar"><code class="xref py py-func docutils literal notranslate"><span class="pre">getShortestPathAStar()</span></code></a></p>
 </dd>
 </dl>
 </li>
 <li><dl class="simple">
-<dt>path_length<span class="classifier">float</span></dt><dd><p>The length of the path in meters. This is an approximation – see distFrom(). –&gt; See getShortestPathAStar()</p>
+<dt>path_length<span class="classifier">float</span></dt><dd><p>The length of the path in meters. This is an approximation – see <a class="reference internal" href="#gps2net.distFrom" title="gps2net.distFrom"><code class="xref py py-func docutils literal notranslate"><span class="pre">distFrom()</span></code></a>.
+–&gt; For more details on how the path is calculated, see <a class="reference internal" href="#gps2net.getShortestPathAStar" title="gps2net.getShortestPathAStar"><code class="xref py py-func docutils literal notranslate"><span class="pre">getShortestPathAStar()</span></code></a></p>
 </dd>
 </dl>
 </li>
 <li><dl class="simple">
-<dt>air_line_length<span class="classifier">float</span></dt><dd><p>The air line length of the current position to the next position (from start to end of ‘path’) in meters. This is an approximation – see distFrom().</p>
+<dt>air_line_length<span class="classifier">float</span></dt><dd><p>The air line length of the current position to the next position (from start to end of ‘path’) in meters. This is an approximation – see <a class="reference internal" href="#gps2net.distFrom" title="gps2net.distFrom"><code class="xref py py-func docutils literal notranslate"><span class="pre">distFrom()</span></code></a>.</p>
 </dd>
 </dl>
 </li>
@@ -289,7 +317,8 @@ The result is not 100% correct as the function does not consider the elipsis-lik
 </dl>
 </li>
 <li><dl class="simple">
-<dt>pathIDs<span class="classifier">list</span></dt><dd><p>The path IDs of all street segments which are traversed on the path. –&gt; See getShortestPathAStar()</p>
+<dt>pathIDs<span class="classifier">list</span></dt><dd><p>The path IDs of all street segments which are traversed on the path.
+–&gt; For more details on how the path is calculated, see <a class="reference internal" href="#gps2net.getShortestPathAStar" title="gps2net.getShortestPathAStar"><code class="xref py py-func docutils literal notranslate"><span class="pre">getShortestPathAStar()</span></code></a></p>
 </dd>
 </dl>
 </li>
@@ -582,7 +611,7 @@ The ‘oneway’-property indicates if a street is bi-directional (B), or one wa
 <dd class="field-even"><dl class="simple">
 <dt><strong>path</strong><span class="classifier">list of coordinates</span></dt><dd><p>The shortest – most likely – path between two data point based on the streets of the underlying network.</p>
 </dd>
-<dt><strong>path_length</strong><span class="classifier">float</span></dt><dd><p>The length of the path in meters. This is an approximation – see distFrom().</p>
+<dt><strong>path_length</strong><span class="classifier">float</span></dt><dd><p>The length of the path in meters. This is an approximation – see <a class="reference internal" href="#gps2net.distFrom" title="gps2net.distFrom"><code class="xref py py-func docutils literal notranslate"><span class="pre">distFrom()</span></code></a>.</p>
 </dd>
 <dt><strong>path_IDs</strong><span class="classifier">list</span></dt><dd><p>The path IDs of all street segments which are traversed on the path.</p>
 </dd>
@@ -614,10 +643,10 @@ The ‘oneway’-property indicates if a street is bi-directional (B), or one wa
 <p class="rubric">Notes</p>
 <p>This method assumes that each line contains one measured GPS position and that values in each line are seperated by a space. Further, it assumes that time is in UNIX epoch format.
 .. rubric:: Examples</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">myPath</span> <span class="o">=</span> <span class="s1">&#39;/Users/Joechi/Google Drive/gps2net/Data/test_data/other_taxi/new_abtyff_copy_BUG.txt&#39;</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">myPath</span> <span class="o">=</span> <span class="s1">&#39;/Users/Joechi/Google Drive/gps2net/Data/testData/testTaxi.txt&#39;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">myTimeDifferences</span> <span class="o">=</span> <span class="n">getTimeDifferences</span><span class="p">(</span><span class="n">myPath</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">myTimeDifferences</span>
-<span class="go">[63, 41]</span>
+<span class="go">[28, 119]</span>
 </pre></div>
 </div>
 </dd></dl>
