@@ -8,8 +8,7 @@ gps2net documentation
 
 .. note::
 
-   If you have any problems, found bugs in the code or have feature request
-   comments or questions, please feel free to send a mail to `Joachim Baumann`_.
+   If you have any problems, found bugs in the code or have comments or questions, please feel free to send a mail to `Joachim Baumann`_.
 
 
 .. _`Joachim Baumann`: joachimbaumann1@gmail.com
