@@ -88,6 +88,6 @@ python gps2net.py -v
 
 <b id="f5">5</b> Scholtes, I.; Wider, N.; Garas, A. (2016). Higher-order aggregate networks in the analysis of temporal networks: path structures and centralities. *The European Physical Journal B* **89(3)**, 61. [↩](#a5)
 
-<b id="f6">6</b> Michal Piorkowski, Natasa Sarafijanovic‑Djukic, Matthias Grossglauser, CRAWDAD dataset epfl/mobility (v. 2009‑02‑24), downloaded from https://crawdad.org/epfl/mobility/20090224, https://doi.org/10.15783/C7J010, Feb 2009. [↩](#a6)
+<b id="f6">6</b> Piorkowski, M.; Sarafijanovic‑Djukic, N.; Grossglauser, M. (2009). CRAWDAD dataset epfl/mobility (v. 2009‑02‑24), downloaded from https://crawdad.org/epfl/mobility/20090224, https://doi.org/10.15783/C7J010. [↩](#a6)
 
 <b id="f7">7</b> https://datasf.org/ [↩](#a7)
