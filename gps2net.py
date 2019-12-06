@@ -1366,6 +1366,7 @@ def calculateMostLikelyPointAndPaths(filepath, filepath_shp, minNumberOfLines=2,
                 # break
 
                 # Update Progress Bar
+                pass
             if(lines != 'artificialline'):
                 suffix = '| current file: {}/{} lines'.format(
                     counter, lines_in_textfile)
