@@ -141,6 +141,39 @@ For every line of the input file (which contains the GPS positions) a dictionary
 <div class="section" id="module-gps2net">
 <span id="functions"></span><h2>3.2. Functions<a class="headerlink" href="#module-gps2net" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
+<dt id="gps2net.air_line_distance">
+<code class="sig-prename descclassname">gps2net.</code><code class="sig-name descname">air_line_distance</code><span class="sig-paren">(</span><em class="sig-param">source</em>, <em class="sig-param">target</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gps2net.html#air_line_distance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gps2net.air_line_distance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Heuristic function for A star algorithm: returns the air line distance from the source to the target.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>source</strong><span class="classifier">tuple (float, float)</span></dt><dd><p>This is the source point. It is a tuple of the form (lng1, lat1) where lng1 is the longitude of the source and lat1 is the latitude of the source.</p>
+</dd>
+<dt><strong>target</strong><span class="classifier">tuple (float, float)</span></dt><dd><p>This is the source point. It is a tuple of the form (lng2, lat2) where lng2 is the longitude of the target and lat2 is the latitude of the target.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>int</dt><dd><p>The air line distance between two points (source and target) in meters.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>This function is only called in the following function: <a class="reference internal" href="#gps2net.getShortestPathAStar" title="gps2net.getShortestPathAStar"><code class="xref py py-func docutils literal notranslate"><span class="pre">getShortestPathAStar()</span></code></a></p>
+<p>This function is used as the heuristic function for the A Star algorithm.
+It calculates the air line distance between two gps points.
+The result is not 100% correct as the function does not consider the elipsis-like shape of the earth. Instead it just uses an earth radius of 6371000 meters for the calculation.</p>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">myAirLineDist</span> <span class="o">=</span> <span class="n">distFrom</span><span class="p">((</span><span class="o">-</span><span class="mf">122.115</span><span class="p">,</span> <span class="mf">37.115</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mf">122.111</span><span class="p">,</span> <span class="mf">37.111</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myAirLineDist</span>
+<span class="go">568.8872918546489</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
 <dt id="gps2net.blockPrint">
 <code class="sig-prename descclassname">gps2net.</code><code class="sig-name descname">blockPrint</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/gps2net.html#blockPrint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gps2net.blockPrint" title="Permalink to this definition">¶</a></dt>
 <dd><p>This method is used to disable print() messages.</p>

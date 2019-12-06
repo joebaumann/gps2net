@@ -333,6 +333,41 @@
     <span class="k">return</span> <span class="n">GraphFromSHP</span></div>
 
 
+
+<div class="viewcode-block" id="air_line_distance"><a class="viewcode-back" href="../documentation.html#gps2net.air_line_distance">[docs]</a><span class="k">def</span> <span class="nf">air_line_distance</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">target</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Heuristic function for A star algorithm: returns the air line distance from the source to the target.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    source : tuple (float, float)</span>
+<span class="sd">        This is the source point. It is a tuple of the form (lng1, lat1) where lng1 is the longitude of the source and lat1 is the latitude of the source.</span>
+<span class="sd">    target : tuple (float, float)</span>
+<span class="sd">        This is the source point. It is a tuple of the form (lng2, lat2) where lng2 is the longitude of the target and lat2 is the latitude of the target.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    This function is only called in the following function: :func:`~gps2net.getShortestPathAStar`</span>
+<span class="sd">    </span>
+<span class="sd">    This function is used as the heuristic function for the A Star algorithm.</span>
+<span class="sd">    It calculates the air line distance between two gps points.</span>
+<span class="sd">    The result is not 100% correct as the function does not consider the elipsis-like shape of the earth. Instead it just uses an earth radius of 6371000 meters for the calculation.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    &gt;&gt;&gt; myAirLineDist = distFrom((-122.115, 37.115), (-122.111, 37.111))</span>
+<span class="sd">    &gt;&gt;&gt; myAirLineDist</span>
+<span class="sd">    568.8872918546489</span>
+
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    int</span>
+<span class="sd">        The air line distance between two points (source and target) in meters.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">distance</span> <span class="o">=</span> <span class="n">distFrom</span><span class="p">(</span><span class="n">source</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">source</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">target</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">target</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">distance</span></div>
+
 <div class="viewcode-block" id="getShortestPathAStar"><a class="viewcode-back" href="../documentation.html#gps2net.getShortestPathAStar">[docs]</a><span class="k">def</span> <span class="nf">getShortestPathAStar</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">source_line</span><span class="p">,</span> <span class="n">target_line</span><span class="p">,</span> <span class="n">source_line_oneway</span><span class="p">,</span> <span class="n">target_line_oneway</span><span class="p">,</span> <span class="n">filepath_shp</span><span class="p">,</span> <span class="n">ignore_oneway</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;The shortest – most likely – path between two GPS positions (on a street segment) based on the streets of the underlying network.</span>
 
@@ -378,37 +413,6 @@
     <span class="n">path_IDs</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">all_added_edges</span> <span class="o">=</span> <span class="p">[]</span>
 
-    <span class="k">def</span> <span class="nf">air_line_distance</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">target</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;Heuristic function for A star algorithm: returns the air line distance from the source to the target.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        source : tuple (float, float)</span>
-<span class="sd">            This is the source point. It is a tuple of the form (lng1, lat1) where lng1 is the longitude of the source and lat1 is the latitude of the source.</span>
-<span class="sd">        target : tuple (float, float)</span>
-<span class="sd">            This is the source point. It is a tuple of the form (lng2, lat2) where lng2 is the longitude of the target and lat2 is the latitude of the target.</span>
-
-<span class="sd">        Notes</span>
-<span class="sd">        -----</span>
-<span class="sd">        This function is used as the heuristic function for the A Star algorithm.</span>
-<span class="sd">        It calculates the air line distance between two gps points.</span>
-<span class="sd">        The result is not 100% correct as the function does not consider the elipsis-like shape of the earth. Instead it just uses an earth radius of 6371000 meters for the calculation.</span>
-
-<span class="sd">        Examples</span>
-<span class="sd">        --------</span>
-
-<span class="sd">        &gt;&gt;&gt; myAirLineDist = distFrom((-122.115, 37.115), (-122.111, 37.111))</span>
-<span class="sd">        &gt;&gt;&gt; myAirLineDist</span>
-<span class="sd">        568.8872918546489</span>
-
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        int</span>
-<span class="sd">            The air line distance between two points (source and target) in meters.</span>
-<span class="sd">        &#39;&#39;&#39;</span>
-        <span class="n">distance</span> <span class="o">=</span> <span class="n">distFrom</span><span class="p">(</span><span class="n">source</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">source</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">target</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">target</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-        <span class="k">return</span> <span class="n">distance</span>
 
     <span class="k">def</span> <span class="nf">temporarily_add_edge_to_graph</span><span class="p">(</span><span class="n">startNode</span><span class="p">,</span> <span class="n">endNode</span><span class="p">,</span> <span class="n">edgeWeight</span><span class="p">,</span> <span class="n">edgeId</span><span class="p">,</span> <span class="n">direction</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Temporarily adds an edge to the global graph.</span>

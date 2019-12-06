@@ -59,14 +59,11 @@ def printProgressBar(iteration, total, prefix='', suffix='', decimals=1, length=
     filledLength = int(length * iteration // total)
     bar = fill * filledLength + '-' * (length - filledLength)
 
-    # enablePrint()
-
     print('\r%s |%s| %s%% %s' % (prefix, bar, percent, suffix), end=printEnd)
     # Print New Line on Complete
     if iteration == total:
         print()
 
-    # blockPrint()
 
 # %%
 
@@ -206,8 +203,6 @@ def createGraphFromSHPInput(filepath_shp):
 
     GraphFromSHP = nx.DiGraph()
 
-    # blockPrint()
-
     counter = 0
 
     nr_elements_in_SHP_file = 0
@@ -253,31 +248,57 @@ def createGraphFromSHPInput(filepath_shp):
 
                 previous_coord = coord
 
-            # enablePrint()
-
             # Update Progress Bar
             suffix = '| SHP file street segments: {}/{}'.format(
                 counter+1, nr_elements_in_SHP_file)
             printProgressBar(counter + 1, nr_elements_in_SHP_file,
                              prefix='The Graph is being created:', suffix=suffix, length=50)
 
-            # blockPrint()
-
             counter += 1
-    # blockPrint()
-    # enablePrint()
 
     print('The graph was created and contains {} edges.'.format(
         GraphFromSHP.number_of_edges()))
 
-    # blockPrint()
-
     return GraphFromSHP
+
+
+def air_line_distance(source, target):
+    '''Heuristic function for A star algorithm: returns the air line distance from the source to the target.
+
+    Parameters
+    ----------
+    source : tuple (float, float)
+        This is the source point. It is a tuple of the form (lng1, lat1) where lng1 is the longitude of the source and lat1 is the latitude of the source.
+    target : tuple (float, float)
+        This is the source point. It is a tuple of the form (lng2, lat2) where lng2 is the longitude of the target and lat2 is the latitude of the target.
+
+    Notes
+    -----
+    This function is only called in the following function: :func:`~gps2net.getShortestPathAStar`
+
+    This function is used as the heuristic function for the A Star algorithm.
+    It calculates the air line distance between two gps points.
+    The result is not 100% correct as the function does not consider the elipsis-like shape of the earth. Instead it just uses an earth radius of 6371000 meters for the calculation.
+
+    Examples
+    --------
+
+    >>> myAirLineDist = distFrom((-122.115, 37.115), (-122.111, 37.111))
+    >>> myAirLineDist
+    568.8872918546489
+
+
+    Returns
+    -------
+    int
+        The air line distance between two points (source and target) in meters.
+    '''
+    distance = distFrom(source[0], source[1], target[0], target[1])
+    return distance
 
 
 def getShortestPathAStar(source, target, source_line, target_line, source_line_oneway, target_line_oneway, filepath_shp, ignore_oneway=False):
     """The shortest – most likely – path between two GPS positions (on a street segment) based on the streets of the underlying network.
-
 
     Parameters
     ----------
@@ -305,52 +326,13 @@ def getShortestPathAStar(source, target, source_line, target_line, source_line_o
     path : list of coordinates
         The shortest – most likely – path between two data point based on the streets of the underlying network.
     path_length : float
-        The length of the path in meters. This is an approximation – see distFrom().
+        The length of the path in meters. This is an approximation – see :func:`~gps2net.distFrom`.
     path_IDs : list
         The path IDs of all street segments which are traversed on the path.
     """
 
     # make sure global variable is used. 'DG' is a Directed Graph
     global DG
-
-    # blockPrint()
-
-    path = None
-    path_length = None
-    path_IDs = []
-    all_added_edges = []
-
-    def air_line_distance(source, target):
-        '''Heuristic function for A star algorithm: returns the air line distance from the source to the target.
-
-        Parameters
-        ----------
-        source : tuple (float, float)
-            This is the source point. It is a tuple of the form (lng1, lat1) where lng1 is the longitude of the source and lat1 is the latitude of the source.
-        target : tuple (float, float)
-            This is the source point. It is a tuple of the form (lng2, lat2) where lng2 is the longitude of the target and lat2 is the latitude of the target.
-
-        Notes
-        -----
-        This function is used as the heuristic function for the A Star algorithm.
-        It calculates the air line distance between two gps points.
-        The result is not 100% correct as the function does not consider the elipsis-like shape of the earth. Instead it just uses an earth radius of 6371000 meters for the calculation.
-
-        Examples
-        --------
-
-        >>> myAirLineDist = distFrom((-122.115, 37.115), (-122.111, 37.111))
-        >>> myAirLineDist
-        568.8872918546489
-
-
-        Returns
-        -------
-        int
-            The air line distance between two points (source and target) in meters.
-        '''
-        distance = distFrom(source[0], source[1], target[0], target[1])
-        return distance
 
     def temporarily_add_edge_to_graph(startNode, endNode, edgeWeight, edgeId, direction):
         '''Temporarily adds an edge to the global graph.
@@ -371,6 +353,8 @@ def getShortestPathAStar(source, target, source_line, target_line, source_line_o
 
         Notes
         -----
+        This function is only called in the following function: :func:`~gps2net.getShortestPathAStar`
+
         This function temporarily adds an edge to the global graph. It only adds the edge if it deosn't exist in the graph yet. Further, the new edge is added to the list 'all_added_edges' so that it can be removed again in the end.
         '''
         if (not DG.has_edge(startNode, endNode)):
@@ -385,6 +369,11 @@ def getShortestPathAStar(source, target, source_line, target_line, source_line_o
             # print('graph does have({},{})'.format(startNode,endNode))
             # print('edge:',DG.get_edge_data(startNode, endNode))
             # print('')
+
+    path = None
+    path_length = None
+    path_IDs = []
+    all_added_edges = []
 
     # check if the global variable 'DG' is an empty directed graph. If yes, create a graph from the shp-file content.
     if(nx.is_empty(DG)):
@@ -645,13 +634,15 @@ def calculateMostLikelyPointAndPaths(filepath, filepath_shp, minNumberOfLines=2,
             The time from the current to the next GPS position in seconds.
 
         - path : list of coordinates
-            The shortest – most likely – path between two data point based on the streets of the underlying network. --> See getShortestPathAStar()
+            The shortest – most likely – path between two data point based on the streets of the underlying network.
+            --> For more details on how the path is calculated, see :func:`~gps2net.getShortestPathAStar`
 
         - path_length : float
-            The length of the path in meters. This is an approximation – see distFrom(). --> See getShortestPathAStar()
+            The length of the path in meters. This is an approximation – see :func:`~gps2net.distFrom`.
+            --> For more details on how the path is calculated, see :func:`~gps2net.getShortestPathAStar`
 
         - air_line_length : float
-            The air line length of the current position to the next position (from start to end of 'path') in meters. This is an approximation – see distFrom().
+            The air line length of the current position to the next position (from start to end of 'path') in meters. This is an approximation – see :func:`~gps2net.distFrom`.
 
         - path_length/air_line_length : float
             'path_length' devided by 'air_line_length'
@@ -660,7 +651,9 @@ def calculateMostLikelyPointAndPaths(filepath, filepath_shp, minNumberOfLines=2,
             The average velocity along the path in m/s (path_length devided by path_time).
 
         - pathIDs : list
-            The path IDs of all street segments which are traversed on the path. --> See getShortestPathAStar()
+            The path IDs of all street segments which are traversed on the path.
+            --> For more details on how the path is calculated, see :func:`~gps2net.getShortestPathAStar`
+
 
         - solution_id : int
             The id of street where the mapped point lies on.
@@ -720,36 +713,60 @@ def calculateMostLikelyPointAndPaths(filepath, filepath_shp, minNumberOfLines=2,
 
     '''
 
-    # blockPrint()
-
-    counter = 0
-
-    calculatedSolution = []
-
-    # initialize the dict in which all the statistics of the currently calculated solution will be stored.
-    statistics = {}
-    statistics['outlier'] = 0
-    statistics['taxi_did_not_move'] = 0
-    statistics['no_path_found'] = 0
-    statistics['cannot_compute_shortest_path_as_previous_point_is_outlier'] = 0
-    statistics['path_from_target_to_source'] = 0
-    statistics['checked_other_solution_index'] = 0
-    statistics['chose_other_solution_index'] = 0
-    statistics['solution_already_lies_on_shortest_path'] = 0
-    statistics['no_solution_lies_on_shortest_path'] = 0
-    statistics['other_solution_is_worse'] = 0
-    statistics['other_solution_no_path_found'] = 0
-
-    statistics['checked_if_path_exists_for_second_best_solution_index'] = 0
-    statistics['second_best_solution_yields_more_found_paths'] = 0
-
-    previous_target = (0, 0)
-    previous_source = (0, 0)
-    previous_intersected_line = None
-    previous_timestamp = None
-    previous_intersected_line_oneway = None
-
     def getLocationResult(filepath_shp, x, y, passenger, timestamp, previous_point, previous_intersected_line, previous_timestamp, previous_intersected_line_oneway, minNumberOfLines=2):
+        """Calculates all additional parameters for one GPS position (which corresponds to one line in the txt file).
+
+        Parameters
+        ----------
+        filepath_shp : str
+            The path where the shp file (which contains the street data) is stored.
+        y : float
+            Latitude of the GPS position in decimal degrees.
+        x : float
+            Longitude of the GPS position in decimal degrees.
+        passenger : {0, 1}
+            Occupancy shows if a cab has a fare (1 = occupied, 0 = free).
+        timestamp : int
+            Time is in UNIX epoch format.
+        previous_point : tuple of float
+            GPS position of the mapped previous point based on the underlying street structure.
+        previous_intersected_line : list of coordinates
+            The previous_intersected_line is a list of GPS coordinates. These coordinates represent the street on which the mapped previous point lies.
+        previous_timestamp : int
+            Time of the previous point (in UNIX epoch format).
+        previous_intersected_line_oneway : [list of coordinates
+            The 'oneway'-property of the previous_intersected_line. The 'oneway'-property indicates if a street is bi-directional (B), or one way heading from the from-node to the to-node (F), or one way heading from the to-node to the from-node (T).
+        minNumberOfLines : int, optional
+            The min number of lines is just needed to increse areasize. This means that the areasize is increased as long as minNumberOfLines is not found and max areasize is not exeeded.
+            A GPS position is only marked as an outlier if NOT EVEN A SINGLE STREET could be found in the area
+            By default 2.
+
+        Notes
+        -----
+        This function is only called in the following function: :func:`~gps2net.calculateMostLikelyPointAndPaths`
+
+        The additional parameters are calculated in this function. However, the solution is not saved. When the next GPS position is looked at, the result is validated and only if then it still found to be the most likely result is saved as such.
+        However, if then another result (namely, mapping the GPS position to another street which yields a result which lies further away from the GPS location) is found to be more likely, the initial result is overridden.
+
+        Returns
+        -------
+        location_result : dict
+            This dict contains the main solution. More specific, the additional attribute which will be written to the output file (after validation).
+        (closest_intersection_x, closest_intersection_y) : tuple of float
+            GPS position of the mapped point based on the underlying street structure.
+        previous_point : tuple of float
+            GPS position of the mapped previous point based on the underlying street structure.
+        intersected_line : list of coordinates
+            The intersected_line is a list of GPS coordinates. These coordinates represent the street on which the mapped point (closest_intersection_x, closest_intersection_y) lies.
+        previous_intersected_line : list of coordinates
+            The previous_intersected_line is a list of GPS coordinates. These coordinates represent the street on which the mapped previous point lies.
+        timestamp : int
+            Time is in UNIX epoch format.
+        intersected_line_oneway : {'B', 'F', 'T'}
+            The 'oneway'-property of the intersected_line. The 'oneway'-property indicates if a street is bi-directional (B), or one way heading from the from-node to the to-node (F), or one way heading from the to-node to the from-node (T).
+        previous_intersected_line_oneway : list of coordinates
+            The 'oneway'-property of the previous_intersected_line. The 'oneway'-property indicates if a street is bi-directional (B), or one way heading from the from-node to the to-node (F), or one way heading from the to-node to the from-node (T).
+        """
 
         location_result = {}
         # all the paths who were not changed from source-->target to target-->source have the following property
@@ -821,7 +838,7 @@ def calculateMostLikelyPointAndPaths(filepath, filepath_shp, minNumberOfLines=2,
             areasize = 0.0005
             max_areasize = 0.001
 
-            # the min number of lines is just needed to increse areasize. This means that the areasize is increased as long as number_of_lines is not found and max areasize is not exeeded.
+            # the min number of lines is just needed to increse areasize. This means that the areasize is increased as long as minNumberOfLines is not found and max areasize is not exeeded.
             # a GPS position is only marked as an outlier if NOT EVEN A SINGLE STREET could be found in the area
             number_of_streets = 0
 
@@ -1019,6 +1036,36 @@ def calculateMostLikelyPointAndPaths(filepath, filepath_shp, minNumberOfLines=2,
         location_result['comment'] = comment
 
         return location_result, (closest_intersection_x, closest_intersection_y), previous_point, intersected_line, previous_intersected_line, timestamp, intersected_line_oneway, previous_intersected_line_oneway
+
+    global current_txt_file
+    global number_of_txt_files
+
+    counter = 0
+
+    calculatedSolution = []
+
+    # initialize the dict in which all the statistics of the currently calculated solution will be stored.
+    statistics = {}
+    statistics['outlier'] = 0
+    statistics['taxi_did_not_move'] = 0
+    statistics['no_path_found'] = 0
+    statistics['cannot_compute_shortest_path_as_previous_point_is_outlier'] = 0
+    statistics['path_from_target_to_source'] = 0
+    statistics['checked_other_solution_index'] = 0
+    statistics['chose_other_solution_index'] = 0
+    statistics['solution_already_lies_on_shortest_path'] = 0
+    statistics['no_solution_lies_on_shortest_path'] = 0
+    statistics['other_solution_is_worse'] = 0
+    statistics['other_solution_no_path_found'] = 0
+
+    statistics['checked_if_path_exists_for_second_best_solution_index'] = 0
+    statistics['second_best_solution_yields_more_found_paths'] = 0
+
+    previous_target = (0, 0)
+    previous_source = (0, 0)
+    previous_intersected_line = None
+    previous_timestamp = None
+    previous_intersected_line_oneway = None
 
     # calculate the number of lines of the file we are looking at
     # lines_in_textfile=sum(1 for line in open(filepath))
@@ -1319,8 +1366,6 @@ def calculateMostLikelyPointAndPaths(filepath, filepath_shp, minNumberOfLines=2,
                 break
 
             # Update Progress Bar
-
-            # enablePrint()
             if(lines != 'artificialline'):
                 suffix = '| current file: {}/{} lines'.format(
                     counter, lines_in_textfile)
@@ -1328,8 +1373,6 @@ def calculateMostLikelyPointAndPaths(filepath, filepath_shp, minNumberOfLines=2,
                     current_txt_file, number_of_txt_files)
                 printProgressBar(counter, lines_in_textfile,
                                  prefix='Progress:', suffix=suffix, length=50)
-
-            # blockPrint()
 
     return calculatedSolution, statistics
 
@@ -1498,204 +1541,190 @@ def getFilename(path):
     return filename
 
 
-# only selected data points from this taxi
-# filepath = '/Users/Joechi/Google Drive/HS19 – PathPy/2_Taxi data/Tests/Exports/new_abboip_selection_test.txt'
-# all data points from this taxi
-# filepath = '/Users/Joechi/Google Drive/HS19 – PathPy/2_Taxi data/Tests/Exports/AllPointsForOneTaxi/new_abboip_copy_selection_for_SP_tests.txt'
+def caculationForOneTXTFile(filepath_shp, new_filename_solution, new_filename_statistics, new_filename_velocities, new_filename_path_length_air_line_length, filepath, aStar=1):
+    """Calculates the solution for one entire txt file and saves the solution.
+
+    Parameters
+    ----------
+    filepath_shp : str
+        The path where the shp file (which contains the street data) is stored.
+    new_filename_solution : str
+        The filename of the new solution.
+    new_filename_statistics : str
+        The filename of the new solution.
+    new_filename_velocities : str
+        The filename of the velocities histogram.
+    new_filename_path_length_air_line_length : str
+        The filename of the path_length_air_line_length histogram.
+    filepath : str
+        The path where the txt file (which contains the taxi mobility trace) is stored.
+    aStar : int, optional
+        By default 1. If 1, the closest point on underlying street network and the most likely path is calculated. If 0, only the closest point is calculated.
+    """
+
+    # set the header of the output txt file which will contain the calculated solution.
+    header = ['latitude(y);longitude(x);hasPassenger;time;closest_intersection_x;closest_intersection_y;relative_position;relative_position_normalized;intersected_line_oneway;intersected_line_as_linestring;linestring_adjustment_visualization;path_time']
+
+    if(aStar == 1):
+        header += ';path_as_linestring;path_length;air_line_length;path_length/air_line_length;velocity_m_s;pathIDs;solution_id;solution_index;path_from_target_to_source;taxi_did_not_move;second_best_solution_yields_more_found_paths;NO_PATH_FOUND;outlier;comment'
+
+    header += '\n'
+
+    myCalculatedSolution, mySolutionStatistics = calculateMostLikelyPointAndPaths(
+        filepath, filepath_shp, minNumberOfLines=2, aStar=aStar)
+
+    # this saves a new text file which includes the calculated parameters
+    with open(new_filename_solution, 'w') as new_file:
+        # write the header to the new txt file
+        new_file.writelines(header)
+
+        # write the calculated solution to the new txt file
+        for location_result in myCalculatedSolution:
+            new_file.write(str(location_result['y']))
+            new_file.write(';')
+            new_file.write(str(location_result['x']))
+            new_file.write(';')
+            new_file.write(str(location_result['passenger']))
+            new_file.write(';')
+            new_file.write(str(location_result['timestamp']))
+            new_file.write(';')
+            new_file.write(str(location_result['closest_intersection_x']))
+            new_file.write(';')
+            new_file.write(str(location_result['closest_intersection_y']))
+            new_file.write(';')
+            new_file.write(str(location_result['relative_position']))
+            new_file.write(';')
+            new_file.write(
+                str(location_result['relative_position_normalized']))
+            new_file.write(';')
+            new_file.write(str(location_result['intersected_line_oneway']))
+            new_file.write(';')
+            new_file.write(str(location_result['intersected_line']))
+            new_file.write(';')
+            new_file.write(
+                str(location_result['linestring_adjustment_visualization']))
+            new_file.write(';')
+            new_file.write(str(location_result['path_time']))
+            new_file.write(';')
+            new_file.write(str(location_result['path']))
+            new_file.write(';')
+            new_file.write(str(location_result['path_length']))
+            new_file.write(';')
+            new_file.write(str(location_result['air_line_length']))
+            new_file.write(';')
+            new_file.write(
+                str(location_result['path_length/air_line_length']))
+            new_file.write(';')
+            new_file.write(str(location_result['velocity_m_s']))
+            new_file.write(';')
+            new_file.write(str(location_result['pathIDs']))
+            new_file.write(';')
+            new_file.write(str(location_result['solution_id']))
+            new_file.write(';')
+            new_file.write(str(location_result['solution_index']))
+            new_file.write(';')
+            new_file.write(
+                str(location_result['path_from_target_to_source']))
+            new_file.write(';')
+            new_file.write(str(location_result['taxi_did_not_move']))
+            new_file.write(';')
+            new_file.write(
+                str(location_result['second_best_solution_yields_more_found_paths']))
+            new_file.write(';')
+            new_file.write(str(location_result['NO_PATH_FOUND']))
+            new_file.write(';')
+            new_file.write(str(location_result['outlier']))
+            new_file.write(';')
+            new_file.write(str(location_result['comment']))
+            new_file.write('\n')
+
+    # initialise empty lists
+    velocities = []
+    path_length_air_line_length = []
+    velocities_none_counter = 0
+
+    # get all velocities of the solution
+    for location_result in myCalculatedSolution:
+        if (location_result['velocity_m_s'] == ''):
+            velocities_none_counter += 1
+        else:
+            velocities.append(float(location_result['velocity_m_s']))
+
+        if (location_result['path_length/air_line_length'] != ''):
+            path_length_air_line_length.append(
+                float(location_result['path_length/air_line_length']))
+
+    # plot the timeDifferences in a histogram
+    plotAndSaveHistogram(velocities, 0, 80, 5, new_filename_velocities,
+                         'Histogram of velocities between gps points', 'velocity in m/s')
+
+    # plot the the path_length/air_line_length in a histogram
+    plotAndSaveHistogram(path_length_air_line_length, 1.0, 2.5, 0.1, new_filename_path_length_air_line_length,
+                         'Histogram of path lengths divided by air line lengths', 'path length / air line length')
+
+    # SAVE STATISTICS IN NEW FILE
+
+    with open(new_filename_statistics, 'w') as new_file:
+        # write statistics to the file
+        new_file.write('path of shp file: ')
+        new_file.write(str(filepath_shp))
+        new_file.write('\n')
+        new_file.write('path of old file: ')
+        new_file.write(str(filepath))
+        new_file.write('\n')
+        new_file.write('path of new file: ')
+        new_file.write(str(new_filename_solution))
+        new_file.write('\n')
+
+        # calculate the number of lines in the txt file
+        with open(filepath, 'r') as f:
+            num_lines = sum(1 for line in f)
+        new_file.write('number of lines in txt file: ')
+        new_file.write(str(num_lines))
+
+        new_file.write('\n')
+        new_file.write('\n')
+
+        # write the statistics whcih were returned from the algorithm to the file
+        for item in mySolutionStatistics.items():
+            new_file.write(str(item[0]))
+            new_file.write(': ')
+            new_file.write(str(item[1]))
+            new_file.write('\n')
+
+        new_file.write('\n')
+        new_file.write('VELOCITIES PLOT: ')
+        new_file.write('\n')
+        new_file.write('The Velocity plot contains velocities from {} data points. For the remaining {} data points the velocity could not be calculated (e.g. because it is an outlier).'.format(
+            num_lines-velocities_none_counter, velocities_none_counter))
+        new_file.write('\n')
+        new_file.write('\n')
+
 
 def main():
 
     global number_of_txt_files
     global current_txt_file
 
-    # blockPrint()
-
-    def caculationForOneTXTFile(filepath_shp, new_filename_solution, new_filename_statistics, new_filename_velocities, new_filename_path_length_air_line_length, filepath, aStar=1):
-
-        # set the header of the output txt file which will contain the calculated solution.
-        header = ['latitude(y);longitude(x);hasPassenger;time;closest_intersection_x;closest_intersection_y;relative_position;relative_position_normalized;intersected_line_oneway;intersected_line_as_linestring;linestring_adjustment_visualization;path_time']
-
-        if(aStar == 1):
-            header += ';path_as_linestring;path_length;air_line_length;path_length/air_line_length;velocity_m_s;pathIDs;solution_id;solution_index;path_from_target_to_source;taxi_did_not_move;second_best_solution_yields_more_found_paths;NO_PATH_FOUND;outlier;comment'
-
-        header += '\n'
-
-        myCalculatedSolution, mySolutionStatistics = calculateMostLikelyPointAndPaths(
-            filepath, filepath_shp, minNumberOfLines=2, aStar=aStar)
-
-        # this saves a new text file which includes the calculated parameters
-        with open(new_filename_solution, 'w') as new_file:
-            # write the header to the new txt file
-            new_file.writelines(header)
-
-            # write the calculated solution to the new txt file
-            for location_result in myCalculatedSolution:
-                new_file.write(str(location_result['y']))
-                new_file.write(';')
-                new_file.write(str(location_result['x']))
-                new_file.write(';')
-                new_file.write(str(location_result['passenger']))
-                new_file.write(';')
-                new_file.write(str(location_result['timestamp']))
-                new_file.write(';')
-                new_file.write(str(location_result['closest_intersection_x']))
-                new_file.write(';')
-                new_file.write(str(location_result['closest_intersection_y']))
-                new_file.write(';')
-                new_file.write(str(location_result['relative_position']))
-                new_file.write(';')
-                new_file.write(
-                    str(location_result['relative_position_normalized']))
-                new_file.write(';')
-                new_file.write(str(location_result['intersected_line_oneway']))
-                new_file.write(';')
-                new_file.write(str(location_result['intersected_line']))
-                new_file.write(';')
-                new_file.write(
-                    str(location_result['linestring_adjustment_visualization']))
-                new_file.write(';')
-                new_file.write(str(location_result['path_time']))
-                new_file.write(';')
-                new_file.write(str(location_result['path']))
-                new_file.write(';')
-                new_file.write(str(location_result['path_length']))
-                new_file.write(';')
-                new_file.write(str(location_result['air_line_length']))
-                new_file.write(';')
-                new_file.write(
-                    str(location_result['path_length/air_line_length']))
-                new_file.write(';')
-                new_file.write(str(location_result['velocity_m_s']))
-                new_file.write(';')
-                new_file.write(str(location_result['pathIDs']))
-                new_file.write(';')
-                new_file.write(str(location_result['solution_id']))
-                new_file.write(';')
-                new_file.write(str(location_result['solution_index']))
-                new_file.write(';')
-                new_file.write(
-                    str(location_result['path_from_target_to_source']))
-                new_file.write(';')
-                new_file.write(str(location_result['taxi_did_not_move']))
-                new_file.write(';')
-                new_file.write(
-                    str(location_result['second_best_solution_yields_more_found_paths']))
-                new_file.write(';')
-                new_file.write(str(location_result['NO_PATH_FOUND']))
-                new_file.write(';')
-                new_file.write(str(location_result['outlier']))
-                new_file.write(';')
-                new_file.write(str(location_result['comment']))
-                new_file.write('\n')
-
-        # initialise empty lists
-        velocities = []
-        path_length_air_line_length = []
-        velocities_none_counter = 0
-
-        # get all velocities of the solution
-        for location_result in myCalculatedSolution:
-            if (location_result['velocity_m_s'] == ''):
-                velocities_none_counter += 1
-            else:
-                velocities.append(float(location_result['velocity_m_s']))
-
-            if (location_result['path_length/air_line_length'] != ''):
-                path_length_air_line_length.append(
-                    float(location_result['path_length/air_line_length']))
-
-        # plot the timeDifferences in a histogram
-        plotAndSaveHistogram(velocities, 0, 80, 5, new_filename_velocities,
-                             'Histogram of velocities between gps points', 'velocity in m/s')
-
-        # plot the the path_length/air_line_length in a histogram
-        plotAndSaveHistogram(path_length_air_line_length, 1.0, 2.5, 0.1, new_filename_path_length_air_line_length,
-                             'Histogram of path lengths divided by air line lengths', 'path length / air line length')
-
-        # SAVE STATISTICS IN NEW FILE
-
-        with open(new_filename_statistics, 'w') as new_file:
-            # write statistics to the file
-            new_file.write('path of shp file: ')
-            new_file.write(str(filepath_shp))
-            new_file.write('\n')
-            new_file.write('path of old file: ')
-            new_file.write(str(filepath))
-            new_file.write('\n')
-            new_file.write('path of new file: ')
-            new_file.write(str(new_filename_solution))
-            new_file.write('\n')
-
-            # calculate the number of lines in the txt file
-            with open(filepath, 'r') as f:
-                num_lines = sum(1 for line in f)
-            new_file.write('number of lines in txt file: ')
-            new_file.write(str(num_lines))
-
-            new_file.write('\n')
-            new_file.write('\n')
-
-            # write the statistics whcih were returned from the algorithm to the file
-            for item in mySolutionStatistics.items():
-                new_file.write(str(item[0]))
-                new_file.write(': ')
-                new_file.write(str(item[1]))
-                new_file.write('\n')
-
-            new_file.write('\n')
-            new_file.write('VELOCITIES PLOT: ')
-            new_file.write('\n')
-            new_file.write('The Velocity plot contains velocities from {} data points. For the remaining {} data points the velocity could not be calculated (e.g. because it is an outlier).'.format(
-                num_lines-velocities_none_counter, velocities_none_counter))
-            new_file.write('\n')
-            new_file.write('\n')
-
-        # enablePrint()
-
-    #filepath = '/Users/Joechi/Google Drive/HS19 – PathPy/2_Taxi data/Tests/Exports/AllPointsForOneTaxi/new_abboip_copy.txt'
-
-    # filepath = '/Users/Joechi/Google Drive/HS19 – PathPy/2_Taxi data/Tests/Exports/AllPointsForOneTaxi/new_abboip_copy_small.txt'
-    # filepath = '/Users/Joechi/Google Drive/HS19 – PathPy/2_Taxi data/Tests/Exports/AllPointsForOneTaxi/new_abboip_copy_small_verysmall.txt'
-    # filepath = '/Users/Joechi/Google Drive/HS19 – PathPy/2_Taxi data/Tests/Exports/AllPointsForOneTaxi/new_abboip_copy_small_verysmall_2.txt'
-    # filepath = '/Users/Joechi/Google Drive/HS19 – PathPy/2_Taxi data/Tests/Exports/AllPointsForOneTaxi/new_abboip_copy_small_verysmall_3.txt'
-
-    # filepath = '/Users/Joechi/Google Drive/HS19 – PathPy/2_Taxi data/Tests/Exports/AllPointsForOneTaxi/new_abboip_copy_small_verysmall_4.txt'
-
-    #filepath = '/Users/Joechi/Google Drive/HS19 – PathPy/2_Taxi data/Tests/Exports/AllPointsForOneTaxi/new_abboip_copy_verysmall_closestIsBest_oneline.txt'
-
-    #filepath = '/Users/Joechi/Google Drive/HS19 – PathPy/2_Taxi data/Tests/Exports/AllPointsForOneTaxi/new_abboip_copy_SMALL_to_check_outlier.txt'
-
-    ##filepath = '/Users/Joechi/Google Drive/HS19 – PathPy/2_Taxi data/Tests/Exports/AllPointsForOneTaxi/new_abboip_copy_verysmall_closestIsBest_1stSolution.txt'
-
-    #filepath = '/Users/Joechi/Google Drive/gps2net/Data/test_data/just_one_taxi/new_abboip_copy_check_wrong_outliers.txt'
-
-    filepath1 = '/Users/Joechi/Google Drive/gps2net/Data/test_data/just_one_taxi/new_abboip_copy.txt'
-    filepath2 = '/Users/Joechi/Google Drive/gps2net/Data/test_data/other_taxi/new_abgibo_copy.txt'
-    filepath3 = '/Users/Joechi/Google Drive/gps2net/Data/test_data/other_taxi/new_abmuyawm_copy.txt'
-    filepath4 = '/Users/Joechi/Google Drive/gps2net/Data/test_data/other_taxi/new_abniar_copy.txt'
-    filepath5 = '/Users/Joechi/Google Drive/gps2net/Data/test_data/other_taxi/new_abnovkak_copy.txt'
-    filepath6 = '/Users/Joechi/Google Drive/gps2net/Data/test_data/other_taxi/new_abtyff_copy.txt'
-    filepath7 = '/Users/Joechi/Google Drive/gps2net/Data/test_data/other_taxi/new_abwecnij_copy.txt'
-
-    filepath6BUG = '/Users/Joechi/Google Drive/gps2net/Data/test_data/other_taxi/new_abtyff_copy_BUG.txt'
-    filepath6BUG2 = '/Users/Joechi/Google Drive/gps2net/Data/test_data/other_taxi/new_abtyff_copy_BUG2.txt'
-
-    #filepath_shp = '/Users/Joechi/Google Drive/HS19 – PathPy/2_Taxi data/Tests/Exports/AllPointsForOneTaxi/geo_SF_lines_exported_for_testing.shp'
-
     filepath_shp = '/Users/Joechi/Google Drive/gps2net/Data/taxi_san_francisco/San Francisco Basemap Street Centerlines/geo_export_e5dd0539-2344-4e87-b198-d50274be8e1d.shp'
 
     filepaths = []
 
-    filepaths.append(filepath6BUG)
-    filepaths.append(filepath6BUG2)
+    filepath1 = '/Users/Joechi/Google Drive/gps2net/Data/taxi_san_francisco/cabspottingdata/taxi1.txt'
+    filepath2 = '/Users/Joechi/Google Drive/gps2net/Data/taxi_san_francisco/cabspottingdata/taxi2.txt'
+    filepath3 = '/Users/Joechi/Google Drive/gps2net/Data/taxi_san_francisco/cabspottingdata/taxi3.txt'
+    filepath4 = '/Users/Joechi/Google Drive/gps2net/Data/taxi_san_francisco/cabspottingdata/taxi4.txt'
+    filepath5 = '/Users/Joechi/Google Drive/gps2net/Data/taxi_san_francisco/cabspottingdata/taxi5.txt'
+    filepath6 = '/Users/Joechi/Google Drive/gps2net/Data/taxi_san_francisco/cabspottingdata/taxi6.txt'
+    filepath7 = '/Users/Joechi/Google Drive/gps2net/Data/taxi_san_francisco/cabspottingdata/taxi7.txt'
 
-    # filepaths.append(filepath6)
-    # filepaths.append(filepath7)
-    # filepaths.append(filepath1)
-    # filepaths.append(filepath2)
-    # filepaths.append(filepath3)
-    # filepaths.append(filepath4)
-    # filepaths.append(filepath5)
+    filepaths.append(filepath1)
+    filepaths.append(filepath2)
+    filepaths.append(filepath3)
+    filepaths.append(filepath4)
+    filepaths.append(filepath5)
+    filepaths.append(filepath6)
+    filepaths.append(filepath7)
 
     number_of_txt_files = len(filepaths)
 
@@ -1706,10 +1735,6 @@ def main():
         new_filename = getFilename(path)
 
         dirName = os.path.join('output_files', new_filename)
-
-        #dirName += new_filename
-
-        # os.makedirs(dirName)
 
         # Create target directory & all intermediate directories if don't exists
         try:
