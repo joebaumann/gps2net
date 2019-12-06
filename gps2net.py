@@ -1362,10 +1362,10 @@ def calculateMostLikelyPointAndPaths(filepath, filepath_shp, minNumberOfLines=2,
             counter += 1
             # print(counter)
             if (counter > 10):
-                # print('ende')
-                break
+                # print('stopped after 10 lines')
+                # break
 
-            # Update Progress Bar
+                # Update Progress Bar
             if(lines != 'artificialline'):
                 suffix = '| current file: {}/{} lines'.format(
                     counter, lines_in_textfile)
@@ -1780,4 +1780,4 @@ if __name__ == '__main__':
     print(testResults)
 
     # run the main method
-    # main()
+    main()
