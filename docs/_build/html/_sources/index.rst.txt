@@ -8,9 +8,11 @@ gps2net documentation
 
 .. note::
 
-   If you have any problems, found bugs in the code or have comments or questions, please feel free to send a mail to `Joachim Baumann`_.
+    - The code can be accessed here: `gps2net`_.
+    - If you have any problems, found bugs in the code or have comments or questions, please feel free to send a mail to `Joachim Baumann`_.
 
 
+.. _`gps2net`: https://github.com/joehonig/gps2net
 .. _`Joachim Baumann`: joachimbaumann1@gmail.com
 
 
