@@ -566,7 +566,7 @@ def getShortestPathAStar(source, target, source_line, target_line, source_line_o
     return path, path_length, path_IDs
 
 
-def calculateMostLikelyPointAndPaths(filepath, filepath_shp, minNumberOfLines=2, aStar=1):
+def calculateMostLikelyPointAndPaths(filepath, filepath_shp, minNumberOfLines=2, criticalVelocity=35.0, criticalPathLength=2.0):
     '''Maps GPS positions to the most likely points (which lie on the underlying street network) and obtains the most likely paths between those points based on the underlying street network.
 
     Parameters
@@ -576,9 +576,14 @@ def calculateMostLikelyPointAndPaths(filepath, filepath_shp, minNumberOfLines=2,
     filepath_shp : str
         The path where the shp file (which contains the street data) is stored.
     minNumberOfLines : int, optional
-        By default 2. 
-    aStar : int, optional
-        By default 1. If 1, the closest point on underlying street network and the most likely path is calculated. If 0, only the closest point is calculated.
+        By default 2.
+    criticalVelocity : float, optional
+        The critical velocity is measured in m/s.
+        The critical velocity defines the critical threashhold. If for any found solution the calculated velocity is above this threashhold the algorithm checks if there is another solution which would lead to a lower velocity.
+        By default 35.0 m/s. This value was chosen since cars normally do not drive that fast.
+    criticalPathLength : float, optional
+        The critical PathLength defines the critical threashhold. If for any found solution the pathLength devided by the airLineLength above this threashhold the algorithm checks if there is another solution which would lead to a shorter path.
+        By default 2.0. This value was chosen since the data with which the algorithm was evaluated showed that values higher than 2.0 are often due due to erroneously mapped points (e.g. if a gps point is close to a crossing and is then mapped to the wrong street). By checking other solutiones when the threashold is exeeded, more likely paths can be found and thereby the accuracy of the algorithm is improved.
 
 
     Notes
@@ -824,9 +829,6 @@ def calculateMostLikelyPointAndPaths(filepath, filepath_shp, minNumberOfLines=2,
 
         gps_point = Point(x, y)  # radial sweep centre point
 
-        # load the input lines and combine them into one geometry
-
-        # the whole san francisco shp file (which was exported as a copy)
         with fiona.open(filepath_shp) as street_lines:
             # define size of area to filter streets. The areasize is measured in decimal degrees.
             # an areasize of 0.001 is (in the area of San Francisco) approximately 88 meters for longitudes and approximately 111 meters for latitude. This means that if the areasize s 0.001, streets are searched in an area of approximately 196 (longitude) times 222 meters (latitute), since the aresize is added in all four directions of a GPS position. Or an even broader approximation:
@@ -839,7 +841,6 @@ def calculateMostLikelyPointAndPaths(filepath, filepath_shp, minNumberOfLines=2,
             # a GPS position is only marked as an outlier if NOT EVEN A SINGLE STREET could be found in the area
             number_of_streets = 0
 
-            # define number of lines which have to be looked at after filter
             while ((number_of_streets < minNumberOfLines) and (areasize < max_areasize)):
 
                 input_shapes = list(street_lines.items(
@@ -849,14 +850,6 @@ def calculateMostLikelyPointAndPaths(filepath, filepath_shp, minNumberOfLines=2,
 
                 # double are size so that if no lines are found, a bigger area is taken into account when filtering
                 areasize = areasize*1.25
-
-                # if the areasize already arrived at its maximuum size decrease the set minimum number of lines by one.
-                # This makes sure that (if minNumberOfLines>1) a point is only market as an outlier if there is not even one line within the aresize.
-                # Without that it is possible that points are market as outliers just because there are not many lines close to the point,
-                # even though the point lies very close to a line.
-
-                # if((not (number_of_lines < minNumberOfLines)) and (not (areasize < max_areasize)) and (minNumberOfLines > 1)):
-                #    minNumberOfLines -= 1
 
         # point is oulier only if not even a single street was found
         if(number_of_streets == 0):
@@ -901,8 +894,8 @@ def calculateMostLikelyPointAndPaths(filepath, filepath_shp, minNumberOfLines=2,
 
                 solution_dict[lineID] = inter_dict_point
 
-            # sort the nested dict by the 'distance' which lies  within all the inner dicts
-            # first element in the sorted dict is the point with the shortest distance to the focal_pt
+            # sort the nested dict by the 'distance' which lies within all the inner dicts
+            # the first element in the sorted dict is the point with the shortest distance to the gps_point
             solution_dict_sorted_by_distance = sorted(
                 solution_dict.items(), key=lambda kv: (kv[1]['distance']))
 
@@ -921,7 +914,7 @@ def calculateMostLikelyPointAndPaths(filepath, filepath_shp, minNumberOfLines=2,
             intersected_line = solution['input_line']
             intersected_line_oneway = solution['oneway']
 
-            # when appending the solution we have to parse the floats into strings
+            # append x- and y-position of the mapped point, i.e. the closest point which lies on a street of the underlying network
             location_result['closest_intersection_x'] = closest_intersection_x
             location_result['closest_intersection_y'] = closest_intersection_y
 
@@ -967,67 +960,65 @@ def calculateMostLikelyPointAndPaths(filepath, filepath_shp, minNumberOfLines=2,
 
                 location_result['path_time'] = path_time
 
-                if(aStar == 1):
+                path = None
+                path2 = None
+                # calculate the shortest path with A STAR algorithm
+                path, path_length, pathIDs = getShortestPathAStar((closest_intersection_x, closest_intersection_y), previous_point, list(
+                    intersected_line.coords), list(previous_intersected_line.coords), intersected_line_oneway, previous_intersected_line_oneway, filepath_shp)
 
-                    path = None
-                    path2 = None
-                    # calculate the shortest path with A STAR algorithm
-                    path, path_length, pathIDs = getShortestPathAStar((closest_intersection_x, closest_intersection_y), previous_point, list(
-                        intersected_line.coords), list(previous_intersected_line.coords), intersected_line_oneway, previous_intersected_line_oneway, filepath_shp)
+                # calculate air line distance between source and target
+                air_line_length = distFrom(
+                    closest_intersection_x, closest_intersection_y, previous_point[0], previous_point[1])
 
-                    # calculate air line distance between source and target
-                    air_line_length = distFrom(
-                        closest_intersection_x, closest_intersection_y, previous_point[0], previous_point[1])
+                # if this is true, it is possible that a taxi has to ride all around the block because it is a oneway street and source and target lie on the same line
+                if(air_line_length < 20 and intersected_line_oneway != 'B' and previous_intersected_line_oneway != 'B' and (list(intersected_line.coords) == list(previous_intersected_line.coords))):
 
-                    # if this is true, it is possible that a taxi has to ride all around the block because it is a oneway street and source and target lie on the same line
-                    if(air_line_length < 20 and intersected_line_oneway != 'B' and previous_intersected_line_oneway != 'B' and (list(intersected_line.coords) == list(previous_intersected_line.coords))):
+                    # calculate where the source lies on the line
+                    d_source = LineString(list(intersected_line.coords)).project(
+                        Point(closest_intersection_x, closest_intersection_y))
 
-                        # calculate where the source lies on the line
-                        d_source = LineString(list(intersected_line.coords)).project(
-                            Point(closest_intersection_x, closest_intersection_y))
+                    # calculate where the target lies on the line
+                    d_target = LineString(list(previous_intersected_line.coords)).project(
+                        Point(previous_point))
 
-                        # calculate where the target lies on the line
-                        d_target = LineString(list(previous_intersected_line.coords)).project(
-                            Point(previous_point))
+                    # check if there was a glipse in the gps coordinates which resulted in a situation where the source lies after the target on a oneway street
+                    # if it is a oneway line from the FROM-node to the TO-node and source lies AFTER the target   OR   if it is a oneway line from the TO-node to the FROM-node and source lies BEFORE the target
+                    if((intersected_line_oneway == 'F' and d_source > d_target)or(intersected_line_oneway == 'T' and d_source < d_target)):
 
-                        # check if there was a glipse in the gps coordinates which resulted in a situation where the source lies after the target
-                        # if it is a oneway line from the FROM-node to the TO-node and source lies AFTER the target   OR   if it is a oneway line from the TO-node to the FROM-node and source lies BEFORE the target
-                        if((intersected_line_oneway == 'F' and d_source > d_target)or(intersected_line_oneway == 'T' and d_source < d_target)):
+                        # calculate the shortest path with A STAR algorithm
+                        # set ignore_oneway=True : this makes sure that the source_line and the target_line both are treated as lines where driving in both directions is allowed (so feature 'oneway' is ignored)
+                        path2, path_length2, pathIDs2 = getShortestPathAStar((closest_intersection_x, closest_intersection_y), previous_point, list(intersected_line.coords), list(
+                            previous_intersected_line.coords), intersected_line_oneway, previous_intersected_line_oneway, filepath_shp, ignore_oneway=True)
 
-                            # calculate the shortest path with A STAR algorithm
-                            # set ignore_oneway=True : this makes sure that the source_line and the target_line both are treated as lines where driving in both directions is allowed (so feature 'oneway' is ignored)
-                            path2, path_length2, pathIDs2 = getShortestPathAStar((closest_intersection_x, closest_intersection_y), previous_point, list(intersected_line.coords), list(
-                                previous_intersected_line.coords), intersected_line_oneway, previous_intersected_line_oneway, filepath_shp, ignore_oneway=True)
+                    # if the new solution is more likely to be correct, override path/path_lenght/pathIDs to make sure to use the new solution, i.e. the one which ignores the 'oneway' property
+                    if((path == None and path2 != None) or (path != None and path2 != None and (path_length > path_length2))):
+                        path = path2
+                        path_length = path_length2
+                        pathIDs = pathIDs2
+                        comment += 'The oneway-property was ignored. '
+                        path_from_target_to_source = 1
 
-                        # override path/path_lenght/pathIDs to make sure to use the solution which ignores the 'oneway' property
-                        if((path == None and path2 != None) or (path != None and path2 != None and (path_length > path_length2))):
-                            path = path2
-                            path_length = path_length2
-                            pathIDs = pathIDs2
-                            comment += 'The oneway-property was ignored. '
-                            path_from_target_to_source = 1
+                        # update statistics
+                        statistics['path_from_target_to_source'] += 1
 
-                            # update statistics
-                            statistics['path_from_target_to_source'] += 1
+                # if a path was found, append the solution to the calculatedSolution
+                if(path != None):
+                    velocity_m_s = path_length/path_time
 
-                    # if a path was found, append the solution to the calculatedSolution
-                    if(path != None):
-                        velocity_m_s = path_length/path_time
+                    location_result['path'] = LineString(path)
+                    location_result['path_length'] = path_length
+                    location_result['air_line_length'] = air_line_length
+                    location_result['path_length/air_line_length'] = path_length / \
+                        air_line_length
+                    location_result['velocity_m_s'] = velocity_m_s
+                    location_result['pathIDs'] = pathIDs
+                    location_result['comment'] = comment
 
-                        location_result['path'] = LineString(path)
-                        location_result['path_length'] = path_length
-                        location_result['air_line_length'] = air_line_length
-                        location_result['path_length/air_line_length'] = path_length / \
-                            air_line_length
-                        location_result['velocity_m_s'] = velocity_m_s
-                        location_result['pathIDs'] = pathIDs
-                        location_result['comment'] = comment
+                else:
 
-                    else:
-
-                        # no previous point set, do not calculate shortest path.
-                        printComment = 'No path was found with A Star algorithm from {} to {}. '.format(
-                            (closest_intersection_x, closest_intersection_y), previous_point)
+                    # no previous point set, do not calculate shortest path.
+                    printComment = 'No path was found with A Star algorithm from {} to {}. '.format(
+                        (closest_intersection_x, closest_intersection_y), previous_point)
 
         location_result['path_from_target_to_source'] = path_from_target_to_source
         location_result['comment'] = comment
@@ -1065,7 +1056,6 @@ def calculateMostLikelyPointAndPaths(filepath, filepath_shp, minNumberOfLines=2,
     previous_intersected_line_oneway = None
 
     # calculate the number of lines of the file we are looking at
-    # lines_in_textfile=sum(1 for line in open(filepath))
     lines_in_textfile = 0
     with open(filepath, 'r') as f:
         lines_in_textfile = sum(1 for line in f)
@@ -1074,23 +1064,22 @@ def calculateMostLikelyPointAndPaths(filepath, filepath_shp, minNumberOfLines=2,
     suffix = '| current file: {}/{} lines'.format(counter+1, lines_in_textfile)
     suffix += ' | total: {} of {} files'.format(
         current_txt_file, number_of_txt_files)
-    #printProgressBar(0, lines_in_textfile, prefix='Progress:',suffix=suffix, length=50)
 
     previous_location_result = {}
 
     with open(filepath, 'r') as f:
         mylist = f.read().splitlines()
 
-        # append an artificaial line at the end. This will make sure that also the path from the last to the second-last element will be calculated and possible improvements will be checked.
+        # append an artificial line at the end. This will make sure that also the path from the last to the second-last element will be calculated and possible improvements will be checked.
         mylist.append('artificialline')
 
-        for lines in mylist:
+        for txt_line in mylist:
 
             # the last line of the text file is artificial as it was added before. this line is just needed to make sure the second last line (which is actually the last actual line of the text file is calculated correctly)
-            if(lines != 'artificialline'):
+            if(txt_line != 'artificialline'):
 
-                values = lines.split(' ')
-                # the longitude and latitude were read from the txt file an saved as a string, here we transform it to a float
+                values = txt_line.split(' ')
+                # the longitude, latitude, passenger and timestamp properties were read from the txt file an saved as a string, here we transform it to a float / int
                 x = float(values[1])
                 y = float(values[0])
                 passenger = int(values[2])
@@ -1103,7 +1092,9 @@ def calculateMostLikelyPointAndPaths(filepath, filepath_shp, minNumberOfLines=2,
             if (previous_location_result != {}):
 
                 # check if the result of the previous location can be improved
-                # we check if either velocity>35m/s or if path_length/air_line_length > 2
+                # we check if either velocity > criticalVelocity or if path_length/air_line_length > criticalRPathLength
+                # by default the criticalVelocity is 35.0 m/s
+                # by default the criticalPathLength is 2.0. This means that other solutions are checked if the calculated path length is >= the double of the airLineLength
 
                 # no point is an outlier and all paths were found --> check if the solution can be improved
                 if(previous_target != (0, 0) and target != (0, 0) and previous_location_result['path'] != ''):
@@ -1113,7 +1104,7 @@ def calculateMostLikelyPointAndPaths(filepath, filepath_shp, minNumberOfLines=2,
 
                     # OLD IF STATEMENT --->   if(current_location_result['velocity_m_s'] != '' and ((previous_location_result['path'] == '') or (float(previous_location_result['velocity_m_s']) > 35.0) or ((previous_location_result['path_length/air_line_length']) > 2.0) or (float(current_location_result['velocity_m_s']) > 35.0) or ((current_location_result['path_length/air_line_length']) > 2.0))):
 
-                    if(current_location_result['velocity_m_s'] != '' and ((float(previous_location_result['velocity_m_s']) > 35.0) or ((previous_location_result['path_length/air_line_length']) > 2.0) or (float(current_location_result['velocity_m_s']) > 35.0) or ((current_location_result['path_length/air_line_length']) > 2.0))):
+                    if(current_location_result['velocity_m_s'] != '' and ((float(previous_location_result['velocity_m_s']) > criticalVelocity) or ((previous_location_result['path_length/air_line_length']) > criticalPathLength) or (float(current_location_result['velocity_m_s']) > criticalVelocity) or ((current_location_result['path_length/air_line_length']) > criticalPathLength))):
 
                         # update statistics
                         statistics['checked_other_solution_index'] += 1
@@ -1360,11 +1351,11 @@ def calculateMostLikelyPointAndPaths(filepath, filepath_shp, minNumberOfLines=2,
             # print(counter)
             if (counter > 10):
                 # print('stopped after 10 lines')
-                # break
+                break
+                # pass
 
-                # Update Progress Bar
-                pass
-            if(lines != 'artificialline'):
+            # Update Progress Bar
+            if(txt_line != 'artificialline'):
                 suffix = '| current file: {}/{} lines'.format(
                     counter, lines_in_textfile)
                 suffix += ' | total: {} of {} files'.format(
@@ -1539,7 +1530,7 @@ def getFilename(path):
     return filename
 
 
-def caculationForOneTXTFile(filepath_shp, new_filename_solution, new_filename_statistics, new_filename_velocities, new_filename_path_length_air_line_length, filepath, aStar=1):
+def caculationForOneTXTFile(filepath_shp, new_filename_solution, new_filename_statistics, new_filename_velocities, new_filename_path_length_air_line_length, filepath):
     """Calculates the solution for one entire txt file and saves the solution.
 
     Parameters
@@ -1556,20 +1547,13 @@ def caculationForOneTXTFile(filepath_shp, new_filename_solution, new_filename_st
         The filename of the path_length_air_line_length histogram.
     filepath : str
         The path where the txt file (which contains the taxi mobility trace) is stored.
-    aStar : int, optional
-        By default 1. If 1, the closest point on underlying street network and the most likely path is calculated. If 0, only the closest point is calculated.
     """
 
     # set the header of the output txt file which will contain the calculated solution.
-    header = ['latitude(y);longitude(x);hasPassenger;time;closest_intersection_x;closest_intersection_y;relative_position;relative_position_normalized;intersected_line_oneway;intersected_line_as_linestring;linestring_adjustment_visualization;path_time']
-
-    if(aStar == 1):
-        header += ';path_as_linestring;path_length;air_line_length;path_length/air_line_length;velocity_m_s;pathIDs;solution_id;solution_index;path_from_target_to_source;taxi_did_not_move;second_best_solution_yields_more_found_paths;NO_PATH_FOUND;outlier;comment'
-
-    header += '\n'
+    header = ['latitude(y);longitude(x);hasPassenger;time;closest_intersection_x;closest_intersection_y;relative_position;relative_position_normalized;intersected_line_oneway;intersected_line_as_linestring;linestring_adjustment_visualization;path_time;path_as_linestring;path_length;air_line_length;path_length/air_line_length;velocity_m_s;pathIDs;solution_id;solution_index;path_from_target_to_source;taxi_did_not_move;second_best_solution_yields_more_found_paths;NO_PATH_FOUND;outlier;comment\n']
 
     myCalculatedSolution, mySolutionStatistics = calculateMostLikelyPointAndPaths(
-        filepath, filepath_shp, minNumberOfLines=2, aStar=aStar)
+        filepath, filepath_shp, minNumberOfLines=2, criticalVelocity=35.0, criticalPathLength=2.0)
 
     # this saves a new text file which includes the calculated parameters
     with open(new_filename_solution, 'w') as new_file:
@@ -1708,6 +1692,8 @@ def main():
 
     filepaths = []
 
+    filepath1_copy = '/Users/Joechi/Google Drive/gps2net/Data/taxi_san_francisco/cabspottingdata/taxi1_copy.txt'
+
     filepath1 = '/Users/Joechi/Google Drive/gps2net/Data/taxi_san_francisco/cabspottingdata/taxi1.txt'
     filepath2 = '/Users/Joechi/Google Drive/gps2net/Data/taxi_san_francisco/cabspottingdata/taxi2.txt'
     filepath3 = '/Users/Joechi/Google Drive/gps2net/Data/taxi_san_francisco/cabspottingdata/taxi3.txt'
@@ -1716,6 +1702,9 @@ def main():
     filepath6 = '/Users/Joechi/Google Drive/gps2net/Data/taxi_san_francisco/cabspottingdata/taxi6.txt'
     filepath7 = '/Users/Joechi/Google Drive/gps2net/Data/taxi_san_francisco/cabspottingdata/taxi7.txt'
 
+    filepaths.append(filepath1_copy)
+
+    """
     filepaths.append(filepath1)
     filepaths.append(filepath2)
     filepaths.append(filepath3)
@@ -1723,6 +1712,7 @@ def main():
     filepaths.append(filepath5)
     filepaths.append(filepath6)
     filepaths.append(filepath7)
+    """
 
     number_of_txt_files = len(filepaths)
 
@@ -1751,7 +1741,7 @@ def main():
             dirName, 'path_length_air_line_length_PLOT.png')
 
         caculationForOneTXTFile(filepath_shp, new_filename_solution, new_filename_statistics,
-                                new_filename_velocities, new_filename_path_length_air_line_length, path, 1)
+                                new_filename_velocities, new_filename_path_length_air_line_length, path)
 
         # get all timestamp differences of a text file
         timeDifferences = getTimeDifferences(path, 3)
@@ -1778,4 +1768,4 @@ if __name__ == '__main__':
     print(testResults)
 
     # run the main method
-    # main()
+    main()
