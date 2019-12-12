@@ -61,11 +61,8 @@ def printProgressBar(iteration, total, prefix='', suffix='', decimals=1, length=
 
     print('\r%s |%s| %s%% %s' % (prefix, bar, percent, suffix), end=printEnd)
     # Print New Line on Complete
-    if iteration == total:
+    if iteration >= total:
         print()
-
-
-# %%
 
 
 def distFrom(lng1, lat1, lng2, lat2):
@@ -94,16 +91,11 @@ def distFrom(lng1, lat1, lng2, lat2):
     Examples
     --------
 
-    >>> x=12
-    >>> x
-    12
-    >>> (5<10)
-    True
     >>> myDist = distFrom(-122.115, 37.115, -122.111, 37.111)
     >>> myDist
     568.8872918546489
-    >>> distFrom(-122.115, 37.115, -122.111, 37.111) # doctest: +SKIP
-    5
+    >>> distFrom(-122.115, 37.115, -122.111, 37.111)
+    568.8872918546489
 
 
     Returns
@@ -123,8 +115,6 @@ def distFrom(lng1, lat1, lng2, lat2):
     dist = earthRadius * c
 
     return dist
-
-# %%
 
 
 def cut(line, distance, point):
@@ -205,6 +195,7 @@ def createGraphFromSHPInput(filepath_shp):
 
     counter = 0
 
+    # calculate how many street segments the shp file contains
     nr_elements_in_SHP_file = 0
     with fiona.open(filepath_shp) as street_lines:
         nr_elements_in_SHP_file = sum(1 for street_segment in street_lines)
@@ -217,36 +208,40 @@ def createGraphFromSHPInput(filepath_shp):
 
     with fiona.open(filepath_shp) as street_lines:
 
+        # loop through all streets
         for street_segment in list(street_lines):
 
-            previous_coord = (0, 0)
+            previous_segment = (0, 0)
             # get the attributes from the street
             id = street_segment['id']
             oneway = street_segment['properties']['oneway']
 
-            for coord in street_segment['geometry']['coordinates']:
+            # loop through all segments of a street
+            for segment in street_segment['geometry']['coordinates']:
 
-                if (previous_coord != (0, 0)):
+                if (previous_segment != (0, 0)):
 
+                    # calculate the length of a street segment
                     calculated_length = distFrom(
-                        coord[0], coord[1], previous_coord[0], previous_coord[1])
+                        segment[0], segment[1], previous_segment[0], previous_segment[1])
 
+                    # add streetsegments as edges (depending on the oneway property)
                     if(oneway == 'B'):
                         # create two directed edges for both directions
                         GraphFromSHP.add_edge(
-                            coord, previous_coord, weight=calculated_length, id=id, oneway=oneway)
+                            segment, previous_segment, weight=calculated_length, id=id, oneway=oneway)
                         GraphFromSHP.add_edge(
-                            previous_coord, coord, weight=calculated_length, id=id, oneway=oneway)
+                            previous_segment, segment, weight=calculated_length, id=id, oneway=oneway)
                     elif(oneway == 'F'):
                         # create a directed edge from the from-node to the to-node
                         GraphFromSHP.add_edge(
-                            previous_coord, coord, weight=calculated_length, id=id, oneway=oneway)
+                            previous_segment, segment, weight=calculated_length, id=id, oneway=oneway)
                     elif(oneway == 'T'):
                         # create a directed edge from the to-node to the from-node
                         GraphFromSHP.add_edge(
-                            coord, previous_coord, weight=calculated_length, id=id, oneway=oneway)
+                            segment, previous_segment, weight=calculated_length, id=id, oneway=oneway)
 
-                previous_coord = coord
+                previous_segment = segment
 
             # Update Progress Bar
             suffix = '| SHP file street segments: {}/{}'.format(
@@ -358,98 +353,95 @@ def getShortestPathAStar(source, target, source_line, target_line, source_line_o
         This function temporarily adds an edge to the global graph. It only adds the edge if it deosn't exist in the graph yet. Further, the new edge is added to the list 'all_added_edges' so that it can be removed again in the end.
         '''
         if (not DG.has_edge(startNode, endNode)):
-            # print('edge has to be added')
+            # edge has to be added
             # print('adding ({},{})'.format(startNode, endNode))
-            # print('')
 
             DG.add_edge(startNode, endNode, weight=edgeWeight,
                         id=edgeId, oneway=direction)
             all_added_edges.append((startNode, endNode))
-        # else:
+        else:
+            # edge is already in graph
             # print('graph does have({},{})'.format(startNode,endNode))
             # print('edge:',DG.get_edge_data(startNode, endNode))
-            # print('')
+            pass
 
     path = None
     path_length = None
     path_IDs = []
     all_added_edges = []
 
-    # check if the global variable 'DG' is an empty directed graph. If yes, create a graph from the shp-file content.
+    # check if the global variable 'DG' is an empty directed graph. If yes, create a graph from the shp file content.
     if(nx.is_empty(DG)):
         DG = (createGraphFromSHPInput(filepath_shp))
 
     # check if target lies exactly on the beginning/end of a line segment
-    # if yes, target already exists as a node
+    # if yes, target already exists as a node in the graph
     if (target not in target_line):
-        # remove the target_line edges and add the line_segments as edges
+
+        # add the line_segments as edges
 
         d_target = LineString(target_line).project(Point(target))
 
         cut_line_target = cut(LineString(target_line), d_target, Point(target))
-        # print('cut_line_target: ', cut_line_target)
         new_line_target_after_cut = [list(x.coords) for x in cut_line_target]
 
         len_line_segment = len(new_line_target_after_cut[0])
-        edge_to_remove_T_source = new_line_target_after_cut[0][len_line_segment-2]
-        edge_to_remove_T_target = new_line_target_after_cut[1][1]
+        edge_target_start = new_line_target_after_cut[0][len_line_segment-2]
+        edge_target_end = new_line_target_after_cut[1][1]
 
-        # get the edge (including the attributes) that should be removed from the graph
+        # get the edge (including the attributes)
 
         if(target_line_oneway == 'B'):
-            edge_to_remove_from_graph = DG.get_edge_data(
-                edge_to_remove_T_source, edge_to_remove_T_target)
+            graph_edge = DG.get_edge_data(
+                edge_target_start, edge_target_end)
 
         elif(target_line_oneway == 'F'):
-            edge_to_remove_from_graph = DG.get_edge_data(
-                edge_to_remove_T_source, edge_to_remove_T_target)
+            graph_edge = DG.get_edge_data(
+                edge_target_start, edge_target_end)
 
         elif(target_line_oneway == 'T'):
-            edge_to_remove_from_graph = DG.get_edge_data(
-                edge_to_remove_T_target, edge_to_remove_T_source)
+            graph_edge = DG.get_edge_data(
+                edge_target_end, edge_target_start)
 
-        edge_to_remove_from_graph_id = edge_to_remove_from_graph['id']
-        edge_to_remove_from_graph_oneway = edge_to_remove_from_graph['oneway']
+        graph_edge_id = graph_edge['id']
+        graph_edge_oneway = graph_edge['oneway']
 
-        # add the line segments for the target
+        # add the line segments for the target as edges to the graph
 
-        if(edge_to_remove_from_graph_oneway == 'B' or ignore_oneway == True):
+        if(graph_edge_oneway == 'B' or ignore_oneway == True):
 
+            # add edges in both directions
+            temporarily_add_edge_to_graph(edge_target_start, target, distFrom(
+                edge_target_start[0], edge_target_start[1], target[0], target[1]), graph_edge_id, graph_edge_oneway)
+            temporarily_add_edge_to_graph(target, edge_target_end, distFrom(
+                edge_target_end[0], edge_target_end[1], target[0], target[1]), graph_edge_id, graph_edge_oneway)
+            temporarily_add_edge_to_graph(edge_target_end, target, distFrom(
+                edge_target_end[0], edge_target_end[1], target[0], target[1]), graph_edge_id, graph_edge_oneway)
+            temporarily_add_edge_to_graph(target, edge_target_start, distFrom(
+                edge_target_start[0], edge_target_start[1], target[0], target[1]), graph_edge_id, graph_edge_oneway)
+
+        elif(graph_edge_oneway == 'F'):
             # add edges in direction of from-node to to-node
-
-            temporarily_add_edge_to_graph(edge_to_remove_T_source, target, distFrom(
-                edge_to_remove_T_source[0], edge_to_remove_T_source[1], target[0], target[1]), edge_to_remove_from_graph_id, edge_to_remove_from_graph_oneway)
-            temporarily_add_edge_to_graph(target, edge_to_remove_T_target, distFrom(
-                edge_to_remove_T_target[0], edge_to_remove_T_target[1], target[0], target[1]), edge_to_remove_from_graph_id, edge_to_remove_from_graph_oneway)
-            # add edges in direction of to-node to from-node
-            temporarily_add_edge_to_graph(edge_to_remove_T_target, target, distFrom(
-                edge_to_remove_T_target[0], edge_to_remove_T_target[1], target[0], target[1]), edge_to_remove_from_graph_id, edge_to_remove_from_graph_oneway)
-            temporarily_add_edge_to_graph(target, edge_to_remove_T_source, distFrom(
-                edge_to_remove_T_source[0], edge_to_remove_T_source[1], target[0], target[1]), edge_to_remove_from_graph_id, edge_to_remove_from_graph_oneway)
-
-        elif(edge_to_remove_from_graph_oneway == 'F'):
-            # add edges in direction of from-node to to-node
-            temporarily_add_edge_to_graph(edge_to_remove_T_source, target, distFrom(
-                edge_to_remove_T_source[0], edge_to_remove_T_source[1], target[0], target[1]), edge_to_remove_from_graph_id, edge_to_remove_from_graph_oneway)
-            temporarily_add_edge_to_graph(target, edge_to_remove_T_target, distFrom(
-                edge_to_remove_T_target[0], edge_to_remove_T_target[1], target[0], target[1]), edge_to_remove_from_graph_id, edge_to_remove_from_graph_oneway)
+            temporarily_add_edge_to_graph(edge_target_start, target, distFrom(
+                edge_target_start[0], edge_target_start[1], target[0], target[1]), graph_edge_id, graph_edge_oneway)
+            temporarily_add_edge_to_graph(target, edge_target_end, distFrom(
+                edge_target_end[0], edge_target_end[1], target[0], target[1]), graph_edge_id, graph_edge_oneway)
 
         else:
             # add edges in direction of to-node to from-node
-            temporarily_add_edge_to_graph(target, edge_to_remove_T_source, distFrom(
-                edge_to_remove_T_source[0], edge_to_remove_T_source[1], target[0], target[1]), edge_to_remove_from_graph_id, edge_to_remove_from_graph_oneway)
-            temporarily_add_edge_to_graph(edge_to_remove_T_target, target, distFrom(
-                edge_to_remove_T_target[0], edge_to_remove_T_target[1], target[0], target[1]), edge_to_remove_from_graph_id, edge_to_remove_from_graph_oneway)
+            temporarily_add_edge_to_graph(target, edge_target_start, distFrom(
+                edge_target_start[0], edge_target_start[1], target[0], target[1]), graph_edge_id, graph_edge_oneway)
+            temporarily_add_edge_to_graph(edge_target_end, target, distFrom(
+                edge_target_end[0], edge_target_end[1], target[0], target[1]), graph_edge_id, graph_edge_oneway)
 
     else:
-        blockPrint()
-        print('no need to add additional edges target')
-        enablePrint()
+        # no need to add additional edges target
+        pass
 
     # check if source lies exactly on the beginning/end of a line segment
     # if yes, source already exists as a node
     if (source not in source_line):
-        # remove the source_line edges and add the line_segments as edges
+        # add the line_segments as edges
 
         # if source and target line are equal, the already cut line has to be used
 
@@ -458,86 +450,91 @@ def getShortestPathAStar(source, target, source_line, target_line, source_line_o
         new_line_source_after_cut = [list(x.coords) for x in cut_line_source]
 
         len_line_segment = len(new_line_source_after_cut[0])
-        edge_to_remove_S_source = new_line_source_after_cut[0][len_line_segment-2]
-        edge_to_remove_S_target = new_line_source_after_cut[1][1]
+        edge_source_start = new_line_source_after_cut[0][len_line_segment-2]
+        edge_source_end = new_line_source_after_cut[1][1]
 
-        # get the edge (including the attributes) that should be removed from the graph
+        # get the edge (including the attributes)
 
         if(source_line_oneway == 'B'):
-            edge_to_remove_from_graph = DG.get_edge_data(
-                edge_to_remove_S_source, edge_to_remove_S_target)
+            graph_edge = DG.get_edge_data(
+                edge_source_start, edge_source_end)
 
         elif(source_line_oneway == 'F'):
-            edge_to_remove_from_graph = DG.get_edge_data(
-                edge_to_remove_S_source, edge_to_remove_S_target)
+            graph_edge = DG.get_edge_data(
+                edge_source_start, edge_source_end)
 
         elif(source_line_oneway == 'T'):
-            edge_to_remove_from_graph = DG.get_edge_data(
-                edge_to_remove_S_target, edge_to_remove_S_source)
+            graph_edge = DG.get_edge_data(
+                edge_source_end, edge_source_start)
 
-        edge_to_remove_from_graph_id = edge_to_remove_from_graph['id']
-        edge_to_remove_from_graph_oneway = edge_to_remove_from_graph['oneway']
+        graph_edge_id = graph_edge['id']
+        graph_edge_oneway = graph_edge['oneway']
 
         # if source and target line on the same line segment, add a connection between the two
-        if((source_line == target_line) and (target not in target_line) and (edge_to_remove_T_source == edge_to_remove_S_source)and (edge_to_remove_T_target == edge_to_remove_S_target)):
+        if((source_line == target_line) and (target not in target_line) and (edge_target_start == edge_source_start) and (edge_target_end == edge_source_end)):
 
             # check which point comes first on the line to then know which direction the line between the two should be
             d_target_same_line = LineString(source_line).project(Point(target))
             d_source_same_line = LineString(source_line).project(Point(source))
 
-            # get the edge (including the attributes) that should be removed from the graph
+            # get the edge (including the attributes)
 
+            # add adges in both directions
             if(source_line_oneway == 'B' or ignore_oneway == True):
                 temporarily_add_edge_to_graph(source, target, distFrom(
-                    source[0], source[1], target[0], target[1]), edge_to_remove_from_graph_id, edge_to_remove_from_graph_oneway)
+                    source[0], source[1], target[0], target[1]), graph_edge_id, graph_edge_oneway)
                 temporarily_add_edge_to_graph(target, source, distFrom(
-                    source[0], source[1], target[0], target[1]), edge_to_remove_from_graph_id, edge_to_remove_from_graph_oneway)
+                    source[0], source[1], target[0], target[1]), graph_edge_id, graph_edge_oneway)
 
+            # add adges in only one direction
             elif(source_line_oneway == 'F'):
-                # if the source_line (which equals target_line) is onway from the from-node to the to-node, the point which is closer at the beginning of the line has to be the starting point of the directed edge which is added to the graph
+                # if the source_line (which equals target_line) is oneway from the from-node to the to-node, the point which is closer to the beginning of the line has to be the starting point of the directed edge which is added to the graph
                 if(d_source_same_line > d_target_same_line):
                     temporarily_add_edge_to_graph(target, source, distFrom(
-                        source[0], source[1], target[0], target[1]), edge_to_remove_from_graph_id, edge_to_remove_from_graph_oneway)
+                        source[0], source[1], target[0], target[1]), graph_edge_id, graph_edge_oneway)
                 else:
                     temporarily_add_edge_to_graph(source, target, distFrom(
-                        source[0], source[1], target[0], target[1]), edge_to_remove_from_graph_id, edge_to_remove_from_graph_oneway)
+                        source[0], source[1], target[0], target[1]), graph_edge_id, graph_edge_oneway)
 
+            # add adges in only one direction
             elif(source_line_oneway == 'T'):
-                # if the source_line (which equals target_line) is oneway from the to-node to the from-node, the point which is closer at the end of the line has to be the starting point of the directed edge which is added to the graph
+                # if the source_line (which equals target_line) is oneway from the to-node to the from-node, the point which is closer to the end of the line has to be the starting point of the directed edge which is added to the graph
                 if(d_source_same_line > d_target_same_line):
                     temporarily_add_edge_to_graph(source, target, distFrom(
-                        source[0], source[1], target[0], target[1]), edge_to_remove_from_graph_id, edge_to_remove_from_graph_oneway)
+                        source[0], source[1], target[0], target[1]), graph_edge_id, graph_edge_oneway)
                 else:
                     temporarily_add_edge_to_graph(target, source, distFrom(
-                        source[0], source[1], target[0], target[1]), edge_to_remove_from_graph_id, edge_to_remove_from_graph_oneway)
+                        source[0], source[1], target[0], target[1]), graph_edge_id, graph_edge_oneway)
 
-        # add the line segments for the source
-        if(edge_to_remove_from_graph_oneway == 'B' or ignore_oneway == True):
+        # add the line segments for the source as edges to the graph
+
+        if(graph_edge_oneway == 'B' or ignore_oneway == True):
             # add edges in direction of from-node to to-node
-            temporarily_add_edge_to_graph(edge_to_remove_S_source, source, distFrom(
-                edge_to_remove_S_source[0], edge_to_remove_S_source[1], source[0], source[1]), edge_to_remove_from_graph_id, edge_to_remove_from_graph_oneway)
-            temporarily_add_edge_to_graph(source, edge_to_remove_S_target, distFrom(
-                edge_to_remove_S_target[0], edge_to_remove_S_target[1], source[0], source[1]), edge_to_remove_from_graph_id, edge_to_remove_from_graph_oneway)
+            temporarily_add_edge_to_graph(edge_source_start, source, distFrom(
+                edge_source_start[0], edge_source_start[1], source[0], source[1]), graph_edge_id, graph_edge_oneway)
+            temporarily_add_edge_to_graph(source, edge_source_end, distFrom(
+                edge_source_end[0], edge_source_end[1], source[0], source[1]), graph_edge_id, graph_edge_oneway)
             # add edges in direction of to-node to from-node
-            temporarily_add_edge_to_graph(edge_to_remove_S_target, source, distFrom(
-                edge_to_remove_S_target[0], edge_to_remove_S_target[1], source[0], source[1]), edge_to_remove_from_graph_id, edge_to_remove_from_graph_oneway)
-            temporarily_add_edge_to_graph(source, edge_to_remove_S_source, distFrom(
-                edge_to_remove_S_source[0], edge_to_remove_S_source[1], source[0], source[1]), edge_to_remove_from_graph_id, edge_to_remove_from_graph_oneway)
-        elif(edge_to_remove_from_graph_oneway == 'F'):
+            temporarily_add_edge_to_graph(edge_source_end, source, distFrom(
+                edge_source_end[0], edge_source_end[1], source[0], source[1]), graph_edge_id, graph_edge_oneway)
+            temporarily_add_edge_to_graph(source, edge_source_start, distFrom(
+                edge_source_start[0], edge_source_start[1], source[0], source[1]), graph_edge_id, graph_edge_oneway)
+
+        elif(graph_edge_oneway == 'F'):
             # add edges in direction of from-node to to-node
-            temporarily_add_edge_to_graph(edge_to_remove_S_source, source, distFrom(
-                edge_to_remove_S_source[0], edge_to_remove_S_source[1], source[0], source[1]), edge_to_remove_from_graph_id, edge_to_remove_from_graph_oneway)
-            temporarily_add_edge_to_graph(source, edge_to_remove_S_target, distFrom(
-                edge_to_remove_S_target[0], edge_to_remove_S_target[1], source[0], source[1]), edge_to_remove_from_graph_id, edge_to_remove_from_graph_oneway)
+            temporarily_add_edge_to_graph(edge_source_start, source, distFrom(
+                edge_source_start[0], edge_source_start[1], source[0], source[1]), graph_edge_id, graph_edge_oneway)
+            temporarily_add_edge_to_graph(source, edge_source_end, distFrom(
+                edge_source_end[0], edge_source_end[1], source[0], source[1]), graph_edge_id, graph_edge_oneway)
+
         else:
             # add edges in direction of to-node to from-node
-            temporarily_add_edge_to_graph(edge_to_remove_S_target, source, distFrom(
-                edge_to_remove_S_target[0], edge_to_remove_S_target[1], source[0], source[1]), edge_to_remove_from_graph_id, edge_to_remove_from_graph_oneway)
-            temporarily_add_edge_to_graph(source, edge_to_remove_S_source, distFrom(
-                edge_to_remove_S_source[0], edge_to_remove_S_source[1], source[0], source[1]), edge_to_remove_from_graph_id, edge_to_remove_from_graph_oneway)
+            temporarily_add_edge_to_graph(edge_source_end, source, distFrom(
+                edge_source_end[0], edge_source_end[1], source[0], source[1]), graph_edge_id, graph_edge_oneway)
+            temporarily_add_edge_to_graph(source, edge_source_start, distFrom(
+                edge_source_start[0], edge_source_start[1], source[0], source[1]), graph_edge_id, graph_edge_oneway)
 
     try:
-
         # try to find a path
         path = nx.astar_path(DG, source, target,
                              heuristic=air_line_distance, weight='weight')
@@ -777,7 +774,7 @@ def calculateMostLikelyPointAndPaths(filepath, filepath_shp, minNumberOfLines=2,
         intersected_line = None
         intersected_line_oneway = None
 
-        # set those key which are not necessarily set (e.g. when previous point was an outlier)
+        # initiaize all keys (as some of them are not necessarily set, e.g. when previous point was an outlier)
 
         location_result['solution_index'] = 0
         location_result['target'] = previous_point
@@ -825,7 +822,7 @@ def calculateMostLikelyPointAndPaths(filepath, filepath_shp, minNumberOfLines=2,
 
         # how to get the closest line from one point
 
-        focal_pt = Point(x, y)  # radial sweep centre point
+        gps_point = Point(x, y)  # radial sweep centre point
 
         # load the input lines and combine them into one geometry
 
@@ -882,10 +879,10 @@ def calculateMostLikelyPointAndPaths(filepath, filepath_shp, minNumberOfLines=2,
 
                 newLS = LineString(input_line[1]['geometry']['coordinates'])
                 # get the distance along the LineString to a point nearest to the point
-                relative_position = newLS.project(focal_pt)
+                relative_position = newLS.project(gps_point)
                 # get the distance normalized to the length of the LineString
                 relative_position_normalized = newLS.project(
-                    focal_pt, normalized=True)
+                    gps_point, normalized=True)
 
                 closest_point_on_line = newLS.interpolate(relative_position)
 
@@ -900,7 +897,7 @@ def calculateMostLikelyPointAndPaths(filepath, filepath_shp, minNumberOfLines=2,
 
                 # distance needs to be float so that it can be sorted appropriately afterwards
                 inter_dict_point['distance'] = float(
-                    focal_pt.distance(closest_point_on_line))
+                    gps_point.distance(closest_point_on_line))
 
                 solution_dict[lineID] = inter_dict_point
 
@@ -938,7 +935,7 @@ def calculateMostLikelyPointAndPaths(filepath, filepath_shp, minNumberOfLines=2,
 
             # append the line which visualizes the way from the start point to the new position of the closest intersection point
             linestring_adjustment_visualization = LineString(
-                [(focal_pt.x, focal_pt.y), (closest_intersection_x, closest_intersection_y)])
+                [(gps_point.x, gps_point.y), (closest_intersection_x, closest_intersection_y)])
 
             location_result['linestring_adjustment_visualization'] = linestring_adjustment_visualization
 
@@ -1781,4 +1778,4 @@ if __name__ == '__main__':
     print(testResults)
 
     # run the main method
-    main()
+    # main()
