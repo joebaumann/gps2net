@@ -1346,9 +1346,8 @@ def calculateMostLikelyPointAndPaths(filepath, filepath_shp, minNumberOfLines=2,
 
             # The following lines are just for testing. Uncomment 'break' in order to only run the algorithm for a certain amount of lines per file. The counter counts the amount of lines of the current txt file which were already calculated.
             counter += 1
-            # print(counter)
             if (counter > 10):
-                break
+                # break
                 pass
 
             # Update Progress Bar
@@ -1689,8 +1688,6 @@ def main():
 
     filepaths = []
 
-    filepath1_copy = '/Users/Joechi/Google Drive/gps2net/Data/taxi_san_francisco/cabspottingdata/taxi1_copy.txt'
-
     filepath1 = '/Users/Joechi/Google Drive/gps2net/Data/taxi_san_francisco/cabspottingdata/taxi1.txt'
     filepath2 = '/Users/Joechi/Google Drive/gps2net/Data/taxi_san_francisco/cabspottingdata/taxi2.txt'
     filepath3 = '/Users/Joechi/Google Drive/gps2net/Data/taxi_san_francisco/cabspottingdata/taxi3.txt'
@@ -1699,9 +1696,6 @@ def main():
     filepath6 = '/Users/Joechi/Google Drive/gps2net/Data/taxi_san_francisco/cabspottingdata/taxi6.txt'
     filepath7 = '/Users/Joechi/Google Drive/gps2net/Data/taxi_san_francisco/cabspottingdata/taxi7.txt'
 
-    filepaths.append(filepath1_copy)
-
-    """
     filepaths.append(filepath1)
     filepaths.append(filepath2)
     filepaths.append(filepath3)
@@ -1709,7 +1703,6 @@ def main():
     filepaths.append(filepath5)
     filepaths.append(filepath6)
     filepaths.append(filepath7)
-    """
 
     number_of_txt_files = len(filepaths)
 
