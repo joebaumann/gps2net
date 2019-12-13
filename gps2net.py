@@ -3,7 +3,6 @@ import doctest
 import math
 import os
 import sys
-from timeit import default_timer as timer
 
 import fiona
 import matplotlib.pyplot as plt
@@ -1255,7 +1254,7 @@ def calculateMostLikelyPointAndPaths(filepath, filepath_shp, minNumberOfLines=2,
                     previous_location_result_new, previous_source_new, previous_target_new, previous_intersected_line_new, previous_target_intersected_line_new, previous_timestamp_new, previous_intersected_line_oneway_new, previous_target_intersected_line_oneway_new = getLocationResult(
                         filepath_shp, new_solution_point_x, new_solution_point_y, previous_location_result['passenger'], previous_location_result['timestamp'], previous_location_result['target'], previous_location_result['previous_intersected_line'], previous_location_result['previous_timestamp'], previous_location_result['previous_intersected_line_oneway'], minNumberOfLines)
 
-                    # check how many paths could not be found  WITH NEW SOLUTION
+                    # check how many paths could not be found WITH NEW SOLUTION
                     not_found_paths_NEW_SOLUTION = 0
                     if (previous_location_result_new['path'] == ''):
                         not_found_paths_NEW_SOLUTION += 1
@@ -1345,14 +1344,12 @@ def calculateMostLikelyPointAndPaths(filepath, filepath_shp, minNumberOfLines=2,
             previous_intersected_line_oneway = intersected_line_oneway
             previous_target_intersected_line_oneway = target_intersected_line_oneway
 
-            # TODO: Delete the following lines as this is just for testing.
-            # stop script after a few lines (for testing reasons)
+            # The following lines are just for testing. Uncomment 'break' in order to only run the algorithm for a certain amount of lines per file. The counter counts the amount of lines of the current txt file which were already calculated.
             counter += 1
             # print(counter)
             if (counter > 10):
-                # print('stopped after 10 lines')
                 break
-                # pass
+                pass
 
             # Update Progress Bar
             if(txt_line != 'artificialline'):
@@ -1497,7 +1494,7 @@ def plotAndSaveHistogram(input, minXLabel, maxXLabel, binSize, filename, title, 
 
     # save the figure in the folder of the current taxi
     plt.savefig(filename)
-    # plt.show()
+    # the figure could be shown with 'plt.show()'. However, this is not necessary as it is saved anyway.
     # close the current figure
     plt.close()
 
@@ -1519,10 +1516,10 @@ def getFilename(path):
     Examples
     --------
 
-    >>> myPath = 'dir1/dir2/MyFilename.txt'
+    >>> myPath = 'dir1/dir2/ThisIsMyFilename.txt'
     >>> filename = getFilename(myPath)
     >>> filename
-    'MyFilename'
+    'ThisIsMyFilename'
 
     '''
     # get the name of the file from the path (without the directories and without extension)
@@ -1763,7 +1760,7 @@ def main():
 
 if __name__ == '__main__':
     import doctest
-    # running 'doctest.testmod()' test the examples in docstrings. Alternatively, the examples in docstrings can be tested by navigating to the 'docs' directory and running the following command in the terminal (this will also show the test results for passed tests): python gps2net.py -v
+    # running 'doctest.testmod()' test the examples in docstrings. Alternatively, the examples in docstrings can be tested by commenting out 'main()' and then navigating to the 'docs' directory and running the following command in the terminal (this will also show the test results for passed tests): python gps2net.py -v
     testResults = doctest.testmod()
     print(testResults)
 
