@@ -292,7 +292,7 @@ def air_line_distance(source, target):
 
 
 def getShortestPathAStar(source, target, source_line, target_line, source_line_oneway, target_line_oneway, filepath_shp, ignore_oneway=False):
-    """The shortest – most likely – path between two GPS positions (on a street segment) based on the streets of the underlying network.
+    """Calculates the shortest – most likely – path between two GPS positions (on a street segment) based on the streets of the underlying network.
 
     Parameters
     ----------
@@ -594,7 +594,7 @@ def calculateMostLikelyPointAndPaths(filepath, filepath_shp, minNumberOfLines=2,
     Returns
     -------
     calculatedSolution : list of dictionaries
-        Every line of the txt file (which was the input containing the GPS positions) yields a dictionary.This dictionary is appended to the calculatedSolution list. In the end every dictionary will be written to a new txt file as a separate line. This will yield a txt file (similar to the input file but) with additional information. The following values are taken from the input file which contains the GPS trajectories:
+        Every line of the txt file (which was the input containing the GPS positions) yields a dictionary. This dictionary is appended to the calculatedSolution list. In the end every dictionary will be written to a new txt file as a separate line. This will yield a txt file (similar to the input file but) with additional information. The following values are taken from the input file which contains the GPS trajectories:
 
         - y : float
             Latitude of the GPS position in decimal degrees.
@@ -611,10 +611,10 @@ def calculateMostLikelyPointAndPaths(filepath, filepath_shp, minNumberOfLines=2,
         In addition to those four values, every dictionary contains the following parameters which where computed by the algorithm (key : type):
 
         - closest_intersection_x : float
-            Longitude of the mapped point.
+            Longitude of the mapped position based on underlying network topology.
 
         - closest_intersection_y : float
-            Latitude of the mapped point.
+            Latitude of the mapped position based on underlying network topology.
 
         - relative_position : float
             Distance along the street (where the initial point was mapped to).
@@ -654,7 +654,6 @@ def calculateMostLikelyPointAndPaths(filepath, filepath_shp, minNumberOfLines=2,
         - pathIDs : list
             The path IDs of all street segments which are traversed on the path.
             --> For more details on how the path is calculated, see :func:`~gps2net.getShortestPathAStar`
-
 
         - solution_id : int
             The id of street where the mapped point lies on.
@@ -1507,6 +1506,19 @@ def getPathFromUnmappedGpsPositions(filepath, new_filename):
         The path where the txt file (which contains the taxi mobility trace) is stored.
     new_filename : str
         The filename of the new solution.
+
+    Notes
+    -----
+    This function created a txt file which (in addition to the input values) contains additional parameters which are NOT based on the underlying street network, such as:
+    
+    - path : Linestring
+        Linear path with start=current_position and end=next_position.
+    - path length : float
+        Distance between current and next position in meters.
+    - path time : float
+        Time between measurement at current and next position in seconds.
+    - velocity : float
+        Velocity in meters/second.
     """
 
     header = [
