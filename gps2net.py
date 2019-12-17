@@ -566,7 +566,7 @@ def getShortestPathAStar(source, target, source_line, target_line, source_line_o
 
 
 def calculateMostLikelyPointAndPaths(filepath, filepath_shp, minNumberOfLines=2, criticalVelocity=35.0, criticalPathLength=2.0):
-    '''Maps GPS positions to the most likely points (which lie on the underlying street network) and obtains the most likely paths between those points based on the underlying street network.
+    '''Maps GPS positions to the most likely points (based on the underlying street network) and obtains the most likely paths between those points based on the underlying street network.
 
     Parameters
     ----------
@@ -1498,6 +1498,89 @@ def plotAndSaveHistogram(input, minXLabel, maxXLabel, binSize, filename, title, 
     plt.close()
 
 
+def getPathFromUnmappedGpsPositions(filepath, new_filename):
+    """Creates a new file which includes path, path length, path time, and velocity without considering the underlying street network.
+
+    Parameters
+    ----------
+    filepath : str
+        The path where the txt file (which contains the taxi mobility trace) is stored.
+    new_filename : str
+        The filename of the new solution.
+    """
+
+    header = [
+        "latitude(y);longitude(x);hasPassenger;time;path;path_length;path_time;velocity_m_s\n"]
+
+    path = ''
+    path_length = ''
+    path_time = ''
+    velocity_m_s = ''
+    time_previous = None
+
+    with open(filepath, "r") as f:
+        mylist = f.read().splitlines()
+
+        # this saves a new text file which includes the calculated parameters
+        with open(new_filename, 'w') as new_file:
+
+            # write the header to the new txt file
+            new_file.writelines(header)
+
+            for line in mylist:
+
+                # read the values from the txt file and transform the strings to float/int
+
+                values = line.split(" ")
+                x = float(values[1])
+                y = float(values[0])
+                time_current = int(values[3])
+                lines_withoutspaces = str(line).replace(" ", ";")
+
+                # no values are added to the first line of the file
+                if (time_previous != None):
+
+                    # check if data is sorted by time
+                    # we start with newest data point, so if previous data time was earlier in time, it is not sorted
+                    if (time_previous < time_current):
+                        print('')
+                        print('Algorithm cannot run since DATA IS NOT SORTED!')
+                        print('Time of current position ({}) is before time of previous position ({}).'.format(
+                            time_previous, time_current))
+                        print(
+                            'Please adjust your input file. The newest gps signal should be the first line.')
+                        print('')
+                        sys.exit('Execution of the algorithm stopped.')
+
+                    else:
+                        start_pt = Point(x_previous, y_previous)
+                        end_pt = Point(x, y)
+                        path = LineString(
+                            [(start_pt.x, start_pt.y), (end_pt.x, end_pt.y)])
+                        path_length = distFrom(x_previous, y_previous, x, y)
+                        path_time = abs(time_previous-time_current)
+
+                        velocity_m_s = path_length/path_time
+
+                # write the initial values to the new file
+                new_file.write(lines_withoutspaces)
+
+                # write the new values to the new file
+                new_file.write(';')
+                new_file.write(str(path))
+                new_file.write(';')
+                new_file.write(str(path_length))
+                new_file.write(';')
+                new_file.write(str(path_time))
+                new_file.write(';')
+                new_file.write(str(velocity_m_s))
+                new_file.write('\n')
+
+                x_previous = x
+                y_previous = y
+                time_previous = time_current
+
+
 def getFilename(path):
     '''Returns the name of a file from a specific path (excluding directories and extension).
 
@@ -1527,7 +1610,7 @@ def getFilename(path):
 
 
 def caculationForOneTXTFile(filepath_shp, new_filename_solution, new_filename_statistics, new_filename_velocities, new_filename_path_length_air_line_length, filepath):
-    """Calculates the solution for one entire txt file and saves the solution.
+    """Calculates the most likely solution for one entire txt file based on the underlying street network and saves the solution.
 
     Parameters
     ----------
@@ -1723,6 +1806,9 @@ def main():
             print('')
             print('Directory ', dirName,  ' already exists.')
 
+        new_filename_simple_solution = os.path.join(
+            dirName, 'pathFromUnmappedGpsPositions') + '.txt'
+
         new_filename_solution = os.path.join(
             dirName, 'calculatedSolution') + '.txt'
         new_filename_statistics = os.path.join(dirName, 'statistics') + '.txt'
@@ -1730,6 +1816,10 @@ def main():
         new_filename_path_length_air_line_length = os.path.join(
             dirName, 'path_length_air_line_length_PLOT.png')
 
+        # calculate and save the simple solution (path from exact gps positions without considering the underlying street network)
+        getPathFromUnmappedGpsPositions(path, new_filename_simple_solution)
+
+        # calculate and save the full solution (most likely paths) based on the underlying street network
         caculationForOneTXTFile(filepath_shp, new_filename_solution, new_filename_statistics,
                                 new_filename_velocities, new_filename_path_length_air_line_length, path)
 
@@ -1745,6 +1835,7 @@ def main():
 
         print('')
         print('The following files where created:')
+        print('- ' + new_filename_simple_solution)
         print('- ' + new_filename_solution)
         print('- ' + new_filename_statistics)
         print('- ' + new_filename_velocities)
