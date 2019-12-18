@@ -71,10 +71,16 @@ For every line of the input file (which contains the GPS positions) a dictionary
 
 ## Running doctests
 
-In order to run the doctests navigate to the *docs* directory and run the following command in the terminal:
+In order to run the doctests make sure to first comment out the call of the main() function gps2net module:
+```
+# main()
+```
+
+Then navigate to the *docs* directory and run the following command in the terminal:
 ```
 python gps2net.py -v
 ```
+
 
 ## Footnotes & References
 
