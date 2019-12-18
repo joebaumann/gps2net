@@ -37,6 +37,7 @@ Contents:
 
    introduction
    data
+   algorithm
    documentation
    references
    
