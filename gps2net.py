@@ -10,6 +10,7 @@ import networkx as nx
 import numpy as np
 from shapely.geometry import LineString, Point
 
+
 # global variable: empty Directed Graph
 DG = nx.DiGraph()
 current_txt_file = 0
@@ -1100,8 +1101,6 @@ def calculateMostLikelyPointAndPaths(filepath, filepath_shp, minNumberOfLines=2,
                     # check if either the path from current source to target or from previous source to previous target might be needed to improved
                     # if (current_location_result['velocity_m_s']=='') means that the taxi was not moving at the previous point --> for this reason it should not be checked
 
-                    # OLD IF STATEMENT --->   if(current_location_result['velocity_m_s'] != '' and ((previous_location_result['path'] == '') or (float(previous_location_result['velocity_m_s']) > 35.0) or ((previous_location_result['path_length/air_line_length']) > 2.0) or (float(current_location_result['velocity_m_s']) > 35.0) or ((current_location_result['path_length/air_line_length']) > 2.0))):
-
                     if(current_location_result['velocity_m_s'] != '' and ((float(previous_location_result['velocity_m_s']) > criticalVelocity) or ((previous_location_result['path_length/air_line_length']) > criticalPathLength) or (float(current_location_result['velocity_m_s']) > criticalVelocity) or ((current_location_result['path_length/air_line_length']) > criticalPathLength))):
 
                         # update statistics
@@ -1191,6 +1190,13 @@ def calculateMostLikelyPointAndPaths(filepath, filepath_shp, minNumberOfLines=2,
                                         # previous_location_result_new saved the updated x and y position. For this reason the initial GPS position coordinates have to be set again.
                                         previous_location_result['y'] = myLat
                                         previous_location_result['x'] = myLng
+
+                                        # previous_location_result_new used the updated x and y position for linestring_adjustment_visualization. For this reason the initial GPS position coordinates have to be set again.
+                                        # append the line which visualizes the way from the start point to the new position of the closest intersection point
+                                        adjustment_visualization_new = LineString(
+                                            [(myLng, myLat), (previous_location_result['closest_intersection_x'], previous_location_result['closest_intersection_y'])])
+
+                                        previous_location_result['linestring_adjustment_visualization'] = adjustment_visualization_new
 
                                         previous_location_result['comment'] += new_comment
                                         previous_location_result['solution_id'] = new_solution_id
@@ -1345,7 +1351,7 @@ def calculateMostLikelyPointAndPaths(filepath, filepath_shp, minNumberOfLines=2,
 
             # The following lines are just for testing. Uncomment 'break' in order to only run the algorithm for a certain amount of lines per file. The counter counts the amount of lines of the current txt file which were already calculated.
             counter += 1
-            if (counter > 10):
+            if (counter > 50):
                 # break
                 pass
 
@@ -1803,6 +1809,7 @@ def main():
 
     # loop through all the filepaths
     for path in filepaths:
+
         current_txt_file += 1
 
         new_filename = getFilename(path)
