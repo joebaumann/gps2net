@@ -10,8 +10,6 @@ import networkx as nx
 import numpy as np
 from shapely.geometry import LineString, Point
 
-from timeit import default_timer as timer
-
 
 # global variable: empty Directed Graph
 DG = nx.DiGraph()
@@ -1103,8 +1101,6 @@ def calculateMostLikelyPointAndPaths(filepath, filepath_shp, minNumberOfLines=2,
                     # check if either the path from current source to target or from previous source to previous target might be needed to improved
                     # if (current_location_result['velocity_m_s']=='') means that the taxi was not moving at the previous point --> for this reason it should not be checked
 
-                    # OLD IF STATEMENT --->   if(current_location_result['velocity_m_s'] != '' and ((previous_location_result['path'] == '') or (float(previous_location_result['velocity_m_s']) > 35.0) or ((previous_location_result['path_length/air_line_length']) > 2.0) or (float(current_location_result['velocity_m_s']) > 35.0) or ((current_location_result['path_length/air_line_length']) > 2.0))):
-
                     if(current_location_result['velocity_m_s'] != '' and ((float(previous_location_result['velocity_m_s']) > criticalVelocity) or ((previous_location_result['path_length/air_line_length']) > criticalPathLength) or (float(current_location_result['velocity_m_s']) > criticalVelocity) or ((current_location_result['path_length/air_line_length']) > criticalPathLength))):
 
                         # update statistics
@@ -1356,7 +1352,7 @@ def calculateMostLikelyPointAndPaths(filepath, filepath_shp, minNumberOfLines=2,
             # The following lines are just for testing. Uncomment 'break' in order to only run the algorithm for a certain amount of lines per file. The counter counts the amount of lines of the current txt file which were already calculated.
             counter += 1
             if (counter > 50):
-                break
+                # break
                 pass
 
             # Update Progress Bar
@@ -1811,20 +1807,14 @@ def main():
 
     number_of_txt_files = len(filepaths)
 
-
-    totalTime_start = timer()
-
-
     # loop through all the filepaths
     for path in filepaths:
-        
-        timeForOneFile_start = timer()
-        
+
         current_txt_file += 1
 
         new_filename = getFilename(path)
 
-        dirName = os.path.join('output_files_TEST', new_filename)
+        dirName = os.path.join('output_files', new_filename)
 
         # Create target directory & all intermediate directories if don't exists
         try:
@@ -1869,12 +1859,6 @@ def main():
         print('- ' + new_filename_statistics)
         print('- ' + new_filename_velocities)
         print('- ' + new_filename_path_length_air_line_length)
-
-        timeForOneFile_end = timer()
-        print('ElapsedTimeTHISFile:',(timeForOneFile_end-timeForOneFile_start))
-
-    totalTime_end = timer()
-    print('totalElapsedTime:',(totalTime_end-totalTime_start))
 
 
 if __name__ == '__main__':

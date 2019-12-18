@@ -1,18 +1,18 @@
 path of shp file: /Users/Joechi/Google Drive/gps2net/Data/taxi_san_francisco/San Francisco Basemap Street Centerlines/geo_export_e5dd0539-2344-4e87-b198-d50274be8e1d.shp
 path of old file: /Users/Joechi/Google Drive/gps2net/Data/taxi_san_francisco/cabspottingdata/taxi1.txt
-path of new file: output_files/taxi1/calculatedSolution.txt
+path of new file: output_files_withoutBUG/taxi1/calculatedSolution.txt
 number of lines in txt file: 23495
 
 outlier: 1374
-taxi_did_not_move: 1081
+taxi_did_not_move: 1094
 no_path_found: 8
 cannot_compute_shortest_path_as_previous_point_is_outlier: 65
-path_from_target_to_source: 455
-checked_other_solution_index: 2693
-chose_other_solution_index: 994
-solution_already_lies_on_shortest_path: 1090
-no_solution_lies_on_shortest_path: 542
-other_solution_is_worse: 67
+path_from_target_to_source: 439
+checked_other_solution_index: 2685
+chose_other_solution_index: 1001
+solution_already_lies_on_shortest_path: 1082
+no_solution_lies_on_shortest_path: 544
+other_solution_is_worse: 58
 other_solution_no_path_found: 0
 checked_if_path_exists_for_second_best_solution_index: 11
 second_best_solution_yields_more_found_paths: 2
