@@ -43,11 +43,11 @@ Dataset of mobility traces of taxi cabs in San Francisco, USA.
 
 ###### Prerequisites
 
-In order to run the script, the filepaths of the txt files containing GPS data have to be specified in the main() function. In addition to that, the path of the shp-file (which provides the underlying network structure) has to be set.
+In order to run the algorithm, the filepaths of the txt files containing GPS data have to be specified in the main() function. In addition to that, the path of the shp-file (which provides the underlying network structure) has to be set.
 
-###### Running the script
+###### Running the algorithm
 
-After the filepaths are specified in the main() function, the script can be run:
+After the filepaths are specified in the main() function, the algorithm can be run:
 ```
 python gps2net.py
 ```
