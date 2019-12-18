@@ -1510,7 +1510,7 @@ def getPathFromUnmappedGpsPositions(filepath, new_filename):
     Notes
     -----
     This function created a txt file which (in addition to the input values) contains additional parameters which are NOT based on the underlying street network, such as:
-    
+
     - path : Linestring
         Linear path with start=current_position and end=next_position.
     - path length : float

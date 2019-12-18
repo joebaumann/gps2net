@@ -5,7 +5,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>3. Algorithm &#8212; gps2net 1.1.2020 documentation</title>
+    <title>4. Code Documentation &#8212; gps2net 1.1.2020 documentation</title>
     <link rel="stylesheet" href="_static/bizstyle.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     
@@ -17,8 +17,8 @@
     <script type="text/javascript" src="_static/bizstyle.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="4. List of References" href="references.html" />
-    <link rel="prev" title="2. Data" href="data.html" />
+    <link rel="next" title="5. List of References" href="references.html" />
+    <link rel="prev" title="3. Algorithm" href="algorithm.html" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <!--[if lt IE 9]>
     <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
@@ -34,38 +34,22 @@
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="references.html" title="4. List of References"
+          <a href="references.html" title="5. List of References"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="data.html" title="2. Data"
+          <a href="algorithm.html" title="3. Algorithm"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">gps2net 1.1.2020 documentation</a> &#187;</li> 
       </ul>
     </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="index.html">Table of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">3. Algorithm</a><ul>
-<li><a class="reference internal" href="#usage">3.1. Usage</a><ul>
-<li><a class="reference internal" href="#prerequisits">3.1.1. Prerequisits</a></li>
-<li><a class="reference internal" href="#running-the-algorithm">3.1.2. Running the Algorithm</a></li>
-<li><a class="reference internal" href="#solution-output">3.1.3. Solution Output</a></li>
-<li><a class="reference internal" href="#visualizing-the-solution-output">3.1.4. Visualizing the Solution Output</a></li>
-<li><a class="reference internal" href="#running-doctests">3.1.5. Running Doctests</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#module-gps2net">3.2. Code Documentation: Functions</a></li>
-</ul>
-</li>
-</ul>
-
   <h4>Previous topic</h4>
-  <p class="topless"><a href="data.html"
-                        title="previous chapter">2. Data</a></p>
+  <p class="topless"><a href="algorithm.html"
+                        title="previous chapter">3. Algorithm</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="references.html"
-                        title="next chapter">4. List of References</a></p>
+                        title="next chapter">5. List of References</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -91,290 +75,8 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="algorithm">
-<h1>3. Algorithm<a class="headerlink" href="#algorithm" title="Permalink to this headline">¶</a></h1>
-<p>In the following, a documentation for all functions of the gps2net algorithm is provided. Further, code examples illustrate thir usages.</p>
-<div class="section" id="usage">
-<h2>3.1. Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
-<p><strong>gps2net</strong> is a python module which addresses the problem outlined above. It contains a suitable algorithm to extract path data from GPS trajectories considering the underlying network topology.</p>
-<div class="section" id="prerequisits">
-<h3>3.1.1. Prerequisits<a class="headerlink" href="#prerequisits" title="Permalink to this headline">¶</a></h3>
-<ul class="simple">
-<li><p>In order to run the algorithm, the filepaths of the txt files containing GPS data have to be specified in the main() function.</p></li>
-<li><p>The GPS data in the txt files must be sorted (first line is newest).</p></li>
-<li><p>The path of the shp-file (which provides the underlying network structure) has to be set.</p></li>
-</ul>
-</div>
-<div class="section" id="running-the-algorithm">
-<h3>3.1.2. Running the Algorithm<a class="headerlink" href="#running-the-algorithm" title="Permalink to this headline">¶</a></h3>
-<p>After the filepaths are specified in the main() function, the algorithm can be run:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">gps2net</span><span class="o">.</span><span class="n">py</span>
-</pre></div>
-</div>
-</div>
-<div class="section" id="solution-output">
-<h3>3.1.3. Solution Output<a class="headerlink" href="#solution-output" title="Permalink to this headline">¶</a></h3>
-<p>The output is saved in the <em>output_files</em> directory.
-For every line of the input file (which contains the values) a dictionary (named after the input file) is created in <em>output_files</em>. Every created directory contains the following solution files:</p>
-<ul class="simple">
-<li><dl class="simple">
-<dt><strong>pathFromUnmappedGpsPositions.txt</strong></dt><dd><p>A txt file which (in addition to the input values) contains additional parameters which are NOT based on the underlying street network, such as:</p>
-<ul>
-<li><dl class="simple">
-<dt>path<span class="classifier">Linestring</span></dt><dd><p>Linear path with start=current_position and end=next_position.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>path length<span class="classifier">float</span></dt><dd><p>Distance between current and next position in meters.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>path time<span class="classifier">float</span></dt><dd><p>Time between measurement at current and next position in seconds.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>velocity<span class="classifier">float</span></dt><dd><p>Velocity in meters/second.</p>
-</dd>
-</dl>
-</li>
-</ul>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt><strong>calculatedSolution.txt</strong></dt><dd><p>A txt file which (in addition to the input values) contains additional parameters which are all based on the underlying street network, such as:</p>
-<ul>
-<li><dl class="simple">
-<dt>closest_intersection_x<span class="classifier">float</span></dt><dd><p>Longitude of the mapped position based on underlying network topology.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>closest_intersection_y<span class="classifier">float</span></dt><dd><p>Latitude of the mapped position based on underlying network topology.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>relative_position<span class="classifier">float</span></dt><dd><p>Distance along the street (where the initial point was mapped to).</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>relative_position_normalized<span class="classifier">float between 0 and 1</span></dt><dd><p>Normalized distance along the street (where the initial point was mapped to).</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>intersected_line_oneway<span class="classifier">{‘B’, ‘F’, ‘T’}</span></dt><dd><p>The ‘oneway’-property of the street (LineString) which the GPS point was mapped to. The ‘oneway’-property indicates if a street is bi-directional (B), or one way heading from the from-node to the to-node (F), or one way heading from the to-node to the from-node (T).</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>intersected_line<span class="classifier">list of coordinates</span></dt><dd><p>The source_line is a list of GPS coordinates. These coordinates represent the street on which the source point lies.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>linestring_adjustment_visualization<span class="classifier">list with two elements (GPS_position, mapped_point)</span></dt><dd><p>The first element is the GPS position from the input file (x, y). The second element is the point on a street where the initial GPS position was mapped to (closest_intersection_x, closest_intersection_y). This list can be used to visualize the mapping of points.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>path_time<span class="classifier">int</span></dt><dd><p>The time from the current to the next GPS position in seconds.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>path<span class="classifier">list of coordinates</span></dt><dd><p>The shortest – most likely – path between two data point based on the streets of the underlying network.
-–&gt; For more details on how the path is calculated, see <a class="reference internal" href="#gps2net.getShortestPathAStar" title="gps2net.getShortestPathAStar"><code class="xref py py-func docutils literal notranslate"><span class="pre">getShortestPathAStar()</span></code></a></p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>path_length<span class="classifier">float</span></dt><dd><p>The length of the path in meters. This is an approximation – see <a class="reference internal" href="#gps2net.distFrom" title="gps2net.distFrom"><code class="xref py py-func docutils literal notranslate"><span class="pre">distFrom()</span></code></a>.
-–&gt; For more details on how the path is calculated, see <a class="reference internal" href="#gps2net.getShortestPathAStar" title="gps2net.getShortestPathAStar"><code class="xref py py-func docutils literal notranslate"><span class="pre">getShortestPathAStar()</span></code></a></p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>air_line_length<span class="classifier">float</span></dt><dd><p>The air line length of the current position to the next position (from start to end of ‘path’) in meters. This is an approximation – see <a class="reference internal" href="#gps2net.distFrom" title="gps2net.distFrom"><code class="xref py py-func docutils literal notranslate"><span class="pre">distFrom()</span></code></a>.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>path_length/air_line_length<span class="classifier">float</span></dt><dd><p>‘path_length’ devided by ‘air_line_length’</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>velocity_m_s<span class="classifier">float</span></dt><dd><p>The average velocity along the path in m/s (path_length devided by path_time).</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>pathIDs<span class="classifier">list</span></dt><dd><p>The path IDs of all street segments which are traversed on the path.
-–&gt; For more details on how the path is calculated, see <a class="reference internal" href="#gps2net.getShortestPathAStar" title="gps2net.getShortestPathAStar"><code class="xref py py-func docutils literal notranslate"><span class="pre">getShortestPathAStar()</span></code></a></p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>solution_id<span class="classifier">int</span></dt><dd><p>The id of street where the mapped point lies on.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>solution_index<span class="classifier">int</span></dt><dd><p>The index of the chosen solution. All possible solutions are in a list which is sorted by the distance of the solution to the GPS position. 0 means that the point was mapped to the closest intersection with a street. If this solution does not seem to be probable, other (further away) solution where checked and if one of these solutions yielded a better outcome (e.g. shorter paths) than the index of this solution is taken. Consequently, solution_index=3 means that the third-closest solution was chosen.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>path_from_target_to_source<span class="classifier">{0, 1}</span></dt><dd><p>1 means that the on the ‘oneway’-property was ignored. In this case the path might actually be the path from the target to the source. This is done when the algorithm detects a GPS glipse (the vehicle seems to drive a tiny bit backwards on a oneway street which is not possible) which resulted in a wrong path.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>taxi_did_not_move<span class="classifier">{0, 1}</span></dt><dd><p>0 means that the taxi did move. 1 means that the taxi did not move.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>second_best_solution_yields_more_found_paths<span class="classifier">{0, 1}</span></dt><dd><p>1 means that no path existed for initial solution and the second best solution lead to more found paths. In these cases the initial solution was replaced by the second best solution.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>NO_PATH_FOUND<span class="classifier">{0, 1}</span></dt><dd><p>1 means that no path could be found even though the taxi moved and both source and target point are both no outliers.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>outlier<span class="classifier">{0, 1}</span></dt><dd><p>1 means that the GPS position is marked as an outlier. This is done when no street could be found in a specified area.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>comment<span class="classifier">str</span></dt><dd><p>Comment which summarizes most important assumptions/results/concerns for a specific GPS position.</p>
-</dd>
-</dl>
-</li>
-</ul>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt><strong>statistics.txt</strong></dt><dd><p>A txt file which lists various statistics, such as e.g. the following numbers:</p>
-<ul>
-<li><dl class="simple">
-<dt>outlier<span class="classifier">int</span></dt><dd><p>Number of data points which where flagged as outliers.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>taxi_did_not_move<span class="classifier">int</span></dt><dd><p>Number of times when a data point’s GPS position was identical to the GPS position of the previous data point.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>no_path_found<span class="classifier">int</span></dt><dd><p>Number of times no path was found even though the taxi moved and both source and target point are both no outliers.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>cannot_compute_shortest_path_as_previous_point_is_outlier<span class="classifier">int</span></dt><dd><p>Number of times the path could not be computed since the previous point was an outlier.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>path_from_target_to_source<span class="classifier">int</span></dt><dd><p>Number of times the ‘oneway’-property was ignored. In this case the path might actually be the path from the target to the source. This is done when the algorithm detects a GPS glipse (the vehicle seems to drive a tiny bit backwards on a oneway street which is not possible) which resulted in a wrong path.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>checked_other_solution_index<span class="classifier">int</span></dt><dd><p>Number of times another solution was checked because a path either lead to a velocity of more than 35 m/s or a path length which is more than double the air line length.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>chose_other_solution_index<span class="classifier">int</span></dt><dd><p>Number of times the other solution actually lead to a shorter cummulated path (path to previous point plus path to next point) than the initial solution</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>solution_already_lies_on_shortest_path<span class="classifier">int</span></dt><dd><p>Number of times when velocity was more than 35 m/s or path length was is more than double the air line length BUT the initial solution was already on the shortest path from the previous point to the next point (in this case, the solution is optimal which is why no other solution was checked).</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>no_solution_lies_on_shortest_path<span class="classifier">int</span></dt><dd><p>Number of times when velocity was more than 35 m/s or path length was is more than double the air line length BUT there was no other solution which lied on the shortest path from the previous point to the next point (in this case, no other solution could b checked).</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>other_solution_is_worse<span class="classifier">int</span></dt><dd><p>Number of times when another solution was checked, but since this new solution was worse than the initial solution it wasn’t taken.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>other_solution_no_path_found<span class="classifier">int</span></dt><dd><p>Number of times when another solution was checked, but since there was no valid path for this new solution it wasn’t taken.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>checked_if_path_exists_for_second_best_solution_index<span class="classifier">int</span></dt><dd><p>Number of times no path existed for initial solution. In these cases the secont best solution (if it existed) was checked.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>second_best_solution_yields_more_found_paths<span class="classifier">int</span></dt><dd><p>Number of times no path existed for initial solution and the second best solution lead to more found paths. In these cases the initial solution was replaced by the second best solution.</p>
-</dd>
-</dl>
-</li>
-</ul>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt><strong>timedifferencesPLOT.png</strong></dt><dd><p>A figure which plots a histogram of all time differences between GPS measurements.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt><strong>velocitiesPLOT.png</strong></dt><dd><p>A figure which plots a histogram of the velocities at all GPS positions.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt><strong>path_length_air_line_length_PLOT.png</strong></dt><dd><p>A figure which plots a histogram of the length of the most likely path between two positions divided by the air line length between those two points. The histogram plots an overview of this measurement for at all GPS positions.</p>
-</dd>
-</dl>
-</li>
-</ul>
-</div>
-<div class="section" id="visualizing-the-solution-output">
-<h3>3.1.4. Visualizing the Solution Output<a class="headerlink" href="#visualizing-the-solution-output" title="Permalink to this headline">¶</a></h3>
-<p>The solution can be visualized using <a class="reference external" href="https://www.qgis.org/">QGIS</a>.</p>
-<ul class="simple">
-<li><p>In order to visualize Points (such as e.g. the measured or the mapped GPS positions), add it as a layer in GQIS (<em>Layer</em> &gt; <em>Add Layer</em> &gt; Add delimited text layer –&gt; Choose <em>Point Coordinates</em> as geometry definition and ‘longitude(x)’ as X field and ‘latitude(y)’ as Y field respectively).</p></li>
-<li><p>In order to visualize Linestrings (such as e.g. path or linestring_adjustment_visualization), add it as a layer in GQIS (<em>Layer</em> &gt; <em>Add Layer</em> &gt; Add delimited text layer –&gt; Choose <em>WKT</em> as geometry definition and ‘linestring_adjustment_visualization’ as geometry field).</p></li>
-</ul>
-</div>
-<div class="section" id="running-doctests">
-<h3>3.1.5. Running Doctests<a class="headerlink" href="#running-doctests" title="Permalink to this headline">¶</a></h3>
-<p>In order to run the doctests make sure to first comment out the call of the main() function gps2net module:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># main()</span>
-</pre></div>
-</div>
-<p>Then navigate to the <em>docs</em> directory and run the following command in the terminal:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">gps2net</span><span class="o">.</span><span class="n">py</span> <span class="o">-</span><span class="n">v</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="section" id="module-gps2net">
-<span id="code-documentation-functions"></span><h2>3.2. Code Documentation: Functions<a class="headerlink" href="#module-gps2net" title="Permalink to this headline">¶</a></h2>
+  <div class="section" id="module-gps2net">
+<span id="code-documentation"></span><h1>4. Code Documentation<a class="headerlink" href="#module-gps2net" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
 <dt id="gps2net.air_line_distance">
 <code class="sig-prename descclassname">gps2net.</code><code class="sig-name descname">air_line_distance</code><span class="sig-paren">(</span><em class="sig-param">source</em>, <em class="sig-param">target</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gps2net.html#air_line_distance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gps2net.air_line_distance" title="Permalink to this definition">¶</a></dt>
@@ -981,7 +683,6 @@ The ‘oneway’-property indicates if a street is bi-directional (B), or one wa
 </dd></dl>
 
 </div>
-</div>
 
 
           </div>
@@ -999,10 +700,10 @@ The ‘oneway’-property indicates if a street is bi-directional (B), or one wa
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="references.html" title="4. List of References"
+          <a href="references.html" title="5. List of References"
              >next</a> |</li>
         <li class="right" >
-          <a href="data.html" title="2. Data"
+          <a href="algorithm.html" title="3. Algorithm"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">gps2net 1.1.2020 documentation</a> &#187;</li> 
       </ul>
