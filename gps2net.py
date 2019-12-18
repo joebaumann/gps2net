@@ -1192,6 +1192,13 @@ def calculateMostLikelyPointAndPaths(filepath, filepath_shp, minNumberOfLines=2,
                                         previous_location_result['y'] = myLat
                                         previous_location_result['x'] = myLng
 
+                                        # previous_location_result_new used the updated x and y position for linestring_adjustment_visualization. For this reason the initial GPS position coordinates have to be set again.
+                                        # append the line which visualizes the way from the start point to the new position of the closest intersection point
+                                        adjustment_visualization_new = LineString(
+                                            [(myLng, myLat), (previous_location_result['closest_intersection_x'], previous_location_result['closest_intersection_y'])])
+
+                                        previous_location_result['linestring_adjustment_visualization'] = adjustment_visualization_new
+
                                         previous_location_result['comment'] += new_comment
                                         previous_location_result['solution_id'] = new_solution_id
                                         previous_location_result['solution_index'] = new_solution_index
