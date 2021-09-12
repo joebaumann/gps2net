@@ -19,7 +19,7 @@ gps2net Documentation
     - If you have any problems, found bugs in the code or have comments or questions, please feel free to send an e-mail to `Joachim Baumann`_.
 
 
-.. _`gps2net`: https://github.com/joehonig/gps2net
+.. _`gps2net`: https://github.com/joebaumann/gps2net
 .. _`Joachim Baumann`: joachimbaumann1@gmail.com
 
 

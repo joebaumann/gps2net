@@ -4,7 +4,7 @@
       <tr><td>Date</td><td>January 2020</td></tr>
       <tr><td>Author</td><td>Joachim Baumann</td></tr>
       <tr><td>Contact</td><td>joachimbaumann1@gmail.com</td></tr>
-      <tr><td>Documentation</td><td>https://joehonig.github.io/gps2net/</td></tr>
+      <tr><td>Documentation</td><td>https://joebaumann.github.io/gps2net/</td></tr>
 </table>
 
 ## Note
