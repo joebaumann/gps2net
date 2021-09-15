@@ -45,9 +45,22 @@ Dataset of mobility traces of taxi cabs in San Francisco, USA.
 
 In order to run the algorithm, the filepaths of the txt files containing GPS data have to be specified in the main() function. In addition to that, the path of the shp-file (which provides the underlying network structure) has to be set.
 
+###### Python version
+Python 3.7.11
+
+###### Installing required packages
+Create a new conda environment and install the necessary packages:
+```
+conda create --name venv-gps2net --file requirements.txt
+```
+Then, activate the new environment:
+```
+conda activate venv-gps2net
+```
+
 ###### Running the algorithm
 
-After the filepaths are specified in the main() function, the algorithm can be run:
+After the filepaths are specified in the main() function and the packages are installed, the algorithm can be run:
 ```
 python gps2net.py
 ```
