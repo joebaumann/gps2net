@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 # %%
 import doctest
 import math
@@ -1382,7 +1384,7 @@ def getTimeDifferences(filepath, timestampPosition):
     This method assumes that each line contains one measured GPS position and that values in each line are seperated by a space. Further, it assumes that time is in UNIX epoch format.
     Examples
     --------
-    >>> myPath = '/Users/Joechi/Google Drive/gps2net/Data/testData/testTaxi.txt'
+    >>> myPath = 'Data/testData/testTaxi.txt'
     >>> myTimeDifferences = getTimeDifferences(myPath, 3)
     >>> myTimeDifferences
     [28, 119]
@@ -1785,25 +1787,13 @@ def main():
     global number_of_txt_files
     global current_txt_file
 
-    filepath_shp = '/Users/Joechi/Google Drive/gps2net/Data/taxi_san_francisco/San Francisco Basemap Street Centerlines/geo_export_e5dd0539-2344-4e87-b198-d50274be8e1d.shp'
+    filepath_shp = 'Data/taxi_san_francisco/San Francisco Basemap Street Centerlines/geo_export_e5dd0539-2344-4e87-b198-d50274be8e1d.shp'
 
     filepaths = []
-
-    filepath1 = '/Users/Joechi/Google Drive/gps2net/Data/taxi_san_francisco/cabspottingdata/taxi1.txt'
-    filepath2 = '/Users/Joechi/Google Drive/gps2net/Data/taxi_san_francisco/cabspottingdata/taxi2.txt'
-    filepath3 = '/Users/Joechi/Google Drive/gps2net/Data/taxi_san_francisco/cabspottingdata/taxi3.txt'
-    filepath4 = '/Users/Joechi/Google Drive/gps2net/Data/taxi_san_francisco/cabspottingdata/taxi4.txt'
-    filepath5 = '/Users/Joechi/Google Drive/gps2net/Data/taxi_san_francisco/cabspottingdata/taxi5.txt'
-    filepath6 = '/Users/Joechi/Google Drive/gps2net/Data/taxi_san_francisco/cabspottingdata/taxi6.txt'
-    filepath7 = '/Users/Joechi/Google Drive/gps2net/Data/taxi_san_francisco/cabspottingdata/taxi7.txt'
-
-    filepaths.append(filepath1)
-    filepaths.append(filepath2)
-    filepaths.append(filepath3)
-    filepaths.append(filepath4)
-    filepaths.append(filepath5)
-    filepaths.append(filepath6)
-    filepaths.append(filepath7)
+    
+    filepaths.append("Data/testData/testTaxi.txt")
+    #filepaths.append("Data/taxi_san_francisco/cabspottingdata/taxi1.txt")
+    #filepaths.append("Data/taxi_san_francisco/cabspottingdata/taxi2.txt")
 
     number_of_txt_files = len(filepaths)
 
